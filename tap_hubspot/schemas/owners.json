@@ -73,13 +73,22 @@
             "items": "object",
             "properties": {
                 "id": {
-                    "type": ["null", "string"]
+                    "type": [
+                        "null",
+                        "string"
+                    ]
                 },
                 "name": {
-                    "type": ["null", "string"]
+                    "type": [
+                        "null",
+                        "string"
+                    ]
                 },
                 "membership": {
-                    "type": ["null", "string"]
+                    "type": [
+                        "null",
+                        "string"
+                    ]
                 }
             }
         }
