@@ -1570,30 +1570,6 @@
                                 }
                             }
                         }
-                    },
-                    "teams": {
-                        "type": "array",
-                        "items": "object",
-                        "properties": {
-                            "id": {
-                                "type": [
-                                    "null",
-                                    "string"
-                                ]
-                            },
-                            "name": {
-                                "type": [
-                                    "null",
-                                    "string"
-                                ]
-                            },
-                            "membership": {
-                                "type": [
-                                    "null",
-                                    "string"
-                                ]
-                            }
-                        }
                     }
                 }
             },
@@ -1731,15 +1707,6 @@
                     "breadcrumb": [
                         "properties",
                         "remoteList"
-                    ],
-                    "metadata": {
-                        "inclusion": "available"
-                    }
-                },
-                {
-                    "breadcrumb": [
-                        "properties",
-                        "teams"
                     ],
                     "metadata": {
                         "inclusion": "available"
