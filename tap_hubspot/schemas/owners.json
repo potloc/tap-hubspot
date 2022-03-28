@@ -6,6 +6,9 @@
             "items":{
                 "type": "object",
                 "properties":{
+                    "id": {
+                        "type": ["null","string"]
+                    },
                     "portalId": {
                         "type": ["null", "integer"]
                     },
@@ -69,6 +72,23 @@
                                 },
                                 "active": {
                                     "type": ["null", "boolean"]
+                                }
+                            }
+                        }
+                    },
+                    "teams": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": ["null", "string"]
+                                },
+                                "name": {
+                                    "type": ["null", "string"]
+                                },
+                                "membership": {
+                                    "type": ["null", "string"]
                                 }
                             }
                         }
