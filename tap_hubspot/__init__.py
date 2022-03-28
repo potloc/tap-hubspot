@@ -44,10 +44,6 @@ CONTACTS_BY_COMPANY = "contacts_by_company"
 
 DEFAULT_CHUNK_SIZE = 1000 * 60 * 60 * 24
 
-# CUSTOM
-## TODO: Add owners limit to code FOR OWNERS V3
-OWNERS_LIMIT = 200
-
 V3_PREFIXES = {'hs_date_entered', 'hs_date_exited', 'hs_time_in'}
 
 CONFIG = {
@@ -98,7 +94,7 @@ ENDPOINTS = {
     "contact_lists":        "/contacts/v1/lists",
     "forms":                "/forms/v2/forms",
     "workflows":            "/automation/v3/workflows",
-    "owners":               f"/crm/v3/owners?limit={OWNERS_LIMIT}&archived=false"
+    "owners":               f"/crm/v3/owners?limit=500&archived=false"
 }
 
 def get_start(state, tap_stream_id, bookmark_key):
@@ -855,7 +851,6 @@ def sync_owners(STATE, ctx):
     if CONFIG.get('include_inactives'):
         params['includeInactives'] = "true"
     
-    # ADDED LINE HERE TO GET RESULTS
     data = request(get_url("owners"), params).json()['results']
 
     time_extracted = utils.now()
