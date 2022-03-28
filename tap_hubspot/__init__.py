@@ -94,8 +94,7 @@ ENDPOINTS = {
     "contact_lists":        "/contacts/v1/lists",
     "forms":                "/forms/v2/forms",
     "workflows":            "/automation/v3/workflows",
-    # "owners":               "/owners/v2/owners",
-    "owners":               "/crm/v3/owners?limit=200&archived=false",
+    "owners":               "/owners/v2/owners",
 }
 
 def get_start(state, tap_stream_id, bookmark_key):
