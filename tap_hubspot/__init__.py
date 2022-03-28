@@ -94,7 +94,7 @@ ENDPOINTS = {
     "contact_lists":        "/contacts/v1/lists",
     "forms":                "/forms/v2/forms",
     "workflows":            "/automation/v3/workflows",
-    "owners":               "/owners/v2/owners",
+    "owners":               f"/crm/v3/owners?limit=500&archived=false"
 }
 
 def get_start(state, tap_stream_id, bookmark_key):
@@ -275,8 +275,6 @@ def get_params_and_headers(params):
     params = params or {}
     hapikey = CONFIG['hapikey']
     if hapikey is None:
-        if CONFIG['token_expires'] is None or CONFIG['token_expires'] < datetime.datetime.utcnow():
-            acquire_access_token_from_refresh_token()
         headers = {'Authorization': 'Bearer {}'.format(CONFIG['access_token'])}
     else:
         params['hapikey'] = hapikey
@@ -840,7 +838,7 @@ def sync_owners(STATE, ctx):
     schema = load_schema("owners")
     bookmark_key = 'updatedAt'
 
-    singer.write_schema("owners", schema, ["ownerId"], [bookmark_key], catalog.get('stream_alias'))
+    singer.write_schema("owners", schema, ["id"], [bookmark_key], catalog.get('stream_alias'))
     start = get_start(STATE, "owners", bookmark_key)
     max_bk_value = start
 
@@ -849,7 +847,8 @@ def sync_owners(STATE, ctx):
     params = {}
     if CONFIG.get('include_inactives'):
         params['includeInactives'] = "true"
-    data = request(get_url("owners"), params).json()
+    
+    data = request(get_url("owners"), params).json()['results']
 
     time_extracted = utils.now()
 
@@ -945,7 +944,7 @@ STREAMS = [
     # Do these last as they are full table
     Stream('forms', sync_forms, ['guid'], 'updatedAt', 'FULL_TABLE'),
     Stream('workflows', sync_workflows, ['id'], 'updatedAt', 'FULL_TABLE'),
-    Stream('owners', sync_owners, ["ownerId"], 'updatedAt', 'FULL_TABLE'),
+    Stream('owners', sync_owners, ["id"], 'updatedAt', 'FULL_TABLE'),
     Stream('campaigns', sync_campaigns, ["id"], None, 'FULL_TABLE'),
     Stream('contact_lists', sync_contact_lists, ["listId"], 'updatedAt', 'FULL_TABLE'),
     Stream('contacts', sync_contacts, ["vid"], 'versionTimestamp', 'FULL_TABLE'),
