@@ -840,7 +840,7 @@ def sync_owners(STATE, ctx):
     schema = load_schema("owners")
     bookmark_key = 'updatedAt'
 
-    singer.write_schema("owners", schema, ["ownerId"], [bookmark_key], catalog.get('stream_alias'))
+    singer.write_schema("owners", schema, ["id"], [bookmark_key], catalog.get('stream_alias'))
     start = get_start(STATE, "owners", bookmark_key)
     max_bk_value = start
 
@@ -947,7 +947,7 @@ STREAMS = [
     # Do these last as they are full table
     Stream('forms', sync_forms, ['guid'], 'updatedAt', 'FULL_TABLE'),
     Stream('workflows', sync_workflows, ['id'], 'updatedAt', 'FULL_TABLE'),
-    Stream('owners', sync_owners, ["ownerId"], 'updatedAt', 'FULL_TABLE'),
+    Stream('owners', sync_owners, ["id"], 'updatedAt', 'FULL_TABLE'),
     Stream('campaigns', sync_campaigns, ["id"], None, 'FULL_TABLE'),
     Stream('contact_lists', sync_contact_lists, ["listId"], 'updatedAt', 'FULL_TABLE'),
     Stream('contacts', sync_contacts, ["vid"], 'versionTimestamp', 'FULL_TABLE'),
