@@ -1082,10 +1082,7 @@ def do_discover():
 
 def main_impl():
     args = utils.parse_args(
-        ["redirect_uri",
-         "client_id",
-         "client_secret",
-         "refresh_token",
+        ["access_token",
          "start_date"])
 
     CONFIG.update(args.config)
