@@ -99,3 +99,5 @@ config.json
 *~
 env-vars*
 .venv/
+state.json
+catalog.json
