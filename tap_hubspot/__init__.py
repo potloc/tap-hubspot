@@ -918,25 +918,29 @@ def sync_engagements(STATE, ctx):
 
 # TODO CREATE Meetings sync
 def sync_meetings(STATE, ctx):
-    pass
-    # catalog = ctx.get_catalog_from_id(singer.get_currently_syncing(STATE))
-    # mdata = metadata.to_map(catalog.get('metadata'))
-    # schema = load_schema("engagements")
-    # bookmark_key = 'lastUpdated'
-    # singer.write_schema("engagements", schema, ["engagement_id"], [bookmark_key], catalog.get('stream_alias'))
-    # start = get_start(STATE, "engagements", bookmark_key)
 
-    # current_sync_start = get_current_sync_start(STATE, "engagements") or utils.now()
-    # STATE = write_current_sync_start(STATE, "engagements", current_sync_start)
-    # singer.write_state(STATE)
+    catalog = ctx.get_catalog_from_id(singer.get_currently_syncing(STATE))
+    mdata = metadata.to_map(catalog.get('metadata'))
+    schema = load_schema("meetings")
+    bookmark_key = 'lastUpdated'
+    singer.write_schema("meetings", schema, ["id"], [bookmark_key], catalog.get('stream_alias'))
+    start = get_start(STATE, "meetings", bookmark_key)
 
-    # max_bk_value = start
-    # LOGGER.info("sync_engagements from %s", start)
+    current_sync_start = get_current_sync_start(STATE, "meetings") or utils.now()
+    STATE = write_current_sync_start(STATE, "meetings", current_sync_start)
+    singer.write_state(STATE)
 
-    # STATE = singer.write_bookmark(STATE, 'engagements', bookmark_key, start)
-    # singer.write_state(STATE)
+    max_bk_value = start
+    LOGGER.info("sync_meetings from %s", start)
 
-    # url = get_url("engagements_all")
+    STATE = singer.write_bookmark(STATE, 'meetings', bookmark_key, start)
+    singer.write_state(STATE)
+
+    url = get_url("meetings")
+    params = {
+        'limit': 100,
+        'properties': "hs_internal_meeting_notes,hs_lastmodifieddate,hs_meeting_body,hs_meeting_end_time,hs_meeting_external_url,hs_meeting_location,hs_meeting_outcome,hs_meeting_start_time,hs_meeting_title,hs_timestamp,hubspot_owner_id"
+    }
     # params = {'limit': 250}
     # top_level_key = "results"
     # engagements = gen_request(STATE, 'engagements', url, params, top_level_key, "hasMore", ["offset"], ["offset"])
