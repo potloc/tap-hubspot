@@ -1,0 +1,68 @@
+{
+    "type": "object",
+    "properties":{
+        "id": {
+            "type": ["null","string"]
+        },
+        "createdAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+        },
+        "updatedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+        },
+        "archived": {
+            "type": ["null", "boolean"]
+        },
+        "properties": {
+            "type": "object",
+            "properties": {
+                "hs_createdate": {
+                    "type": ["null", "string"],
+                    "format": "date-time"
+                },
+                "hs_internal_meeting_notes": {
+                    "type": ["null", "string"]
+                },
+                "hs_lastmodifieddate": {
+                    "type": ["null", "string"],
+                    "format": "date-time"
+                },
+                "hs_meeting_body": {
+                    "type": ["null", "string"]
+                },
+                "hs_meeting_end_time": {
+                    "type": ["null", "string"],
+                    "format": "date-time"
+                },
+                "hs_meeting_external_uri": {
+                    "type": ["null", "string"]
+                },
+                "hs_meeting_location": {
+                    "type": ["null", "string"]
+                },
+                "hs_meeting_outcome": {
+                    "type": ["null", "string"]
+                },
+                "hs_meeting_start_time": {
+                    "type": ["null", "string"],
+                    "format": "date-time"
+                },
+                "hs_meeting_title": {
+                    "type": ["null", "string"]
+                },
+                "hs_object_id": {
+                    "type": ["null", "string"]
+                },
+                "hs_timestamp": {
+                    "type": ["null", "string"],
+                    "format": "date-time"
+                },
+                "hubspot_owner_id": {
+                    "type": ["null", "string"]
+                }
+            }
+        }
+    }
+}
