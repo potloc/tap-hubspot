@@ -941,29 +941,28 @@ def sync_meetings(STATE, ctx):
         'limit': 100,
         'properties': "hs_internal_meeting_notes,hs_lastmodifieddate,hs_meeting_body,hs_meeting_end_time,hs_meeting_external_url,hs_meeting_location,hs_meeting_outcome,hs_meeting_start_time,hs_meeting_title,hs_timestamp,hubspot_owner_id"
     }
-    # params = {'limit': 250}
-    # top_level_key = "results"
-    # engagements = gen_request(STATE, 'engagements', url, params, top_level_key, "hasMore", ["offset"], ["offset"])
+    top_level_key = "results"
+    meetings = gen_request(STATE, 'meetings', url, params, top_level_key, "hasMore", ["offset"], ["offset"])
 
-    # time_extracted = utils.now()
+    time_extracted = utils.now()
 
-    # with Transformer(UNIX_MILLISECONDS_INTEGER_DATETIME_PARSING) as bumble_bee:
-    #     for engagement in engagements:
-    #         record = bumble_bee.transform(lift_properties_and_versions(engagement), schema, mdata)
-    #         if record['engagement'][bookmark_key] >= start:
-    #             # hoist PK and bookmark field to top-level record
-    #             record['engagement_id'] = record['engagement']['id']
-    #             record[bookmark_key] = record['engagement'][bookmark_key]
-    #             singer.write_record("engagements", record, catalog.get('stream_alias'), time_extracted=time_extracted)
-    #             if record['engagement'][bookmark_key] >= max_bk_value:
-    #                 max_bk_value = record['engagement'][bookmark_key]
+    with Transformer(UNIX_MILLISECONDS_INTEGER_DATETIME_PARSING) as bumble_bee:
+        for meeting in meetings:
+            record = bumble_bee.transform(lift_properties_and_versions(meeting), schema, mdata)
+            if record['meeting'][bookmark_key] >= start:
+                # hoist PK and bookmark field to top-level record
+                record['meetting_id'] = record['meeting']['id']
+                record[bookmark_key] = record['meeting'][bookmark_key]
+                singer.write_record("meeting", record, catalog.get('stream_alias'), time_extracted=time_extracted)
+                if record['meeting'][bookmark_key] >= max_bk_value:
+                    max_bk_value = record['meeting'][bookmark_key]
 
     # # Don't bookmark past the start of this sync to account for updated records during the sync.
-    # new_bookmark = min(utils.strptime_to_utc(max_bk_value), current_sync_start)
-    # STATE = singer.write_bookmark(STATE, 'engagements', bookmark_key, utils.strftime(new_bookmark))
-    # STATE = write_current_sync_start(STATE, 'engagements', None)
-    # singer.write_state(STATE)
-    # return STATE
+    new_bookmark = min(utils.strptime_to_utc(max_bk_value), current_sync_start)
+    STATE = singer.write_bookmark(STATE, 'meetings', bookmark_key, utils.strftime(new_bookmark))
+    STATE = write_current_sync_start(STATE, 'meetings', None)
+    singer.write_state(STATE)
+    return STATE
 
 def sync_deal_pipelines(STATE, ctx):
     catalog = ctx.get_catalog_from_id(singer.get_currently_syncing(STATE))
