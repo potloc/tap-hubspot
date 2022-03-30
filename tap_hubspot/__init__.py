@@ -192,7 +192,7 @@ def load_associated_company_schema():
 
 def load_schema(entity_name):
     schema = utils.load_json(get_abs_path('schemas/{}.json'.format(entity_name)))
-    if entity_name in ["contacts", "companies", "deals", "meetings"]:
+    if entity_name in ["contacts", "companies", "deals"]:
         custom_schema = get_custom_schema(entity_name)
 
         schema['properties']['properties'] = {
