@@ -192,7 +192,7 @@ def load_associated_company_schema():
 
 def load_schema(entity_name):
     schema = utils.load_json(get_abs_path('schemas/{}.json'.format(entity_name)))
-    if entity_name in ["contacts", "companies", "deals"]:
+    if entity_name in ["contacts", "companies", "deals", "meetings"]:
         custom_schema = get_custom_schema(entity_name)
 
         schema['properties']['properties'] = {
@@ -916,6 +916,51 @@ def sync_engagements(STATE, ctx):
     singer.write_state(STATE)
     return STATE
 
+# TODO CREATE Meetings sync
+def sync_meetings(STATE, ctx):
+    pass
+    # catalog = ctx.get_catalog_from_id(singer.get_currently_syncing(STATE))
+    # mdata = metadata.to_map(catalog.get('metadata'))
+    # schema = load_schema("engagements")
+    # bookmark_key = 'lastUpdated'
+    # singer.write_schema("engagements", schema, ["engagement_id"], [bookmark_key], catalog.get('stream_alias'))
+    # start = get_start(STATE, "engagements", bookmark_key)
+
+    # current_sync_start = get_current_sync_start(STATE, "engagements") or utils.now()
+    # STATE = write_current_sync_start(STATE, "engagements", current_sync_start)
+    # singer.write_state(STATE)
+
+    # max_bk_value = start
+    # LOGGER.info("sync_engagements from %s", start)
+
+    # STATE = singer.write_bookmark(STATE, 'engagements', bookmark_key, start)
+    # singer.write_state(STATE)
+
+    # url = get_url("engagements_all")
+    # params = {'limit': 250}
+    # top_level_key = "results"
+    # engagements = gen_request(STATE, 'engagements', url, params, top_level_key, "hasMore", ["offset"], ["offset"])
+
+    # time_extracted = utils.now()
+
+    # with Transformer(UNIX_MILLISECONDS_INTEGER_DATETIME_PARSING) as bumble_bee:
+    #     for engagement in engagements:
+    #         record = bumble_bee.transform(lift_properties_and_versions(engagement), schema, mdata)
+    #         if record['engagement'][bookmark_key] >= start:
+    #             # hoist PK and bookmark field to top-level record
+    #             record['engagement_id'] = record['engagement']['id']
+    #             record[bookmark_key] = record['engagement'][bookmark_key]
+    #             singer.write_record("engagements", record, catalog.get('stream_alias'), time_extracted=time_extracted)
+    #             if record['engagement'][bookmark_key] >= max_bk_value:
+    #                 max_bk_value = record['engagement'][bookmark_key]
+
+    # # Don't bookmark past the start of this sync to account for updated records during the sync.
+    # new_bookmark = min(utils.strptime_to_utc(max_bk_value), current_sync_start)
+    # STATE = singer.write_bookmark(STATE, 'engagements', bookmark_key, utils.strftime(new_bookmark))
+    # STATE = write_current_sync_start(STATE, 'engagements', None)
+    # singer.write_state(STATE)
+    # return STATE
+
 def sync_deal_pipelines(STATE, ctx):
     catalog = ctx.get_catalog_from_id(singer.get_currently_syncing(STATE))
     mdata = metadata.to_map(catalog.get('metadata'))
@@ -953,7 +998,8 @@ STREAMS = [
     Stream('companies', sync_companies, ["companyId"], 'hs_lastmodifieddate', 'FULL_TABLE'),
     Stream('deals', sync_deals, ["dealId"], 'hs_lastmodifieddate', 'FULL_TABLE'),
     Stream('deal_pipelines', sync_deal_pipelines, ['pipelineId'], None, 'FULL_TABLE'),
-    Stream('engagements', sync_engagements, ["engagement_id"], 'lastUpdated', 'FULL_TABLE')
+    Stream('engagements', sync_engagements, ["engagement_id"], 'lastUpdated', 'FULL_TABLE'),
+    Stream('meetings', sync_meetings, ["id"], 'lastUpdated', 'FULL_TABLE')
 ]
 
 def get_streams_to_sync(streams, state):
