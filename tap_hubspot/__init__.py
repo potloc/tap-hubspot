@@ -918,11 +918,10 @@ def sync_engagements(STATE, ctx):
 
 # TODO CREATE Meetings sync
 def sync_meetings(STATE, ctx):
-
     catalog = ctx.get_catalog_from_id(singer.get_currently_syncing(STATE))
     mdata = metadata.to_map(catalog.get('metadata'))
     schema = load_schema("meetings")
-    bookmark_key = 'lastUpdated'
+    bookmark_key = 'updatedAt'
     singer.write_schema("meetings", schema, ["id"], [bookmark_key], catalog.get('stream_alias'))
     start = get_start(STATE, "meetings", bookmark_key)
 
@@ -1002,7 +1001,7 @@ STREAMS = [
     Stream('deals', sync_deals, ["dealId"], 'hs_lastmodifieddate', 'FULL_TABLE'),
     Stream('deal_pipelines', sync_deal_pipelines, ['pipelineId'], None, 'FULL_TABLE'),
     Stream('engagements', sync_engagements, ["engagement_id"], 'lastUpdated', 'FULL_TABLE'),
-    Stream('meetings', sync_meetings, ["id"], 'lastUpdated', 'FULL_TABLE')
+    Stream('meetings', sync_meetings, ["id"], 'updatedAt', 'FULL_TABLE')
 ]
 
 def get_streams_to_sync(streams, state):
