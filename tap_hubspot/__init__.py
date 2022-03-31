@@ -94,9 +94,9 @@ ENDPOINTS = {
     "contact_lists":        "/contacts/v1/lists",
     "forms":                "/forms/v2/forms",
     "workflows":            "/automation/v3/workflows",
-    "owners":               "/crm/v3/owners?limit=500&archived=false",
 
     "meetings":             "/crm/v3/objects/meetings",
+    "owners":               "/crm/v3/owners"
 }
 
 def get_start(state, tap_stream_id, bookmark_key):
@@ -851,6 +851,8 @@ def sync_owners(STATE, ctx):
     params = {}
     if CONFIG.get('include_inactives'):
         params['includeInactives'] = "true"
+    params['limit'] = 500
+    params['archived'] = 'false'
 
     data = request(get_url("owners"), params).json()['results']
 
