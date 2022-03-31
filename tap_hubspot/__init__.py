@@ -941,18 +941,27 @@ def sync_meetings(STATE, ctx):
     STATE = singer.write_bookmark(STATE, 'meetings', bookmark_key, start)
     singer.write_state(STATE)
 
-    data = request(get_url("meetings"), params).json()['results']
+    req = request(get_url("meetings"), params).json()
 
-    time_extracted = utils.now()
+    while True:
+        data = req['results']
+        next = False
+        if req['paging']:
+            next = req['paging']['next']['link']
 
-    with Transformer(UNIX_MILLISECONDS_INTEGER_DATETIME_PARSING) as bumble_bee:
-        for row in data:
-            record = bumble_bee.transform(row, schema, mdata)
-            if record[bookmark_key] >= max_bk_value:
-                max_bk_value = record[bookmark_key]
+        time_extracted = utils.now()
 
-            if record[bookmark_key] >= start:
-                singer.write_record("meetings", record, catalog.get('stream_alias'), time_extracted=time_extracted)
+        with Transformer(UNIX_MILLISECONDS_INTEGER_DATETIME_PARSING) as bumble_bee:
+            for row in data:
+                record = bumble_bee.transform(row, schema, mdata)
+                if record[bookmark_key] >= max_bk_value:
+                    max_bk_value = record[bookmark_key]
+
+                if record[bookmark_key] >= start:
+                    singer.write_record("meetings", record, catalog.get('stream_alias'), time_extracted=time_extracted)
+        if not next:
+            break
+        req = request(next).json()
 
     STATE = singer.write_bookmark(STATE, 'meetings', bookmark_key, max_bk_value)
     singer.write_state(STATE)
