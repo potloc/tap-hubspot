@@ -1,11 +1,10 @@
-# Description of change
+# What was the issue
 (write a short description or paste a link to JIRA)
 
-# Manual QA steps
- - 
- 
-# Risks
- - 
- 
-# Rollback steps
- - revert this branch
+# How did we solve it
+()
+
+# Additional Notes / Warnings
+
+
+# Fun fact (optional)
