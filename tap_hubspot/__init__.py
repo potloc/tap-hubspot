@@ -407,7 +407,7 @@ def gen_request(STATE, tap_stream_id, url, params, path, more_key, offset_keys, 
                 raise RuntimeError("Unexpected API response: {} not in {}".format(path, data.keys()))
 
             if v3_fields:
-                v3_data = get_v3_deals(v3_fields, data[path])
+                v3_data = process_v3_deals_records(data[path])
 
                 # The shape of v3_data is different than the V1 response,
                 # so we transform v3 to look like v1
@@ -936,32 +936,23 @@ def sync_meetings(STATE, ctx):
         'properties': "hs_internal_meeting_notes,hs_lastmodifieddate,hs_meeting_body,hs_meeting_end_time,hs_meeting_external_url,hs_meeting_location,hs_meeting_outcome,hs_meeting_start_time,hs_meeting_title,hs_timestamp,hubspot_owner_id"
     }
 
-
     STATE = singer.write_bookmark(STATE, 'meetings', bookmark_key, start)
     singer.write_state(STATE)
 
-    url = get_url("meetings")
-
-    top_level_key = "results"
-    meetings = gen_request(STATE, 'meetings', url, params, top_level_key, "hasMore", ["offset"], ["offset"])['result']
+    data = request(get_url("meetings"), params).json()['results']
 
     time_extracted = utils.now()
 
     with Transformer(UNIX_MILLISECONDS_INTEGER_DATETIME_PARSING) as bumble_bee:
-        for meeting in meetings:
-            record = bumble_bee.transform(lift_properties_and_versions(meeting), schema, mdata)
-            if record['meeting'][bookmark_key] >= start:
-                # hoist PK and bookmark field to top-level record
-                record['meetting_id'] = record['meeting']['id']
-                record[bookmark_key] = record['meeting'][bookmark_key]
-                singer.write_record("meeting", record, catalog.get('stream_alias'), time_extracted=time_extracted)
-                if record['meeting'][bookmark_key] >= max_bk_value:
-                    max_bk_value = record['meeting'][bookmark_key]
+        for row in data:
+            record = bumble_bee.transform(lift_properties_and_versions(row), schema, mdata)
+            if record[bookmark_key] >= max_bk_value:
+                max_bk_value = record[bookmark_key]
 
-    # # Don't bookmark past the start of this sync to account for updated records during the sync.
-    new_bookmark = min(utils.strptime_to_utc(max_bk_value), current_sync_start)
-    STATE = singer.write_bookmark(STATE, 'meetings', bookmark_key, utils.strftime(new_bookmark))
-    STATE = write_current_sync_start(STATE, 'meetings', None)
+            if record[bookmark_key] >= start:
+                singer.write_record("meetings", record, catalog.get('stream_alias'), time_extracted=time_extracted)
+
+    STATE = singer.write_bookmark(STATE, 'meetings', bookmark_key, max_bk_value)
     singer.write_state(STATE)
     return STATE
 
