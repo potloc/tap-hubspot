@@ -933,26 +933,9 @@ def sync_meetings(STATE, ctx):
     LOGGER.info("sync_meetings from %s", start)
     params = {
         'limit': 100,
-        'properties': []
+        'properties': "hs_internal_meeting_notes,hs_lastmodifieddate,hs_meeting_body,hs_meeting_end_time,hs_meeting_external_url,hs_meeting_location,hs_meeting_outcome,hs_meeting_start_time,hs_meeting_title,hs_timestamp,hubspot_owner_id"
     }
 
-    v3_fields = None
-    has_selected_properties = mdata.get(('properties', 'properties'), {}).get('selected')
-    if has_selected_properties or has_selected_custom_field(mdata):
-        # On 2/12/20, hubspot added a lot of additional properties for
-        # deals, and appending all of them to requests ended up leading to
-        # 414 (url-too-long) errors. Hubspot recommended we use the
-        # `includeAllProperties` and `allpropertiesFetchMode` params
-        # instead.
-        params['includeAllProperties'] = True
-        params['allPropertiesFetchMode'] = 'latest_version'
-
-        # Grab selected `hs_date_entered/exited` fields to call the v3 endpoint with
-        v3_fields = [breadcrumb[1].replace('property_', '')
-                     for breadcrumb, mdata_map in mdata.items()
-                     if breadcrumb
-                     and (mdata_map.get('selected') == True or has_selected_properties)
-                     and any(prefix in breadcrumb[1] for prefix in V3_PREFIXES)]
 
     STATE = singer.write_bookmark(STATE, 'meetings', bookmark_key, start)
     singer.write_state(STATE)
@@ -960,7 +943,7 @@ def sync_meetings(STATE, ctx):
     url = get_url("meetings")
 
     top_level_key = "results"
-    meetings = gen_request(STATE, 'meetings', url, params, top_level_key, "hasMore", ["offset"], ["offset"], v3_fields=v3_fields)
+    meetings = gen_request(STATE, 'meetings', url, params, top_level_key, "hasMore", ["offset"], ["offset"])['result']
 
     time_extracted = utils.now()
 
