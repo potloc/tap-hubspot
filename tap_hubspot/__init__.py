@@ -321,6 +321,8 @@ def request(url, params=None):
 
 def lift_properties_and_versions(record):
     for key, value in record.get('properties', {}).items():
+        LOGGER.info(key)
+        LOGGER.info(value)
         computed_key = "property_{}".format(key)
         versions = value.get('versions')
         record[computed_key] = value
@@ -945,7 +947,7 @@ def sync_meetings(STATE, ctx):
 
     with Transformer(UNIX_MILLISECONDS_INTEGER_DATETIME_PARSING) as bumble_bee:
         for row in data:
-            record = bumble_bee.transform(lift_properties_and_versions(row), schema, mdata)
+            record = bumble_bee.transform(row, schema, mdata)
             if record[bookmark_key] >= max_bk_value:
                 max_bk_value = record[bookmark_key]
 
