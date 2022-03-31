@@ -946,7 +946,7 @@ def sync_meetings(STATE, ctx):
     while True:
         data = req['results']
         next = False
-        if req['paging']:
+        if 'paging' in req:
             next = req['paging']['next']['link']
 
         time_extracted = utils.now()
