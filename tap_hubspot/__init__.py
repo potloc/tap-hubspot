@@ -920,7 +920,6 @@ def sync_engagements(STATE, ctx):
     singer.write_state(STATE)
     return STATE
 
-# TODO CREATE Meetings sync
 def sync_meetings(STATE, ctx):
     catalog = ctx.get_catalog_from_id(singer.get_currently_syncing(STATE))
     mdata = metadata.to_map(catalog.get('metadata'))
