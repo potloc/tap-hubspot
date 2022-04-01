@@ -321,8 +321,6 @@ def request(url, params=None):
 
 def lift_properties_and_versions(record):
     for key, value in record.get('properties', {}).items():
-        LOGGER.info(key)
-        LOGGER.info(value)
         computed_key = "property_{}".format(key)
         versions = value.get('versions')
         record[computed_key] = value
