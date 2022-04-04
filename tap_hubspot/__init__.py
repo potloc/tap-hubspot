@@ -94,6 +94,8 @@ ENDPOINTS = {
     "contact_lists":        "/contacts/v1/lists",
     "forms":                "/forms/v2/forms",
     "workflows":            "/automation/v3/workflows",
+
+    "meetings":             "/crm/v3/objects/meetings",
     "owners":               "/crm/v3/owners"
 }
 
@@ -198,7 +200,7 @@ def load_schema(entity_name):
             "properties": custom_schema,
         }
 
-        if entity_name in ["deals"]:
+        if entity_name in ["deals", 'meetings']:
             v3_schema = get_v3_schema(entity_name)
             for key, value in v3_schema.items():
                 if any(prefix in key for prefix in V3_PREFIXES):
@@ -405,7 +407,7 @@ def gen_request(STATE, tap_stream_id, url, params, path, more_key, offset_keys, 
                 raise RuntimeError("Unexpected API response: {} not in {}".format(path, data.keys()))
 
             if v3_fields:
-                v3_data = get_v3_deals(v3_fields, data[path])
+                v3_data = process_v3_deals_records(data[path])
 
                 # The shape of v3_data is different than the V1 response,
                 # so we transform v3 to look like v1
@@ -916,6 +918,54 @@ def sync_engagements(STATE, ctx):
     singer.write_state(STATE)
     return STATE
 
+def sync_meetings(STATE, ctx):
+    catalog = ctx.get_catalog_from_id(singer.get_currently_syncing(STATE))
+    mdata = metadata.to_map(catalog.get('metadata'))
+    schema = load_schema("meetings")
+    bookmark_key = 'updatedAt'
+    singer.write_schema("meetings", schema, ["id"], [bookmark_key], catalog.get('stream_alias'))
+    start = get_start(STATE, "meetings", bookmark_key)
+
+    current_sync_start = get_current_sync_start(STATE, "meetings") or utils.now()
+    STATE = write_current_sync_start(STATE, "meetings", current_sync_start)
+    singer.write_state(STATE)
+
+    max_bk_value = start
+    LOGGER.info("sync_meetings from %s", start)
+    params = {
+        'limit': 100,
+        'properties': "hs_internal_meeting_notes,hs_lastmodifieddate,hs_meeting_body,hs_meeting_end_time,hs_meeting_external_url,hs_meeting_location,hs_meeting_outcome,hs_meeting_start_time,hs_meeting_title,hs_timestamp,hubspot_owner_id"
+    }
+
+    STATE = singer.write_bookmark(STATE, 'meetings', bookmark_key, start)
+    singer.write_state(STATE)
+
+    req = request(get_url("meetings"), params).json()
+
+    while True:
+        data = req['results']
+        next = False
+        if 'paging' in req:
+            next = req['paging']['next']['link']
+
+        time_extracted = utils.now()
+
+        with Transformer(UNIX_MILLISECONDS_INTEGER_DATETIME_PARSING) as bumble_bee:
+            for row in data:
+                record = bumble_bee.transform(row, schema, mdata)
+                if record[bookmark_key] >= max_bk_value:
+                    max_bk_value = record[bookmark_key]
+
+                if record[bookmark_key] >= start:
+                    singer.write_record("meetings", record, catalog.get('stream_alias'), time_extracted=time_extracted)
+        if not next:
+            break
+        req = request(next).json()
+
+    STATE = singer.write_bookmark(STATE, 'meetings', bookmark_key, max_bk_value)
+    singer.write_state(STATE)
+    return STATE
+
 def sync_deal_pipelines(STATE, ctx):
     catalog = ctx.get_catalog_from_id(singer.get_currently_syncing(STATE))
     mdata = metadata.to_map(catalog.get('metadata'))
@@ -953,7 +1003,8 @@ STREAMS = [
     Stream('companies', sync_companies, ["companyId"], 'hs_lastmodifieddate', 'FULL_TABLE'),
     Stream('deals', sync_deals, ["dealId"], 'hs_lastmodifieddate', 'FULL_TABLE'),
     Stream('deal_pipelines', sync_deal_pipelines, ['pipelineId'], None, 'FULL_TABLE'),
-    Stream('engagements', sync_engagements, ["engagement_id"], 'lastUpdated', 'FULL_TABLE')
+    Stream('engagements', sync_engagements, ["engagement_id"], 'lastUpdated', 'FULL_TABLE'),
+    Stream('meetings', sync_meetings, ["id"], 'updatedAt', 'FULL_TABLE')
 ]
 
 def get_streams_to_sync(streams, state):
