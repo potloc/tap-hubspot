@@ -4,9 +4,8 @@
 
 Built with the [Meltano Tap SDK](https://sdk.meltano.com) for Singer Taps.
 
-### Accepted Config Options
 
-# tap-hubspot
+# Setup
 
 This is a [Singer](https://singer.io) tap that produces JSON-formatted data following the [Singer spec](https://github.com/singer-io/getting-started/blob/master/SPEC.md).
 
@@ -50,11 +49,6 @@ To use an API key, include a `hapikey` configuration variable in your `config.js
 
 Copyright &copy; 2017 Stitch
 
-
-### Source Authentication and Authorization
-
-- [ ] `Developer TODO:` If your tap requires special access on the source system, or any special authentication requirements, provide those here.
-
 ## Usage
 
 You can easily run `tap-hubspot` by itself or in a pipeline using [Meltano](https://meltano.com/).
@@ -66,10 +60,6 @@ tap-hubspot --version
 tap-hubspot --help
 tap-hubspot --config CONFIG --discover > ./catalog.json
 ```
-
-## Developer Resources
-
-- [ ] `Developer TODO:` As a first step, scan the entire project for the text "`TODO:`" and complete any recommended steps, deleting the "TODO" references once completed.
 
 ### Initialize your Development Environment
 
