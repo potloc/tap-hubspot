@@ -13,6 +13,7 @@ license = "Apache 2.0"
 python = "<3.11,>=3.7.1"
 requests = "^2.25.1"
 singer-sdk = "^0.4.5"
+attrs = "^21.4.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
