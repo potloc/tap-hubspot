@@ -16,6 +16,8 @@ class OwnersStream(HubspotStream):
     path = "/crm/v3/owners"
     primary_keys = ["id"]
     replication_key = "updatedAt"
+
+    records_jsonpath = "$.results[*]"
     # Optionally, you may also use `schema_filepath` in place of `schema`:
 
 
