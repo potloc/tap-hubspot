@@ -25,7 +25,7 @@ class TapHubspot(Tap):
     config_jsonschema = th.PropertiesList(
         th.Property(
             "access_token",
-            th.ArrayType(th.StringType),
+            th.StringType,
             required=True,
             description="PRIVATE Access Token for Hubspot API (TODO: Add public option)",
         ),
