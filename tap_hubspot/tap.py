@@ -32,6 +32,7 @@ class TapHubspot(Tap):
         th.Property(
             "start_date",
             th.DateTimeType,
+            required=True,
             description="The earliest record date to sync"
         )
     ).to_dict()
