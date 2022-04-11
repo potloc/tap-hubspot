@@ -99,6 +99,9 @@ config.json
 *~
 env-vars*
 .venv/
-.secrets/
 state.json
 catalog.json
+
+
+# Secrets and internal config files
+**/.secrets/*
