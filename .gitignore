@@ -99,5 +99,6 @@ config.json
 *~
 env-vars*
 .venv/
+.secrets/
 state.json
 catalog.json
