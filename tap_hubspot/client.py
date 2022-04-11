@@ -18,7 +18,7 @@ class HubspotStream(RESTStream):
     """Hubspot stream class."""
 
     # TODO: Set the API's base URL here:
-    url_base = "https://api.mysample.com"
+    url_base = "https://api.hubapi.com"
 
     # OR use a dynamic url_base:
     # @property
