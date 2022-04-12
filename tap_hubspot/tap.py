@@ -9,13 +9,14 @@ from tap_hubspot.streams import (
     MeetingsStream,
     HubspotStream,
     OwnersStream,
-    # DealsStream,
+    DealsStream,
 )
 # TODO: Compile a list of custom stream types here
 #       OR rewrite discover_streams() below with your custom logic.
 STREAM_TYPES = [
     OwnersStream,
-    MeetingsStream
+    MeetingsStream,
+    DealsStream,
 ]
 
 
