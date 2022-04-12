@@ -14,6 +14,10 @@ from memoization import cached
 from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.streams import RESTStream
 from singer_sdk.authenticators import BearerTokenAuthenticator
+from singer_sdk.typing import (
+    PropertiesList,
+    Property,
+)
 
 from tap_hubspot.client import HubspotStream
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
@@ -59,5 +63,20 @@ class DealsStream(HubspotStream):
     replication_key = "updatedAt"
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
+
+
+    @property
+    def schema(self) -> dict:
+        """Dynamically detect the json schema for the stream.
+        This is evaluated prior to any records being retrieved.
+        """
+        properties: List[Property] = []
+
+        properties_hub = requests.get(self.url_base+f"/crm/v3/properties/{self.name}", headers=self.http_headers).json()
+        print(properties_hub)
+        return PropertiesList(*properties).to_dict()
+
+
+
 
 
