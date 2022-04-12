@@ -67,12 +67,19 @@ class DealsStream(HubspotStream):
         """Dynamically detect the json schema for the stream.
         This is evaluated prior to any records being retrieved.
         """
+        internal_properties: List[th.Property] = []
         properties: List[th.Property] = []
 
         properties_hub = requests.get(self.url_base+f"/crm/v3/properties/{self.name}", headers=self.http_headers).json()['results']
         for prop in properties_hub:
-            print(prop)
-        print(properties_hub)
+            internal_properties.append(th.Property(prop['name'], th.StringType()))
+
+        properties.append(th.Property('updatedAt', th.StringType()))
+        properties.append(th.Property('createdAt', th.StringType()))
+        properties.append(th.Property('id', th.StringType()))
+        properties.append(th.Property(
+                'properties', th.ObjectType(*internal_properties)
+            ))
         return th.PropertiesList(*properties).to_dict()
 
 
