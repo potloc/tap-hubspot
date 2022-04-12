@@ -36,6 +36,13 @@ class MeetingsStream(HubspotStream):
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
 
+class Companies(HubspotStream):
+    name = "companies"
+    path = "/crm/v3/objects/companies"
+    primary_keys = ["id"]
+    replication_key = "updatedAt"
+    records_jsonpath = "$.results[*]"
+    next_page_token_jsonpath = "$.paging.next.after"
 
 
 
