@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceRoot}/tap_hubspot/tap.py",
+            "console": "integratedTerminal",
+            "args": ["--config", ".secrets/config.json", "|", "target-jsonl"],
+            "env": { "PYTHONPATH": "${workspaceRoot}"}
+        }
+    ]
+}

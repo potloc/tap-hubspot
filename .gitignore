@@ -105,3 +105,6 @@ catalog.json
 
 # Secrets and internal config files
 **/.secrets/*
+
+# Remove target jsonl output
+*.jsonl
