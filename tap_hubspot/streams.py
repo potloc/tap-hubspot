@@ -29,15 +29,6 @@ class OwnersStream(HubspotStream):
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
 
-    def get_url_params(
-        self, context: Optional[dict], next_page_token: Optional[Any]
-    ) -> Dict[str, Any]:
-        """Return a dictionary of values to be used in URL parameterization."""
-        params: dict = {}
-        LOGGER.debug(f"DEBUG: {params}")
-        if next_page_token:
-            params["after"] = next_page_token
-        return params
 
 
 

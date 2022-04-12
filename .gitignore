@@ -108,3 +108,6 @@ catalog.json
 
 # Remove target jsonl output
 *.jsonl
+
+# Remove .meltano
+*.meltano
