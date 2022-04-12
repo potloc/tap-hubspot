@@ -21,7 +21,6 @@ SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 LOGGER = singer.get_logger()
 class OwnersStream(HubspotStream):
     """Define custom stream."""
-    _LOG_REQUEST_METRIC_URLS=True
     name = "owners"
     path = "/crm/v3/owners"
     primary_keys = ["id"]
@@ -29,7 +28,13 @@ class OwnersStream(HubspotStream):
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
 
-
+class MeetingsStream(HubspotStream):
+    name = "meetings"
+    path = "/crm/v3/objects/meetings"
+    primary_keys = ["id"]
+    replication_key = "updatedAt"
+    records_jsonpath = "$.results[*]"
+    next_page_token_jsonpath = "$.paging.next.after"
 
 
 
