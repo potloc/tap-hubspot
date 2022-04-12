@@ -36,7 +36,7 @@ class MeetingsStream(HubspotStream):
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
 
-class Companies(HubspotStream):
+class CompaniesStream(HubspotStream):
     name = "companies"
     path = "/crm/v3/objects/companies"
     primary_keys = ["id"]
@@ -44,7 +44,7 @@ class Companies(HubspotStream):
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
 
-class Deal_Pipelines(HubspotStream):
+class DealPipelineStream(HubspotStream):
     name = "deal_pipelines"
     path = "/crm/v3/pipelines/deals"
     primary_keys = ["id"]
@@ -52,11 +52,12 @@ class Deal_Pipelines(HubspotStream):
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
 
-class Deals(HubspotStream):
+class DealsStream(HubspotStream):
     name = "deals"
     path = "/crm/v3/objects/deals"
     primary_keys = ["id"]
     replication_key = "updatedAt"
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
+
 
