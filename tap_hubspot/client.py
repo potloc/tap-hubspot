@@ -76,10 +76,8 @@ class HubspotStream(RESTStream):
         """Return a dictionary of values to be used in URL parameterization."""
         params: dict = {}
         if next_page_token:
-            params["page"] = next_page_token
-        if self.replication_key:
-            params["sort"] = "asc"
-            params["order_by"] = self.replication_key
+            params["after"] = next_page_token
+
         return params
 
     def prepare_request_payload(
