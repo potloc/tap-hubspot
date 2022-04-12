@@ -48,6 +48,7 @@ class HubspotStream(RESTStream):
         headers = {}
         if "user_agent" in self.config:
             headers["User-Agent"] = self.config.get("user_agent")
+        if
         # If not using an authenticator, you may also provide inline auth headers:
         # headers["Private-Token"] = self.config.get("auth_token")
         return headers
