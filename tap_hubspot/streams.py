@@ -44,5 +44,12 @@ class Companies(HubspotStream):
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
 
+class Deal_Pipelines(HubspotStream):
+    name = "deal_pipelines"
+    path = "/crm/v3/pipelines/deals"
+    primary_keys = ["id"]
+    replication_key = "updatedAt"
+    records_jsonpath = "$.results[*]"
+    next_page_token_jsonpath = "$.paging.next.after"
 
 
