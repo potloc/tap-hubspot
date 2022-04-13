@@ -62,27 +62,27 @@ class DealsStream(HubspotStream):
     next_page_token_jsonpath = "$.paging.next.after"
 
 
-    @property
-    def schema(self) -> dict:
-        """Dynamically detect the json schema for the stream.
-        This is evaluated prior to any records being retrieved.
-        """
-        internal_properties: List[th.Property] = []
-        properties: List[th.Property] = []
+    # @property
+    # def schema(self) -> dict:
+    #     """Dynamically detect the json schema for the stream.
+    #     This is evaluated prior to any records being retrieved.
+    #     """
+    #     internal_properties: List[th.Property] = []
+    #     properties: List[th.Property] = []
 
-        properties_hub = requests.get(self.url_base+f"/crm/v3/properties/{self.name}", headers=self.http_headers).json()['results']
-        for prop in properties_hub:
-            name = prop['name']
-            type = self.get_json_schema(prop['type'])
-            internal_properties.append(th.Property(name, type))
+    #     properties_hub = requests.get(self.url_base+f"/crm/v3/properties/{self.name}", headers=self.http_headers).json()['results']
+    #     for prop in properties_hub:
+    #         name = prop['name']
+    #         type = self.get_json_schema(prop['type'])
+    #         internal_properties.append(th.Property(name, type))
 
-        properties.append(th.Property('updatedAt', th.StringType()))
-        properties.append(th.Property('createdAt', th.StringType()))
-        properties.append(th.Property('id', th.StringType()))
-        properties.append(th.Property(
-                'properties', th.ObjectType(*internal_properties)
-            ))
-        return th.PropertiesList(*properties).to_dict()
+    #     properties.append(th.Property('updatedAt', th.StringType()))
+    #     properties.append(th.Property('createdAt', th.StringType()))
+    #     properties.append(th.Property('id', th.StringType()))
+    #     properties.append(th.Property(
+    #             'properties', th.ObjectType(*internal_properties)
+    #         ))
+    #     return th.PropertiesList(*properties).to_dict()
 
 
 
