@@ -10,8 +10,6 @@ from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.streams import RESTStream
 from singer_sdk.authenticators import BearerTokenAuthenticator
 from singer_sdk import typing as th  # JSON schema typing helpers
-from tomlkit import string
-
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
@@ -104,7 +102,7 @@ class HubspotStream(RESTStream):
         # TODO: Delete this method if not needed.
         return row
 
-    def get_json_schema(self, from_type: string) -> dict:
+    def get_json_schema(self, from_type: str) -> dict:
         """Return the JSON Schema dict that describes the sql type.
 
         Args:
