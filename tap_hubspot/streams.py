@@ -28,6 +28,28 @@ class CompaniesStream(HubspotStream):
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
 
+    @property
+    def schema(self) -> dict:
+        """Dynamically detect the json schema for the stream.
+        This is evaluated prior to any records being retrieved.
+        """
+        internal_properties: List[th.Property] = []
+        properties: List[th.Property] = []
+
+        properties_hub = requests.get(self.url_base+f"/crm/v3/properties/{self.name}", headers=self.http_headers).json()['results']
+        for prop in properties_hub:
+            name = prop['name']
+            type = self.get_json_schema(prop['type'])
+            internal_properties.append(th.Property(name, type))
+
+        properties.append(th.Property('updatedAt', th.StringType()))
+        properties.append(th.Property('createdAt', th.StringType()))
+        properties.append(th.Property('id', th.StringType()))
+        properties.append(th.Property(
+                'properties', th.ObjectType(*internal_properties)
+            ))
+        return th.PropertiesList(*properties).to_dict()
+
 class ContactsStream(HubspotStream):
     name = "contacts"
     path = "/crm/v3/objects/contacts"
@@ -36,6 +58,28 @@ class ContactsStream(HubspotStream):
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
 
+    @property
+    def schema(self) -> dict:
+        """Dynamically detect the json schema for the stream.
+        This is evaluated prior to any records being retrieved.
+        """
+        internal_properties: List[th.Property] = []
+        properties: List[th.Property] = []
+
+        properties_hub = requests.get(self.url_base+f"/crm/v3/properties/{self.name}", headers=self.http_headers).json()['results']
+        for prop in properties_hub:
+            name = prop['name']
+            type = self.get_json_schema(prop['type'])
+            internal_properties.append(th.Property(name, type))
+
+        properties.append(th.Property('updatedAt', th.StringType()))
+        properties.append(th.Property('createdAt', th.StringType()))
+        properties.append(th.Property('id', th.StringType()))
+        properties.append(th.Property(
+                'properties', th.ObjectType(*internal_properties)
+            ))
+        return th.PropertiesList(*properties).to_dict()
+
 class DealsStream(HubspotStream):
     name = "deals"
     path = "/crm/v3/objects/deals"
@@ -43,6 +87,28 @@ class DealsStream(HubspotStream):
     replication_key = "updatedAt"
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
+
+    @property
+    def schema(self) -> dict:
+        """Dynamically detect the json schema for the stream.
+        This is evaluated prior to any records being retrieved.
+        """
+        internal_properties: List[th.Property] = []
+        properties: List[th.Property] = []
+
+        properties_hub = requests.get(self.url_base+f"/crm/v3/properties/{self.name}", headers=self.http_headers).json()['results']
+        for prop in properties_hub:
+            name = prop['name']
+            type = self.get_json_schema(prop['type'])
+            internal_properties.append(th.Property(name, type))
+
+        properties.append(th.Property('updatedAt', th.StringType()))
+        properties.append(th.Property('createdAt', th.StringType()))
+        properties.append(th.Property('id', th.StringType()))
+        properties.append(th.Property(
+                'properties', th.ObjectType(*internal_properties)
+            ))
+        return th.PropertiesList(*properties).to_dict()
 class DealPipelineStream(HubspotStream):
     name = "deal_pipelines"
     path = "/crm/v3/pipelines/deals"
@@ -83,8 +149,8 @@ class OwnersStream(HubspotStream):
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
 
-class WorflowsStream(HubspotStream):
-    name = "wrokflows"
+class WorkflowsStream(HubspotStream):
+    name = "workflows"
     path = "/automation/v3/workflows"
     primary_keys = ["id"]
     replication_key = "updatedAt"
