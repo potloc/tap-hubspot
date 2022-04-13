@@ -9,6 +9,8 @@ from memoization import cached
 from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.streams import RESTStream
 from singer_sdk.authenticators import BearerTokenAuthenticator
+from singer_sdk import typing as th  # JSON schema typing helpers
+from tomlkit import string
 
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
@@ -101,3 +103,43 @@ class HubspotStream(RESTStream):
         """As needed, append or transform raw data to match expected structure."""
         # TODO: Delete this method if not needed.
         return row
+
+    def get_json_schema(self, from_type: string) -> dict:
+        """Return the JSON Schema dict that describes the sql type.
+
+        Args:
+            from_type: The SQL type as a string or as a TypeEngine. If a TypeEngine is
+                provided, it may be provided as a class or a specific object instance.
+
+        Raises:
+            ValueError: If the `from_type` value is not of type `str` or `TypeEngine`.
+
+        Returns:
+            A compatible JSON Schema type definition.
+        """
+        sqltype_lookup: Dict[str, dict] = {
+            # NOTE: This is an ordered mapping, with earlier mappings taking precedence.
+            #       If the SQL-provided type contains the type name on the left, the mapping
+            #       will return the respective singer type.
+            "timestamp": th.DateTimeType(),
+            "datetime": th.DateTimeType(),
+            "date": th.DateType(),
+            "int": th.IntegerType(),
+            "number": th.NumberType(),
+            "decimal": th.NumberType(),
+            "double": th.NumberType(),
+            "float": th.NumberType(),
+            "string": th.StringType(),
+            "text": th.StringType(),
+            "char": th.StringType(),
+            "bool": th.BooleanType(),
+            "variant": th.StringType(),
+        }
+        if isinstance(from_type, str):
+            type_name = from_type
+        else:
+            raise ValueError("Expected `str` or a SQLAlchemy `TypeEngine` object or type.")
+        for sqltype, jsonschema_type in sqltype_lookup.items():
+            if sqltype.lower() in type_name.lower():
+                return jsonschema_type
+        return sqltype_lookup["string"]  # safe failover to str
