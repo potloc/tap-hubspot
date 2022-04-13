@@ -20,23 +20,6 @@ from tap_hubspot.client import HubspotStream
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
 LOGGER = singer.get_logger()
-class OwnersStream(HubspotStream):
-    """Define custom stream."""
-    name = "owners"
-    path = "/crm/v3/owners"
-    primary_keys = ["id"]
-    replication_key = "updatedAt"
-    records_jsonpath = "$.results[*]"
-    next_page_token_jsonpath = "$.paging.next.after"
-
-class MeetingsStream(HubspotStream):
-    name = "meetings"
-    path = "/crm/v3/objects/meetings"
-    primary_keys = ["id"]
-    replication_key = "updatedAt"
-    records_jsonpath = "$.results[*]"
-    next_page_token_jsonpath = "$.paging.next.after"
-
 class CompaniesStream(HubspotStream):
     name = "companies"
     path = "/crm/v3/objects/companies"
@@ -45,9 +28,9 @@ class CompaniesStream(HubspotStream):
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
 
-class DealPipelineStream(HubspotStream):
-    name = "deal_pipelines"
-    path = "/crm/v3/pipelines/deals"
+class ContactsStream(HubspotStream):
+    name = "contacts"
+    path = "/crm/v3/objects/contacts"
     primary_keys = ["id"]
     replication_key = "updatedAt"
     records_jsonpath = "$.results[*]"
@@ -60,6 +43,59 @@ class DealsStream(HubspotStream):
     replication_key = "updatedAt"
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
+class DealPipelineStream(HubspotStream):
+    name = "deal_pipelines"
+    path = "/crm/v3/pipelines/deals"
+    primary_keys = ["id"]
+    replication_key = "updatedAt"
+    records_jsonpath = "$.results[*]"
+    next_page_token_jsonpath = "$.paging.next.after"
+
+class EngagementsStream(HubspotStream):
+    name = "engagements"
+    path = "/engagements/v1/engagements/paged"
+    primary_keys = ["id"]
+    replication_key = "lastUpdated"
+    records_jsonpath = "$.results[*]"
+    next_page_token_jsonpath = "$.paging.next.after"
+
+class FormsStream(HubspotStream):
+    name = "forms"
+    path = "/forms/v2/forms"
+    primary_keys = ["id"]
+    replication_key = "updatedAt"
+    records_jsonpath = "$.results[*]"
+    next_page_token_jsonpath = "$.paging.next.after"
+
+class MeetingsStream(HubspotStream):
+    name = "meetings"
+    path = "/crm/v3/objects/meetings"
+    primary_keys = ["id"]
+    replication_key = "updatedAt"
+    records_jsonpath = "$.results[*]"
+    next_page_token_jsonpath = "$.paging.next.after"
+class OwnersStream(HubspotStream):
+    """Define custom stream."""
+    name = "owners"
+    path = "/crm/v3/owners"
+    primary_keys = ["id"]
+    replication_key = "updatedAt"
+    records_jsonpath = "$.results[*]"
+    next_page_token_jsonpath = "$.paging.next.after"
+
+class WorflowsStream(HubspotStream):
+    name = "wrokflows"
+    path = "/automation/v3/workflows"
+    primary_keys = ["id"]
+    replication_key = "updatedAt"
+    records_jsonpath = "$.workflows[*]"
+
+
+
+
+
+
+
 
 
     # @property
