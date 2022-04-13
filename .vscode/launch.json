@@ -10,7 +10,7 @@
             "args": [
                 "--config",
                 ".secrets/config.json",
-                //  "|", "target-jsonl"
+                 "|", "target-jsonl"
                 ],
             "env": { "PYTHONPATH": "${workspaceRoot}"}
         }

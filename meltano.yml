@@ -1,6 +1,6 @@
 version: 1
-send_anonymous_usage_stats: true
-project_id: tap-hubspot
+send_anonymous_usage_stats: false
+project_id: 40eb93e3-36f8-492b-bb71-deec50c35380
 plugins:
   extractors:
   - name: tap-hubspot
@@ -10,15 +10,13 @@ plugins:
     - state
     - catalog
     - discover
-    config:
-      start_date: '2010-01-01T00:00:00Z'
     settings:
-    # TODO: To configure using Meltano, declare settings and their types here:
-    - name: username
-    - name: password
+    - name: access_token
       kind: password
     - name: start_date
       value: '2010-01-01T00:00:00Z'
+    config:
+      start_date: '2010-01-01T00:00:00Z'
   loaders:
   - name: target-jsonl
     variant: andyh1203

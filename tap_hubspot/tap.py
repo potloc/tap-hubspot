@@ -26,8 +26,8 @@ STREAM_TYPES = [
     # EngagementsStream,
     # FormsStream,
     DealsStream,
-    # MeetingsStream,
-    # OwnersStream,
+    MeetingsStream,
+    OwnersStream,
     # WorkflowsStream
 ]
 
