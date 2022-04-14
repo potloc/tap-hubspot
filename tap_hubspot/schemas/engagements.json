@@ -1,11 +1,11 @@
 {
   "type": "object",
   "properties": {
-    "engagement_id": {
+    "id": {
       "type": "integer"
     },
     "lastUpdated": {
-      "type": ["null", "string"],
+      "type": ["null", "integer"],
       "format": "date-time"
     },
     "engagement": {
@@ -21,11 +21,11 @@
           "type": "boolean"
         },
         "createdAt": {
-          "type": ["null", "string"],
+          "type": ["null", "integer"],
           "format": "date-time"
         },
         "lastUpdated": {
-          "type": ["null", "string"],
+          "type": ["null", "integer"],
           "format": "date-time"
         },
         "ownerId": {
@@ -35,7 +35,7 @@
           "type": "string"
         },
         "timestamp": {
-          "type": ["null", "string"],
+          "type": ["null", "integer"],
           "format": "date-time"
         }
       }

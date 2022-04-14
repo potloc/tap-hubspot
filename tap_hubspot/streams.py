@@ -1,5 +1,5 @@
 """Stream type classes for tap-hubspot."""
-from black import Report
+# from black import Report
 import requests
 import singer
 import json
