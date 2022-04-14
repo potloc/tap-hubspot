@@ -1,6 +1,8 @@
 """Stream type classes for tap-hubspot."""
+from black import Report
 import requests
 import singer
+import json
 
 from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable
@@ -122,8 +124,27 @@ class EngagementsStream(HubspotStream):
     path = "/engagements/v1/engagements/paged"
     primary_keys = ["id"]
     replication_key = "lastUpdated"
-    records_jsonpath = "$.results[*]"
-    next_page_token_jsonpath = "$.paging.next.after"
+    records_jsonpath = "$.results.[*]"
+    next_page_token_jsonpath = "$.offset"
+
+    def parse_response(self, response: requests.Response) -> Iterable[dict]:
+        """Parse the response and return an iterator of result rows."""
+        response.raise_for_status()
+        input = response.json()
+
+        for elem in input["results"]:
+            elem["id"] = elem["engagement"]["id"]
+            elem["lastUpdated"] = elem["engagement"]["lastUpdated"]
+        yield from extract_jsonpath(self.records_jsonpath, input=input)
+
+    # def get_url_params(
+    #     self, context: Optional[dict], next_page_token: Optional[Any]
+    # ) -> Dict[str, Any]:
+    #     """Return a dictionary of values to be used in URL parameterization."""
+    #     params: dict = {}
+    #     if next_page_token:
+    #         params["offset"] = next_page_token
+
 
 class FormsStream(HubspotStream):
     name = "forms"
