@@ -17,18 +17,17 @@ from tap_hubspot.streams import (
     OwnersStream,
     WorkflowsStream
 )
-# TODO: Compile a list of custom stream types here
-#       OR rewrite discover_streams() below with your custom logic.
+
 STREAM_TYPES = [
-    # CompaniesStream,
-    # ContactsStream,
+    CompaniesStream,
+    ContactsStream,
     DealPipelineStream,
-    # EngagementsStream,
-    # FormsStream,
+    EngagementsStream,
+    FormsStream,
     DealsStream,
     MeetingsStream,
     OwnersStream,
-    # WorkflowsStream
+    WorkflowsStream
 ]
 
 
