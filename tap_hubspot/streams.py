@@ -127,6 +127,16 @@ class EngagementsStream(HubspotStream):
     records_jsonpath = "$.results.[*]"
     next_page_token_jsonpath = "$.offset"
 
+    def get_url_params(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Dict[str, Any]:
+        """Return a dictionary of values to be used in URL parameterization."""
+        params = super().get_url_params(context, next_page_token)
+        if next_page_token:
+            params["offset"] = next_page_token
+
+        return params
+
     def parse_response(self, response: requests.Response) -> Iterable[dict]:
         """Parse the response and return an iterator of result rows."""
         response.raise_for_status()
@@ -137,13 +147,7 @@ class EngagementsStream(HubspotStream):
             elem["lastUpdated"] = elem["engagement"]["lastUpdated"]
         yield from extract_jsonpath(self.records_jsonpath, input=input)
 
-    # def get_url_params(
-    #     self, context: Optional[dict], next_page_token: Optional[Any]
-    # ) -> Dict[str, Any]:
-    #     """Return a dictionary of values to be used in URL parameterization."""
-    #     params: dict = {}
-    #     if next_page_token:
-    #         params["offset"] = next_page_token
+
 
 
 class FormsStream(HubspotStream):
