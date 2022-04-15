@@ -17,7 +17,7 @@ from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.streams import RESTStream
 from singer_sdk.authenticators import BearerTokenAuthenticator
 from singer_sdk import typing as th  # JSON schema typing helpers
-from tap_hubspot.client import HubspotStream
+from tap_hubspot.client import PROPERTIES_DIR, HubspotStream
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
@@ -29,6 +29,7 @@ class CompaniesStream(HubspotStream):
     replication_key = "updatedAt"
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
+    extra_params = []
 
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
@@ -36,6 +37,7 @@ class CompaniesStream(HubspotStream):
         """Return a dictionary of values to be used in URL parameterization."""
         params = super().get_url_params(context, next_page_token)
         params['limit'] = 100
+        params["properties"] = ['createdate', 'domain', 'hs_lastmodified', 'hs_object_id', 'name']
 
         return params
     @property
@@ -47,9 +49,13 @@ class CompaniesStream(HubspotStream):
         properties: List[th.Property] = []
         fuck_this = ['hs_object_id']
 
-        properties_hub = requests.get(self.url_base+f"/crm/v3/properties/{self.name}", headers=self.http_headers).json()['results']
+        properties_file_path = PROPERTIES_DIR / f"{self.name}.json"
+        f = properties_file_path.open()
+        properties_hub = json.load(f)['results']
+
         for prop in properties_hub:
             name = prop['name']
+            self.extra_params.append(name)
             type = self.get_json_schema(prop['type'])
             if name in fuck_this:
                 internal_properties.append(th.Property(name, th.StringType()))
