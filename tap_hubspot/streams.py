@@ -45,12 +45,16 @@ class CompaniesStream(HubspotStream):
         """
         internal_properties: List[th.Property] = []
         properties: List[th.Property] = []
+        fuck_this = ['hs_object_id']
 
         properties_hub = requests.get(self.url_base+f"/crm/v3/properties/{self.name}", headers=self.http_headers).json()['results']
         for prop in properties_hub:
             name = prop['name']
             type = self.get_json_schema(prop['type'])
-            internal_properties.append(th.Property(name, type))
+            if name in fuck_this:
+                internal_properties.append(th.Property(name, th.StringType()))
+            else:
+                internal_properties.append(th.Property(name, type))
 
         properties.append(th.Property('updatedAt', th.StringType()))
         properties.append(th.Property('createdAt', th.StringType()))
