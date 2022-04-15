@@ -2,14 +2,14 @@
   "type": "object",
   "properties":{
       "id": {
-          "type": ["null","string"]
+          "type": ["null","integer"]
       },
       "createdAt": {
-          "type": ["null", "string"],
+          "type": ["null", "integer"],
           "format": "date-time"
       },
       "updatedAt": {
-          "type": ["null", "string"],
+          "type": ["null", "integer"],
           "format": "date-time"
       },
       "archived": {
