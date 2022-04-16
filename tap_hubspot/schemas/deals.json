@@ -10,6 +10,9 @@
     "isDeleted": {
       "type": ["null", "boolean"]
     },
+    "updatedAt": {
+      "type": ["null", "string"]
+    },
     "associations": {
       "type": ["null", "object"],
       "properties": {
