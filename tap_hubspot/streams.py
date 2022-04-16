@@ -31,12 +31,34 @@ class CompaniesStream(HubspotStream):
     next_page_token_jsonpath = "$.paging.next.after"
     extra_params = []
 
+class ContactsStream(HubspotStream):
+    name = "contacts"
+    path = "/crm/v3/objects/contacts"
+    primary_keys = ["id"]
+    replication_key = "updatedAt"
+    records_jsonpath = "$.results[*]"
+    next_page_token_jsonpath = "$.paging.next.after"
+    extra_params = []
+
+class DealsStream(HubspotStream):
+    _LOG_REQUEST_METRIC_URLS = True
+    name = "deals"
+    path = "/crm/v3/objects/deals"
+    primary_keys = ["id"]
+    replication_key = "updatedAt"
+    records_jsonpath = "$.results[*]"
+    next_page_token_jsonpath = "$.paging.next.after"
+    extra_params = []
+
+
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
     ) -> Dict[str, Any]:
         """Return a dictionary of values to be used in URL parameterization."""
         params = super().get_url_params(context, next_page_token)
-        params['limit'] = 100
+        # params['allPropertiesFetchMode'] = 'latest_version'
+        # params['includeAllProperties'] = True
+        params['properties'] = ','.join(self.extra_params)
 
         return params
     @property
@@ -54,7 +76,8 @@ class CompaniesStream(HubspotStream):
 
         for prop in properties_hub:
             name = prop['name']
-            self.extra_params.append(name)
+            if 'hs_' in name:
+                self.extra_params.append(name)
             type = self.get_json_schema(prop['type'])
             if name in fuck_this:
                 internal_properties.append(th.Property(name, th.StringType()))
@@ -69,82 +92,6 @@ class CompaniesStream(HubspotStream):
             ))
         return th.PropertiesList(*properties).to_dict()
 
-class ContactsStream(HubspotStream):
-    name = "contacts"
-    path = "/crm/v3/objects/contacts"
-    primary_keys = ["id"]
-    replication_key = "updatedAt"
-    records_jsonpath = "$.results[*]"
-    next_page_token_jsonpath = "$.paging.next.after"
-    extra_params = []
-
-    def get_url_params(
-        self, context: Optional[dict], next_page_token: Optional[Any]
-    ) -> Dict[str, Any]:
-        """Return a dictionary of values to be used in URL parameterization."""
-        params = super().get_url_params(context, next_page_token)
-        params['limit'] = 100
-
-        return params
-    @property
-    def schema(self) -> dict:
-        """Dynamically detect the json schema for the stream.
-        This is evaluated prior to any records being retrieved.
-        """
-        internal_properties: List[th.Property] = []
-        properties: List[th.Property] = []
-        fuck_this = []
-
-        properties_file_path = PROPERTIES_DIR / f"{self.name}.json"
-        f = properties_file_path.open()
-        properties_hub = json.load(f)['results']
-
-        for prop in properties_hub:
-            name = prop['name']
-            self.extra_params.append(name)
-            type = self.get_json_schema(prop['type'])
-            if name in fuck_this:
-                internal_properties.append(th.Property(name, th.StringType()))
-            else:
-                internal_properties.append(th.Property(name, type))
-
-        properties.append(th.Property('updatedAt', th.StringType()))
-        properties.append(th.Property('createdAt', th.StringType()))
-        properties.append(th.Property('id', th.StringType()))
-        properties.append(th.Property(
-                'properties', th.ObjectType(*internal_properties)
-            ))
-        return th.PropertiesList(*properties).to_dict()
-
-class DealsStream(HubspotStream):
-    name = "deals"
-    path = "/crm/v3/objects/deals"
-    primary_keys = ["id"]
-    replication_key = "updatedAt"
-    records_jsonpath = "$.results[*]"
-    next_page_token_jsonpath = "$.paging.next.after"
-
-    @property
-    def schema(self) -> dict:
-        """Dynamically detect the json schema for the stream.
-        This is evaluated prior to any records being retrieved.
-        """
-        internal_properties: List[th.Property] = []
-        properties: List[th.Property] = []
-
-        properties_hub = requests.get(self.url_base+f"/crm/v3/properties/{self.name}", headers=self.http_headers).json()['results']
-        for prop in properties_hub:
-            name = prop['name']
-            type = self.get_json_schema(prop['type'])
-            internal_properties.append(th.Property(name, type))
-
-        properties.append(th.Property('updatedAt', th.StringType()))
-        properties.append(th.Property('createdAt', th.StringType()))
-        properties.append(th.Property('id', th.StringType()))
-        properties.append(th.Property(
-                'properties', th.ObjectType(*internal_properties)
-            ))
-        return th.PropertiesList(*properties).to_dict()
 class DealPipelineStream(HubspotStream):
     name = "deal_pipelines"
     path = "/crm/v3/pipelines/deals"
@@ -152,6 +99,8 @@ class DealPipelineStream(HubspotStream):
     replication_key = "updatedAt"
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
+
+
 
 class EngagementsStream(HubspotStream):
     name = "engagements"
