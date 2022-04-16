@@ -81,7 +81,7 @@ class HubspotStream(RESTStream):
         params: dict = {}
         if next_page_token:
             params["after"] = next_page_token
-
+        params['limit'] = 100
         return params
 
     def prepare_request_payload(
