@@ -40,6 +40,8 @@ class ContactsStream(HubspotStream):
     next_page_token_jsonpath = "$.paging.next.after"
     extra_params = []
 
+
+
 class DealsStream(HubspotStream):
     _LOG_REQUEST_METRIC_URLS = True
     name = "deals"
