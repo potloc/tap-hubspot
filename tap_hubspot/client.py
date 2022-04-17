@@ -164,10 +164,11 @@ class HubspotStream(RESTStream):
             if 'hs_' in name:
                 extra_params.append(name)
             type = self.get_json_schema(prop['type'])
-            if name in poorly_cast:
-                internal_properties.append(th.Property(name, th.StringType()))
-            else:
-                internal_properties.append(th.Property(name, type))
+            internal_properties.append(th.Property(name, th.StringType()))
+            # if name in poorly_cast:
+            #     internal_properties.append(th.Property(name, th.StringType()))
+            # else:
+            #     internal_properties.append(th.Property(name, type))
 
         properties.append(th.Property('updatedAt', th.StringType()))
         properties.append(th.Property('createdAt', th.StringType()))
