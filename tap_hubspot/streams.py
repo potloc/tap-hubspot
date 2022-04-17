@@ -24,7 +24,7 @@ SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 LOGGER = singer.get_logger()
 
 
-class Calls(HubspotStream):
+class CallsStream(HubspotStream):
     name = "calls"
     path = f"/crm/v3/objects/{name}/search"
     primary_keys = ["id"]
@@ -140,6 +140,7 @@ class DealPipelineStream(HubspotStream):
     replication_key = "updatedAt"
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
+    schema_filepath = SCHEMAS_DIR / f"{name}.json"
 
 
 # TODO Remove engagements once acceptable
@@ -150,6 +151,7 @@ class EngagementsStream(HubspotStream):
     replication_key = "lastUpdated"
     records_jsonpath = "$.results.[*]"
     next_page_token_jsonpath = "$.offset"
+    schema_filepath = SCHEMAS_DIR / f"{name}.json"
 
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
@@ -268,8 +270,9 @@ class OwnersStream(HubspotStream):
     replication_key = "updatedAt"
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
+    schema_filepath = SCHEMAS_DIR / f"{name}.json"
 
-class Tasks(HubspotStream):
+class TasksStream(HubspotStream):
     name = "tasks"
     path = f"/crm/v3/objects/{name}/search"
     primary_keys = ["id"]
@@ -302,6 +305,7 @@ class WorkflowsStream(HubspotStream):
     primary_keys = ["id"]
     replication_key = "updatedAt"
     records_jsonpath = "$.workflows[*]"
+    schema_filepath = SCHEMAS_DIR / f"{name}.json"
 
 
 
