@@ -32,9 +32,9 @@ class HubspotStream(RESTStream):
     next_page_token_jsonpath = "$.next_page"  # Or override `get_next_page_token`.
 
 
-    @property
-    def schema_filepath(self) -> Path:
-        return SCHEMAS_DIR / f"{self.name}.json"
+    # @property
+    # def schema_filepath(self) -> Path:
+    #     return SCHEMAS_DIR / f"{self.name}.json"
 
 
     @property
