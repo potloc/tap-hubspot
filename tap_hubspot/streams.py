@@ -22,28 +22,91 @@ from tap_hubspot.client import PROPERTIES_DIR, HubspotStream
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
 LOGGER = singer.get_logger()
-class CompaniesStream(HubspotStream):
-    name = "companies"
-    path = "/crm/v3/objects/companies"
+
+
+class Calls(HubspotStream):
+    name = "calls"
+    path = f"/crm/v3/objects/{name}/search"
     primary_keys = ["id"]
     replication_key = "updatedAt"
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
+    rest_method = "POST"
     extra_params = []
+
+    @property
+    def schema(self) -> dict:
+        """Return the schema for this stream."""
+        schema, self.extra_params = self.get_custom_schema(poorly_cast=[])
+        return schema
+
+    def prepare_request_payload(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Optional[dict]:
+        """Prepare the data payload for the REST API request.
+        """
+        return {
+            "properties": self.extra_params,
+            "limit": 100,
+            "after": next_page_token,
+        }
+class CompaniesStream(HubspotStream):
+    name = "companies"
+    path = f"/crm/v3/objects/{name}/search"
+    primary_keys = ["id"]
+    replication_key = "updatedAt"
+    records_jsonpath = "$.results[*]"
+    next_page_token_jsonpath = "$.paging.next.after"
+    rest_method = "POST"
+    extra_params = []
+
+    @property
+    def schema(self) -> dict:
+        """Return the schema for this stream."""
+        schema, self.extra_params = self.get_custom_schema(poorly_cast=[])
+        return schema
+
+    def prepare_request_payload(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Optional[dict]:
+        """Prepare the data payload for the REST API request.
+        """
+        return {
+            "properties": self.extra_params,
+            "limit": 100,
+            "after": next_page_token,
+        }
 
 class ContactsStream(HubspotStream):
     name = "contacts"
-    path = "/crm/v3/objects/contacts"
+    path = f"/crm/v3/objects/{name}/search"
     primary_keys = ["id"]
     replication_key = "updatedAt"
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
+    rest_method = "POST"
     extra_params = []
+
+    @property
+    def schema(self) -> dict:
+        """Return the schema for this stream."""
+        schema, self.extra_params = self.get_custom_schema(poorly_cast=[])
+        return schema
+
+    def prepare_request_payload(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Optional[dict]:
+        """Prepare the data payload for the REST API request.
+        """
+        return {
+            "properties": self.extra_params,
+            "limit": 100,
+            "after": next_page_token,
+        }
 
 
 
 class DealsStream(HubspotStream):
-    _LOG_REQUEST_METRIC_URLS = True
     name = "deals"
     path = f"/crm/v3/objects/{name}/search"
     primary_keys = ["id"]
@@ -79,7 +142,7 @@ class DealPipelineStream(HubspotStream):
     next_page_token_jsonpath = "$.paging.next.after"
 
 
-
+# TODO Remove engagements once acceptable
 class EngagementsStream(HubspotStream):
     name = "engagements"
     path = "/engagements/v1/engagements/paged"
@@ -109,23 +172,94 @@ class EngagementsStream(HubspotStream):
         yield from extract_jsonpath(self.records_jsonpath, input=input)
 
 
-
-
-class FormsStream(HubspotStream):
-    name = "forms"
-    path = "/forms/v2/forms"
+class EmailsStream(HubspotStream):
+    name = "emails"
+    path = f"/crm/v3/objects/{name}/search"
     primary_keys = ["id"]
     replication_key = "updatedAt"
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
+    rest_method = "POST"
+    extra_params = []
+
+    @property
+    def schema(self) -> dict:
+        """Return the schema for this stream."""
+        schema, self.extra_params = self.get_custom_schema(poorly_cast=[])
+        return schema
+
+    def prepare_request_payload(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Optional[dict]:
+        """Prepare the data payload for the REST API request.
+        """
+        return {
+            "properties": self.extra_params,
+            "limit": 100,
+            "after": next_page_token,
+        }
+
+# class FormsStream(HubspotStream):
+#     name = "forms"
+#     path = "/forms/v2/forms"
+#     primary_keys = ["id"]
+#     replication_key = "updatedAt"
+#     records_jsonpath = "$.results[*]"
+#     next_page_token_jsonpath = "$.paging.next.after"
 
 class MeetingsStream(HubspotStream):
     name = "meetings"
-    path = "/crm/v3/objects/meetings"
+    path = f"/crm/v3/objects/{name}/search"
     primary_keys = ["id"]
     replication_key = "updatedAt"
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
+    rest_method = "POST"
+    extra_params = []
+
+    @property
+    def schema(self) -> dict:
+        """Return the schema for this stream."""
+        schema, self.extra_params = self.get_custom_schema(poorly_cast=[])
+        return schema
+
+    def prepare_request_payload(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Optional[dict]:
+        """Prepare the data payload for the REST API request.
+        """
+        return {
+            "properties": self.extra_params,
+            "limit": 100,
+            "after": next_page_token,
+        }
+
+class NotesStream(HubspotStream):
+    name = "notes"
+    path = f"/crm/v3/objects/{name}/search"
+    primary_keys = ["id"]
+    replication_key = "updatedAt"
+    records_jsonpath = "$.results[*]"
+    next_page_token_jsonpath = "$.paging.next.after"
+    rest_method = "POST"
+    extra_params = []
+
+    @property
+    def schema(self) -> dict:
+        """Return the schema for this stream."""
+        schema, self.extra_params = self.get_custom_schema(poorly_cast=[])
+        return schema
+
+    def prepare_request_payload(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Optional[dict]:
+        """Prepare the data payload for the REST API request.
+        """
+        return {
+            "properties": self.extra_params,
+            "limit": 100,
+            "after": next_page_token,
+        }
 class OwnersStream(HubspotStream):
     """Define custom stream."""
     name = "owners"
@@ -134,6 +268,33 @@ class OwnersStream(HubspotStream):
     replication_key = "updatedAt"
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
+
+class Tasks(HubspotStream):
+    name = "tasks"
+    path = f"/crm/v3/objects/{name}/search"
+    primary_keys = ["id"]
+    replication_key = "updatedAt"
+    records_jsonpath = "$.results[*]"
+    next_page_token_jsonpath = "$.paging.next.after"
+    rest_method = "POST"
+    extra_params = []
+
+    @property
+    def schema(self) -> dict:
+        """Return the schema for this stream."""
+        schema, self.extra_params = self.get_custom_schema(poorly_cast=[])
+        return schema
+
+    def prepare_request_payload(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Optional[dict]:
+        """Prepare the data payload for the REST API request.
+        """
+        return {
+            "properties": self.extra_params,
+            "limit": 100,
+            "after": next_page_token,
+        }
 
 class WorkflowsStream(HubspotStream):
     name = "workflows"
