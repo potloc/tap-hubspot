@@ -1,6 +1,7 @@
 """REST client handling, including HubspotStream base class."""
 
 import requests
+import json
 from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable
 
@@ -143,3 +144,35 @@ class HubspotStream(RESTStream):
             if sqltype.lower() in type_name.lower():
                 return jsonschema_type
         return sqltype_lookup["string"]  # safe failover to str
+
+    def get_custom_schema(self, poorly_cast: list[str] = []):
+        """Dynamically detect the json schema for the stream.
+        This is evaluated prior to any records being retrieved.
+
+        Returns: Parameters to be included in query + schema property list
+        """
+        internal_properties: List[th.Property] = []
+        properties: List[th.Property] = []
+        extra_params = []
+
+        properties_file_path = PROPERTIES_DIR / f"{self.name}.json"
+        f = properties_file_path.open()
+        properties_hub = json.load(f)['results']
+
+        for prop in properties_hub:
+            name = prop['name']
+            if 'hs_' in name:
+                extra_params.append(name)
+            type = self.get_json_schema(prop['type'])
+            if name in poorly_cast:
+                internal_properties.append(th.Property(name, th.StringType()))
+            else:
+                internal_properties.append(th.Property(name, type))
+
+        properties.append(th.Property('updatedAt', th.StringType()))
+        properties.append(th.Property('createdAt', th.StringType()))
+        properties.append(th.Property('id', th.StringType()))
+        properties.append(th.Property(
+                'properties', th.ObjectType(*internal_properties)
+            ))
+        return th.PropertiesList(*properties).to_dict(), extra_params

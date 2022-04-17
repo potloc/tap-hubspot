@@ -43,54 +43,28 @@ class ContactsStream(HubspotStream):
 class DealsStream(HubspotStream):
     _LOG_REQUEST_METRIC_URLS = True
     name = "deals"
-    path = "/crm/v3/objects/deals"
+    path = f"/crm/v3/objects/{name}/search"
     primary_keys = ["id"]
     replication_key = "updatedAt"
     records_jsonpath = "$.results[*]"
     next_page_token_jsonpath = "$.paging.next.after"
+    rest_method = "POST"
     extra_params = []
 
-
-    def get_url_params(
-        self, context: Optional[dict], next_page_token: Optional[Any]
-    ) -> Dict[str, Any]:
-        """Return a dictionary of values to be used in URL parameterization."""
-        params = super().get_url_params(context, next_page_token)
-        # params['allPropertiesFetchMode'] = 'latest_version'
-        # params['includeAllProperties'] = True
-        params['properties'] = ','.join(self.extra_params)
-
-        return params
     @property
     def schema(self) -> dict:
-        """Dynamically detect the json schema for the stream.
-        This is evaluated prior to any records being retrieved.
+        """Return the schema for this stream."""
+        schema, self.extra_params = self.get_custom_schema(poorly_cast=['amount','hs_object_id'])
+        return schema
+
+    def prepare_request_payload(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Optional[dict]:
+        """Prepare the data payload for the REST API request.
         """
-        internal_properties: List[th.Property] = []
-        properties: List[th.Property] = []
-        fuck_this = ['hs_object_id']
-
-        properties_file_path = PROPERTIES_DIR / f"{self.name}.json"
-        f = properties_file_path.open()
-        properties_hub = json.load(f)['results']
-
-        for prop in properties_hub:
-            name = prop['name']
-            if 'hs_' in name:
-                self.extra_params.append(name)
-            type = self.get_json_schema(prop['type'])
-            if name in fuck_this:
-                internal_properties.append(th.Property(name, th.StringType()))
-            else:
-                internal_properties.append(th.Property(name, type))
-
-        properties.append(th.Property('updatedAt', th.StringType()))
-        properties.append(th.Property('createdAt', th.StringType()))
-        properties.append(th.Property('id', th.StringType()))
-        properties.append(th.Property(
-                'properties', th.ObjectType(*internal_properties)
-            ))
-        return th.PropertiesList(*properties).to_dict()
+        return {
+            "properties": self.extra_params
+        }
 
 class DealPipelineStream(HubspotStream):
     name = "deal_pipelines"
