@@ -54,7 +54,7 @@ class DealsStream(HubspotStream):
     @property
     def schema(self) -> dict:
         """Return the schema for this stream."""
-        schema, self.extra_params = self.get_custom_schema(poorly_cast=['amount','hs_object_id'])
+        schema, self.extra_params = self.get_custom_schema(poorly_cast=[])
         return schema
 
     def prepare_request_payload(
@@ -63,7 +63,9 @@ class DealsStream(HubspotStream):
         """Prepare the data payload for the REST API request.
         """
         return {
-            "properties": self.extra_params
+            "properties": self.extra_params,
+            "limit": 100,
+            "after": next_page_token,
         }
 
 class DealPipelineStream(HubspotStream):
