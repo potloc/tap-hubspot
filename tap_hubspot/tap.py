@@ -24,18 +24,18 @@ from tap_hubspot.streams import (
 
 STREAM_TYPES = [
     CallsStream,
-    CompaniesStream,
-    ContactsStream,
-    DealsStream,
-    DealPipelineStream,
-    EmailsStream,
-    EngagementsStream,
+    # CompaniesStream,
+    # ContactsStream,
+    # DealsStream,
+    # DealPipelineStream,
+    # EmailsStream,
+    # EngagementsStream,
     # FormsStream,
-    MeetingsStream,
-    NotesStream,
-    OwnersStream,
-    TasksStream,
-    WorkflowsStream
+    # MeetingsStream,
+    # NotesStream,
+    # OwnersStream,
+    # TasksStream,
+    # WorkflowsStream
 ]
 
 

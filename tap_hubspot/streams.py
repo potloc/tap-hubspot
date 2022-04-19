@@ -4,6 +4,9 @@ import requests
 import singer
 import json
 
+from dateutil import parser
+import datetime
+
 from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable
 
@@ -25,6 +28,7 @@ LOGGER = singer.get_logger()
 
 
 class CallsStream(HubspotStream):
+    # _LOG_REQUEST_METRICS_URL=True
     name = "calls"
     path = f"/crm/v3/objects/{name}/search"
     primary_keys = ["id"]
@@ -33,6 +37,8 @@ class CallsStream(HubspotStream):
     next_page_token_jsonpath = "$.paging.next.after"
     rest_method = "POST"
     extra_params = []
+    filter = {}
+
 
     @property
     def schema(self) -> dict:
@@ -40,16 +46,48 @@ class CallsStream(HubspotStream):
         schema, self.extra_params = self.get_custom_schema(poorly_cast=[])
         return schema
 
+    def parse_response(self, response: requests.Response) -> Iterable[dict]:
+        """Parse the response and return an iterator of result rows."""
+        self.filter = self.custom_hubspot_filter_request(response)
+        yield from extract_jsonpath(self.records_jsonpath, input=response.json())
+
+    def custom_hubspot_filter_request(self, response: requests.Response) -> dict:
+        if response.json()['results']:
+            org_date = response.json()['results'][0]['properties']['hs_lastmodifieddate']
+            value = parser.parse(org_date)
+            highvalue = value + datetime.timedelta(days=30)
+
+            filter = {
+                "propertyName": "hs_lastmodifieddate",
+                "operator": "BETWEEN",
+                "value": str(int(value.timestamp())*1000),
+                "highValue": str(int(highvalue.timestamp())*1000)
+            }
+
+            return filter
+
     def prepare_request_payload(
         self, context: Optional[dict], next_page_token: Optional[Any]
     ) -> Optional[dict]:
         """Prepare the data payload for the REST API request.
         """
-        return {
+        ret = {
             "properties": self.extra_params,
             "limit": 100,
             "after": next_page_token,
+            "sorts": [
+                {
+                    "propertyName": "hs_lastmodifieddate",
+                    "direction": "ASCENDING"
+                }
+            ]
         }
+        if self.filter:
+            ret["filterGroups"] =[{
+                "filters": [self.filter]
+            }]
+        print(ret)
+        return ret
 class CompaniesStream(HubspotStream):
     name = "companies"
     path = f"/crm/v3/objects/{name}/search"
@@ -65,6 +103,8 @@ class CompaniesStream(HubspotStream):
         """Return the schema for this stream."""
         schema, self.extra_params = self.get_custom_schema(poorly_cast=[])
         return schema
+
+
 
     def prepare_request_payload(
         self, context: Optional[dict], next_page_token: Optional[Any]
