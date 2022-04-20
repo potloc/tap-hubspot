@@ -8,7 +8,6 @@ from tap_hubspot.tap import TapHubspot
 
 SAMPLE_CONFIG = {
     "start_date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d")
-    # TODO: Initialize minimal tap config
 }
 
 
@@ -21,6 +20,3 @@ def test_standard_tap_tests():
     )
     for test in tests:
         test()
-
-
-# TODO: Create additional tests as appropriate for your tap.

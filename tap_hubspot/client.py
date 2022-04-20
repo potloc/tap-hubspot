@@ -19,7 +19,6 @@ PROPERTIES_DIR = Path(__file__).parent / Path("./properties")
 class HubspotStream(RESTStream):
     """Hubspot stream class."""
 
-    # TODO: Set the API's base URL here:
     url_base = "https://api.hubapi.com"
 
     records_jsonpath = "$.results[*]"  # Or override `parse_response`.
@@ -81,17 +80,14 @@ class HubspotStream(RESTStream):
 
         By default, no payload will be sent (return None).
         """
-        # TODO: Delete this method if no payload is required. (Most REST APIs.)
         return None
 
     def parse_response(self, response: requests.Response) -> Iterable[dict]:
         """Parse the response and return an iterator of result rows."""
-        # TODO: Parse response body and return a set of records.
         yield from extract_jsonpath(self.records_jsonpath, input=response.json())
 
     def post_process(self, row: dict, context: Optional[dict]) -> dict:
         """As needed, append or transform raw data to match expected structure."""
-        # TODO: Delete this method if not needed.
         return row
 
     def get_json_schema(self, from_type: str) -> dict:
@@ -153,11 +149,10 @@ class HubspotStream(RESTStream):
             if 'hs_' in name:
                 extra_params.append(name)
             type = self.get_json_schema(prop['type'])
-            internal_properties.append(th.Property(name, th.StringType()))
-            # if name in poorly_cast:
-            #     internal_properties.append(th.Property(name, th.StringType()))
-            # else:
-            #     internal_properties.append(th.Property(name, type))
+            if name in poorly_cast:
+                internal_properties.append(th.Property(name, th.StringType()))
+            else:
+                internal_properties.append(th.Property(name, type))
 
         properties.append(th.Property('updatedAt', th.StringType()))
         properties.append(th.Property('createdAt', th.StringType()))

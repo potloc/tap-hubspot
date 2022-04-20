@@ -26,7 +26,7 @@ class TapHubspot(Tap):
             "access_token",
             th.StringType,
             required=True,
-            description="PRIVATE Access Token for Hubspot API (TODO: Add public option)",
+            description="PRIVATE Access Token for Hubspot API",
         ),
         th.Property(
             "start_date",
