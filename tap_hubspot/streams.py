@@ -35,18 +35,12 @@ class MeetingsStream(HubspotStream):
     path = f"/crm/v3/objects/meetings"
     primary_keys = ["id"]
     replication_key = "updatedAt"
-    records_jsonpath = "$.results[*]"
-    next_page_token_jsonpath = "$.paging.next.after"
-    schema_filepath = SCHEMAS_DIR / f"{name}.json"
 class OwnersStream(HubspotStream):
     """Define custom stream."""
     name = "owners"
     path = "/crm/v3/owners"
     primary_keys = ["id"]
     replication_key = "updatedAt"
-    records_jsonpath = "$.results[*]"
-    next_page_token_jsonpath = "$.paging.next.after"
-    schema_filepath = SCHEMAS_DIR / f"{name}.json"
 
 
 

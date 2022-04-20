@@ -7,35 +7,13 @@ from singer_sdk import Tap, Stream
 from singer_sdk import typing as th  # JSON schema typing helpers
 from tap_hubspot.streams import (
     HubspotStream,
-    CallsStream,
-    CompaniesStream,
-    ContactsStream,
-    DealsStream,
-    DealPipelineStream,
-    EmailsStream,
-    EngagementsStream,
-    # FormsStream,
     MeetingsStream,
-    NotesStream,
     OwnersStream,
-    TasksStream,
-    WorkflowsStream
 )
 
 STREAM_TYPES = [
-    CallsStream,
-    # CompaniesStream,
-    # ContactsStream,
-    # DealsStream,
-    # DealPipelineStream,
-    # EmailsStream,
-    # EngagementsStream,
-    # FormsStream,
-    # MeetingsStream,
-    # NotesStream,
-    # OwnersStream,
-    # TasksStream,
-    # WorkflowsStream
+    MeetingsStream,
+    OwnersStream
 ]
 
 
