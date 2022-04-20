@@ -22,19 +22,13 @@ class HubspotStream(RESTStream):
     # TODO: Set the API's base URL here:
     url_base = "https://api.hubapi.com"
 
-    # OR use a dynamic url_base:
-    # @property
-    # def url_base(self) -> str:
-    #     """Return the API URL root, configurable via tap settings."""
-    #     return self.config["api_url"]
-
-    records_jsonpath = "$[*]"  # Or override `parse_response`.
-    next_page_token_jsonpath = "$.next_page"  # Or override `get_next_page_token`.
+    records_jsonpath = "$.results[*]"  # Or override `parse_response`.
+    next_page_token_jsonpath = "$.paging.next.after"  # Or override `get_next_page_token`.
 
 
-    # @property
-    # def schema_filepath(self) -> Path:
-    #     return SCHEMAS_DIR / f"{self.name}.json"
+    @property
+    def schema_filepath(self) -> Path:
+        return SCHEMAS_DIR / f"{self.name}.json"
 
 
     @property
@@ -53,17 +47,12 @@ class HubspotStream(RESTStream):
             headers["User-Agent"] = self.config.get("user_agent")
         if "access_token" in self.config:
             headers["Authorization"] = f"Bearer {self.config.get('access_token')}"
-        # If not using an authenticator, you may also provide inline auth headers:
-        # headers["Private-Token"] = self.config.get("auth_token")
         return headers
 
     def get_next_page_token(
         self, response: requests.Response, previous_token: Optional[Any]
     ) -> Optional[Any]:
         """Return a token for identifying next page or None if no more pages."""
-        # TODO: If pagination is required, return a token which can be used to get the
-        #       next page. If this is the final page, return "None" to end the
-        #       pagination loop.
         if self.next_page_token_jsonpath:
             all_matches = extract_jsonpath(
                 self.next_page_token_jsonpath, response.json()
