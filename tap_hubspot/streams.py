@@ -42,7 +42,7 @@ class CallsStream(HubspotStream):
     filter = {}
     date = parser.parse("2017-05-04T15:55:46.587Z")
     og_date = parser.parse("2017-05-04T15:55:46.587Z")
-    delta = 60
+    delta = 30
 
 
     @property
@@ -72,7 +72,11 @@ class CallsStream(HubspotStream):
         if token is None:
             if self.date + datetime.timedelta(days=self.delta) > pytz.utc.localize(datetime.datetime.now()):
                 return None
-            token = '0'
+            if previous_token=='0':
+                return '1'
+            else:
+                return '0'
+        print(bool(1))
         return token
 
     def prepare_request_payload(
