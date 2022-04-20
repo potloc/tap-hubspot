@@ -5,7 +5,7 @@ import singer
 import json
 
 from dateutil import parser
-import datetime
+import datetime, pytz
 
 from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable
@@ -25,10 +25,12 @@ from tap_hubspot.client import PROPERTIES_DIR, HubspotStream
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
 LOGGER = singer.get_logger()
+utc=pytz.UTC
+
 
 
 class CallsStream(HubspotStream):
-    # _LOG_REQUEST_METRICS_URL=True
+    _LOG_REQUEST_METRICS_URL=True
     name = "calls"
     path = f"/crm/v3/objects/{name}/search"
     primary_keys = ["id"]
@@ -38,7 +40,9 @@ class CallsStream(HubspotStream):
     rest_method = "POST"
     extra_params = []
     filter = {}
-    date = "2015-08-21T00:30:09.408Z"
+    date = parser.parse("2017-05-04T15:55:46.587Z")
+    og_date = parser.parse("2017-05-04T15:55:46.587Z")
+    delta = 60
 
 
     @property
@@ -47,36 +51,28 @@ class CallsStream(HubspotStream):
         schema, self.extra_params = self.get_custom_schema(poorly_cast=[])
         return schema
 
-    def parse_response(self, response: requests.Response) -> Iterable[dict]:
-        """Parse the response and return an iterator of result rows."""
-        self.filter = self.custom_hubspot_filter_request(response)
-        yield from extract_jsonpath(self.records_jsonpath, input=response.json())
-
-    def custom_hubspot_filter_request(self, response: requests.Response) -> dict:
+    def custom_hubspot_filter_request(self, start_date) -> dict:
         """Return the filter for the request."""
-        org_date = self.date
-        value = parser.parse(org_date)
-        highvalue = value + datetime.timedelta(days=30)
-
+        highvalue = start_date + datetime.timedelta(days=self.delta)
         filter = {
-            "propertyName": "hs_lastmodifieddate",
+            "propertyName": "hs_createdate",
             "operator": "BETWEEN",
-            "value": str(int(value.timestamp())*1000),
+            "value": str(int(start_date.timestamp())*1000),
             "highValue": str(int(highvalue.timestamp())*1000)
         }
-
+        # print(filter)
         return filter
 
     # Loop condition
     def get_next_page_token(self, response: requests.Response, previous_token: Optional[Any]) -> Optional[Any]:
         """Return the next page token from the response."""
         token = super().get_next_page_token(response, previous_token)
-        # if parser.parse(self.date) + datetime.timedelta(days=30) > datetime.date.today():
+        # if parser.parse(self.date) + datetime.timedelta(days=self.delta) > datetime.date.today():
             # return None
         if token is None:
-            if parser.parse(self.date) + datetime.timedelta(days=30) > datetime.date.today():
+            if self.date + datetime.timedelta(days=self.delta) > pytz.utc.localize(datetime.datetime.now()):
                 return None
-            token = 0
+            token = '0'
         return token
 
     def prepare_request_payload(
@@ -84,7 +80,11 @@ class CallsStream(HubspotStream):
     ) -> Optional[dict]:
         """Prepare the data payload for the REST API request.
         """
-
+        if next_page_token == '0':
+            self.date = self.date + datetime.timedelta(days=self.delta)
+        # if self.date == self.og_date:
+        #     next_page_token=0
+        filter = self.custom_hubspot_filter_request(self.date)
         ret = {
             "properties": self.extra_params,
             "limit": 100,
@@ -96,11 +96,12 @@ class CallsStream(HubspotStream):
                 }
             ]
         }
-        if self.filter:
-            ret["filterGroups"] =[{
-                "filters": [self.filter]
-            }]
-        print(ret)
+        ret["filterGroups"] =[{
+            "filters": [filter]
+        }]
+        print()
+        print("RETURN:",ret)
+        print()
         return ret
 class CompaniesStream(HubspotStream):
     name = "companies"
