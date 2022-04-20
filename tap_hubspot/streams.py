@@ -38,6 +38,7 @@ class CallsStream(HubspotStream):
     rest_method = "POST"
     extra_params = []
     filter = {}
+    date = "2015-08-21T00:30:09.408Z"
 
 
     @property
@@ -66,11 +67,20 @@ class CallsStream(HubspotStream):
 
             return filter
 
+    # End condition
+    def get_next_page_token(self, response: requests.Response, previous_token: Optional[Any]) -> Optional[Any]:
+        """Return the next page token from the response."""
+        token = super().get_next_page_token(response, previous_token)
+        if parser.parse(self.date) + datetime.timedelta(days=30) > datetime.date.today():
+            return None
+        return token
+
     def prepare_request_payload(
         self, context: Optional[dict], next_page_token: Optional[Any]
     ) -> Optional[dict]:
         """Prepare the data payload for the REST API request.
         """
+
         ret = {
             "properties": self.extra_params,
             "limit": 100,
