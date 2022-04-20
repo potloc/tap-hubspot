@@ -53,26 +53,30 @@ class CallsStream(HubspotStream):
         yield from extract_jsonpath(self.records_jsonpath, input=response.json())
 
     def custom_hubspot_filter_request(self, response: requests.Response) -> dict:
-        if response.json()['results']:
-            org_date = response.json()['results'][0]['properties']['hs_lastmodifieddate']
-            value = parser.parse(org_date)
-            highvalue = value + datetime.timedelta(days=30)
+        """Return the filter for the request."""
+        org_date = self.date
+        value = parser.parse(org_date)
+        highvalue = value + datetime.timedelta(days=30)
 
-            filter = {
-                "propertyName": "hs_lastmodifieddate",
-                "operator": "BETWEEN",
-                "value": str(int(value.timestamp())*1000),
-                "highValue": str(int(highvalue.timestamp())*1000)
-            }
+        filter = {
+            "propertyName": "hs_lastmodifieddate",
+            "operator": "BETWEEN",
+            "value": str(int(value.timestamp())*1000),
+            "highValue": str(int(highvalue.timestamp())*1000)
+        }
 
-            return filter
+        return filter
 
-    # End condition
+    # Loop condition
     def get_next_page_token(self, response: requests.Response, previous_token: Optional[Any]) -> Optional[Any]:
         """Return the next page token from the response."""
         token = super().get_next_page_token(response, previous_token)
-        if parser.parse(self.date) + datetime.timedelta(days=30) > datetime.date.today():
-            return None
+        # if parser.parse(self.date) + datetime.timedelta(days=30) > datetime.date.today():
+            # return None
+        if token is None:
+            if parser.parse(self.date) + datetime.timedelta(days=30) > datetime.date.today():
+                return None
+            token = 0
         return token
 
     def prepare_request_payload(
