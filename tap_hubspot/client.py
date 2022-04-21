@@ -139,12 +139,13 @@ class HubspotStream(RESTStream):
         internal_properties: List[th.Property] = []
         properties: List[th.Property] = []
 
-        properties_file_path = PROPERTIES_DIR / f"{self.name}.json"
-        f = properties_file_path.open()
-        properties_hub = json.load(f)['results']
+
+        properties_hub = self.get_properties()
+        params = []
 
         for prop in properties_hub:
             name = prop['name']
+            params.append(name)
             type = self.get_json_schema(prop['type'])
             if name in poorly_cast:
                 internal_properties.append(th.Property(name, th.StringType()))
@@ -158,13 +159,15 @@ class HubspotStream(RESTStream):
         properties.append(th.Property(
                 'properties', th.ObjectType(*internal_properties)
             ))
-        return th.PropertiesList(*properties).to_dict()
+        return th.PropertiesList(*properties).to_dict(), params
 
-    def get_params_from_properties(self) -> list[str]:
-        properties_file_path = PROPERTIES_DIR / f"{self.name}.json"
-        f = properties_file_path.open()
-        properties_hub = json.load(f)['results']
+    def get_properties(self) -> List[dict]:
+        response = requests.get(f"{self.url_base}/crm/v3/properties/{self.name}", headers=self.http_headers)
+        res = response.json()
+        return res['results']
+
+    def get_params_from_properties(self, properties: list[dict]) -> list[str]:
         params = []
-        for prop in properties_hub:
+        for prop in properties:
             params.append(prop['name'])
         return params
