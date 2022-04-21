@@ -91,14 +91,13 @@ class DealsStream(HubspotStream):
 
 class PropertiesStream(HubspotStream):
     """Define custom stream."""
-    name = ""
-    path = f"/crm/v3/properties/{name}"
+    schema_filepath = None
     primary_keys = ["name"]
-    replication_key = "updatedAt"
+    replication_key = "name"
     schema = th.PropertiesList(
-                th.Property('updatedAt', th.DateTimeType, required=True),
-                th.Property('createdAt', th.StringType, required=True),
                 th.Property('name', th.StringType, required=True),
+                th.Property('updatedAt', th.DateTimeType, required=False),
+                th.Property('createdAt', th.StringType, required=False),
                 th.Property('label', th.StringType, required=False),
                 th.Property('type', th.StringType, required=False),
                 th.Property('fieldType', th.StringType, required=False),
@@ -116,7 +115,6 @@ class PropertiesStream(HubspotStream):
                 th.Property('displayOrder', th.IntegerType, required=False),
                 th.Property('calculated', th.BooleanType, required=False),
                 th.Property('externalOptions', th.BooleanType, required=False),
-
                 th.Property('hasUniqueValue', th.BooleanType, required=False),
                 th.Property('hasUniqueValue', th.BooleanType, required=False),
                 th.Property('hidden', th.BooleanType, required=False),
@@ -129,16 +127,25 @@ class PropertiesStream(HubspotStream):
                         th.Property('readOnlyValue', th.BooleanType, required=False),
                     ), required=False),
                 th.Property('formField', th.BooleanType, required=False),
-            )
+            ).to_dict()
 
 class PropertiesDealsStream(PropertiesStream):
-    name = "deals"
+    name = "properties_deals"
+    path = f"/crm/v3/properties/{name.replace('properties_', '')}"
 
 class PropertiesMeetingsStream(PropertiesStream):
-    name = "meetings"
+    name = "properties_meetings"
+    path = f"/crm/v3/properties/{name.replace('properties_', '')}"
 
 class PropertiesCompaniesStream(PropertiesStream):
-    name = "companies"
+    name = "properties_companies"
+    path = f"/crm/v3/properties/{name.replace('properties_', '')}"
+
+class PropertiesContactsStream(PropertiesStream):
+    name = "properties_contacts"
+    path = f"/crm/v3/properties/{name.replace('properties_', '')}"
+
+
 
 
 
