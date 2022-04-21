@@ -13,7 +13,6 @@ from singer_sdk.authenticators import BearerTokenAuthenticator
 from singer_sdk import typing as th  # JSON schema typing helpers
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
-PROPERTIES_DIR = Path(__file__).parent / Path("./properties")
 
 
 class HubspotStream(RESTStream):
@@ -23,6 +22,8 @@ class HubspotStream(RESTStream):
 
     records_jsonpath = "$.results[*]"  # Or override `parse_response`.
     next_page_token_jsonpath = "$.paging.next.after"  # Or override `get_next_page_token`.
+    cached_schema = None
+    properties = []
 
 
     @property
@@ -121,11 +122,19 @@ class HubspotStream(RESTStream):
             "bool": th.BooleanType(),
             "variant": th.StringType(),
         }
+        sqltype_lookup_hubspot: Dict[str, dict] = {
+            "timestamp": th.DateTimeType(),
+            "datetime": th.DateTimeType(),
+            "date": th.DateType(),
+            "string": th.StringType(),
+            "bool": th.BooleanType(),
+            "variant": th.StringType(),
+        }
         if isinstance(from_type, str):
             type_name = from_type
         else:
             raise ValueError("Expected `str` or a SQLAlchemy `TypeEngine` object or type.")
-        for sqltype, jsonschema_type in sqltype_lookup.items():
+        for sqltype, jsonschema_type in sqltype_lookup_hubspot.items():
             if sqltype.lower() in type_name.lower():
                 return jsonschema_type
         return sqltype_lookup["string"]  # safe failover to str
@@ -138,35 +147,36 @@ class HubspotStream(RESTStream):
         """
         internal_properties: List[th.Property] = []
         properties: List[th.Property] = []
-        extra_params = []
 
-        properties_file_path = PROPERTIES_DIR / f"{self.name}.json"
-        f = properties_file_path.open()
-        properties_hub = json.load(f)['results']
+
+        properties_hub = self.get_properties()
+        params = []
 
         for prop in properties_hub:
             name = prop['name']
-            if 'hs_' in name:
-                extra_params.append(name)
+            params.append(name)
             type = self.get_json_schema(prop['type'])
             if name in poorly_cast:
                 internal_properties.append(th.Property(name, th.StringType()))
             else:
                 internal_properties.append(th.Property(name, type))
 
-        properties.append(th.Property('updatedAt', th.StringType()))
-        properties.append(th.Property('createdAt', th.StringType()))
+        properties.append(th.Property('updatedAt', th.DateTimeType()))
+        properties.append(th.Property('createdAt', th.DateTimeType()))
         properties.append(th.Property('id', th.StringType()))
+        properties.append(th.Property('archived', th.BooleanType()))
         properties.append(th.Property(
                 'properties', th.ObjectType(*internal_properties)
             ))
-        return th.PropertiesList(*properties).to_dict(), extra_params
+        return th.PropertiesList(*properties).to_dict(), params
 
-    def get_properties_from_file(self) -> list[str]:
-        properties_file_path = PROPERTIES_DIR / f"{self.name}.json"
-        f = properties_file_path.open()
-        properties_hub = json.load(f)['results']
+    def get_properties(self) -> List[dict]:
+        response = requests.get(f"{self.url_base}/crm/v3/properties/{self.name}", headers=self.http_headers)
+        res = response.json()
+        return res['results']
+
+    def get_params_from_properties(self, properties: list[dict]) -> list[str]:
         params = []
-        for prop in properties_hub:
+        for prop in properties:
             params.append(prop['name'])
         return params
