@@ -135,9 +135,6 @@ class HubspotStream(RESTStream):
         for sqltype, jsonschema_type in sqltype_lookup_hubspot.items():
             if sqltype.lower() in type_name.lower():
                 return jsonschema_type
-        # for sqltype, jsonschema_type in sqltype_lookup.items():
-        #     if sqltype.lower() in type_name.lower():
-        #         return jsonschema_type
         return sqltype_lookup["string"]  # safe failover to str
 
     def get_custom_schema(self, poorly_cast: list[str] = []):
