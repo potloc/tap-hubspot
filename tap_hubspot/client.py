@@ -153,10 +153,10 @@ class HubspotStream(RESTStream):
             # else:
             #     internal_properties.append(th.Property(name, type))
 
-        properties.append(th.Property('updatedAt', th.StringType()))
-        properties.append(th.Property('createdAt', th.StringType()))
+        properties.append(th.Property('updatedAt', th.DateTimeType()))
+        properties.append(th.Property('createdAt', th.DateTimeType()))
         properties.append(th.Property('id', th.StringType()))
-        properties.append(th.Property('archived', th.StringType()))
+        properties.append(th.Property('archived', th.BooleanType()))
         properties.append(th.Property(
                 'properties', th.ObjectType(*internal_properties)
             ))
