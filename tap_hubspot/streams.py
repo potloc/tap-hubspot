@@ -47,12 +47,3 @@ class OwnersStream(HubspotStream):
     path = "/crm/v3/owners"
     primary_keys = ["id"]
     replication_key = "updatedAt"
-
-
-
-
-
-
-
-
-
