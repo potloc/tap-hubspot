@@ -111,3 +111,6 @@ catalog.json
 
 # Remove .meltano
 *.meltano
+
+# Custom Debug
+*.vscode
