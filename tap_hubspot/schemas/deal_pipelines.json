@@ -1,7 +1,10 @@
 {
   "type": "object",
   "properties": {
-    "pipelineId": {
+    "id": {
+      "type": ["null", "string"]
+    },
+    "updatedAt": {
       "type": ["null", "string"]
     },
     "stages": {
@@ -28,7 +31,7 @@
             "type": ["null", "boolean"]
           }
         }
-      }    
+      }
     },
     "label": {
       "type": ["null", "string"]
@@ -40,7 +43,7 @@
       "type": ["null", "integer"]
     },
     "staticDefault": {
-      "type": ["null", "boolean"]      
+      "type": ["null", "boolean"]
     }
   }
 }

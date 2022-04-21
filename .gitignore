@@ -101,3 +101,16 @@ env-vars*
 .venv/
 state.json
 catalog.json
+
+
+# Secrets and internal config files
+**/.secrets/*
+
+# Remove target jsonl output
+*.jsonl
+
+# Remove .meltano
+*.meltano
+
+# Custom Debug
+*.vscode
