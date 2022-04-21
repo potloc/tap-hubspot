@@ -6,18 +6,19 @@ from typing import List
 from singer_sdk import Tap, Stream
 from singer_sdk import typing as th  # JSON schema typing helpers
 from tap_hubspot.streams import (
-    HubspotStream,
     CompaniesStream,
     DealsStream,
     MeetingsStream,
     OwnersStream,
+    PropertiesDealsStream,
 )
 
 STREAM_TYPES = [
-    CompaniesStream,
-    DealsStream,
-    MeetingsStream,
-    OwnersStream
+    # CompaniesStream,
+    # DealsStream,
+    # MeetingsStream,
+    # OwnersStream
+    PropertiesDealsStream
 ]
 
 
