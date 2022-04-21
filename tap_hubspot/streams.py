@@ -48,6 +48,20 @@ class OwnersStream(HubspotStream):
     primary_keys = ["id"]
     replication_key = "updatedAt"
 
+class DealsStream(HubspotStream):
+    """Define custom stream."""
+    name = "deals"
+    path = "/crm/v3/objects/deals"
+    primary_keys = ["id"]
+    replication_key = "updatedAt"
+
+class CompaniesStream(HubspotStream):
+    """Define custom stream."""
+    name = "companies"
+    path = "/crm/v3/objects/companies"
+    primary_keys = ["id"]
+    replication_key = "updatedAt"
+
 
 
 
