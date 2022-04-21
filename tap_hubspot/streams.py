@@ -35,8 +35,6 @@ class MeetingsStream(HubspotStream):
     path = f"/crm/v3/objects/meetings"
     primary_keys = ["id"]
     replication_key = "updatedAt"
-    cached_schema = None
-    properties = []
 
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
@@ -62,8 +60,6 @@ class CompaniesStream(HubspotStream):
     path = "/crm/v3/objects/companies"
     primary_keys = ["id"]
     replication_key = "updatedAt"
-    cached_schema = None
-    properties = []
 
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
@@ -81,8 +77,6 @@ class DealsStream(HubspotStream):
     path = "/crm/v3/objects/deals"
     primary_keys = ["id"]
     replication_key = "updatedAt"
-    cached_schema = None
-    properties = []
 
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
