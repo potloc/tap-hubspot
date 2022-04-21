@@ -56,6 +56,7 @@ class OwnersStream(HubspotStream):
     primary_keys = ["id"]
     replication_key = "updatedAt"
 
+    
 class CompaniesStream(HubspotStream):
     """Define custom stream."""
     name = "companies"
@@ -75,6 +76,7 @@ class CompaniesStream(HubspotStream):
         if self.cached_schema is None:
             self.cached_schema, self.properties = self.get_custom_schema()
         return self.cached_schema
+      
 class DealsStream(HubspotStream):
     """Define custom stream."""
     name = "deals"
@@ -94,13 +96,3 @@ class DealsStream(HubspotStream):
         if self.cached_schema is None:
             self.cached_schema, self.properties = self.get_custom_schema()
         return self.cached_schema
-
-
-
-
-
-
-
-
-
-
