@@ -38,7 +38,7 @@ class MeetingsStream(HubspotStream):
 
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
-        params['properties'] = ','.join(self.get_properties_from_file())
+        params['properties'] = ','.join(self.get_params_from_properties())
         return params
 
 class OwnersStream(HubspotStream):
