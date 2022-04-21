@@ -67,10 +67,7 @@ class CompaniesStream(HubspotStream):
 
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
-        params['properties'] = [
-                'type_of_company',
-                'sales_vertical'
-            ]
+        params['properties'] = ','.join(self.properties)
         return params
 
     @property
@@ -89,13 +86,7 @@ class DealsStream(HubspotStream):
 
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
-        params['properties'] = [
-            'acr__acquisition_cost_per_respondent_',
-            'amount',
-            'sdr_points_date',
-            'sdr_points',
-            'sdr_points_attribution'
-        ]
+        params['properties'] = ','.join(self.properties)
         return params
 
     @property
