@@ -48,6 +48,24 @@ class OwnersStream(HubspotStream):
     primary_keys = ["id"]
     replication_key = "updatedAt"
 
+class CompaniesStream(HubspotStream):
+    """Define custom stream."""
+    name = "companies"
+    path = "/crm/v3/objects/companies"
+    primary_keys = ["id"]
+    replication_key = "updatedAt"
+
+    def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
+        params = super().get_url_params(context, next_page_token)
+        params['properties'] = [
+                'type_of_company',
+                'sales_vertical'
+            ]
+        return params
+
+    @property
+    def schema(self) -> dict:
+        return self.get_custom_schema()
 class DealsStream(HubspotStream):
     """Define custom stream."""
     name = "deals"
@@ -55,12 +73,20 @@ class DealsStream(HubspotStream):
     primary_keys = ["id"]
     replication_key = "updatedAt"
 
-class CompaniesStream(HubspotStream):
-    """Define custom stream."""
-    name = "companies"
-    path = "/crm/v3/objects/companies"
-    primary_keys = ["id"]
-    replication_key = "updatedAt"
+    def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
+        params = super().get_url_params(context, next_page_token)
+        params['properties'] = [
+            'acr__acquisition_cost_per_respondent_',
+            'amount',
+            'sdr_points_date',
+            'sdr_points',
+            'sdr_points_attribution'
+        ]
+        return params
+    @property
+    def schema(self) -> dict:
+        return self.get_custom_schema()
+
 
 
 
