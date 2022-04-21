@@ -120,13 +120,24 @@ class HubspotStream(RESTStream):
             "bool": th.BooleanType(),
             "variant": th.StringType(),
         }
+        sqltype_lookup_hubspot: Dict[str, dict] = {
+            "timestamp": th.DateTimeType(),
+            "datetime": th.DateTimeType(),
+            "date": th.DateType(),
+            "string": th.StringType(),
+            "bool": th.BooleanType(),
+            "variant": th.StringType(),
+        }
         if isinstance(from_type, str):
             type_name = from_type
         else:
             raise ValueError("Expected `str` or a SQLAlchemy `TypeEngine` object or type.")
-        for sqltype, jsonschema_type in sqltype_lookup.items():
+        for sqltype, jsonschema_type in sqltype_lookup_hubspot.items():
             if sqltype.lower() in type_name.lower():
                 return jsonschema_type
+        # for sqltype, jsonschema_type in sqltype_lookup.items():
+        #     if sqltype.lower() in type_name.lower():
+        #         return jsonschema_type
         return sqltype_lookup["string"]  # safe failover to str
 
     def get_custom_schema(self, poorly_cast: list[str] = []):
@@ -146,11 +157,10 @@ class HubspotStream(RESTStream):
             name = prop['name']
             params.append(name)
             type = self.get_json_schema(prop['type'])
-            internal_properties.append(th.Property(name, th.StringType()))
-            # if name in poorly_cast:
-            #     internal_properties.append(th.Property(name, th.StringType()))
-            # else:
-            #     internal_properties.append(th.Property(name, type))
+            if name in poorly_cast:
+                internal_properties.append(th.Property(name, th.StringType()))
+            else:
+                internal_properties.append(th.Property(name, type))
 
         properties.append(th.Property('updatedAt', th.DateTimeType()))
         properties.append(th.Property('createdAt', th.DateTimeType()))
