@@ -13,7 +13,6 @@ from singer_sdk.authenticators import BearerTokenAuthenticator
 from singer_sdk import typing as th  # JSON schema typing helpers
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
-PROPERTIES_DIR = Path(__file__).parent / Path("./properties")
 
 
 class HubspotStream(RESTStream):
