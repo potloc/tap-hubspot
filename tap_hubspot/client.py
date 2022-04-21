@@ -138,7 +138,6 @@ class HubspotStream(RESTStream):
         """
         internal_properties: List[th.Property] = []
         properties: List[th.Property] = []
-        extra_params = []
 
         properties_file_path = PROPERTIES_DIR / f"{self.name}.json"
         f = properties_file_path.open()
@@ -159,7 +158,7 @@ class HubspotStream(RESTStream):
         properties.append(th.Property(
                 'properties', th.ObjectType(*internal_properties)
             ))
-        return th.PropertiesList(*properties).to_dict(), extra_params
+        return th.PropertiesList(*properties).to_dict()
 
     def get_params_from_properties(self) -> list[str]:
         properties_file_path = PROPERTIES_DIR / f"{self.name}.json"
