@@ -95,7 +95,59 @@ class DealsStream(HubspotStream):
             self.cached_schema, self.properties = self.get_custom_schema()
         return self.cached_schema
 
+class PropertiesStream(HubspotStream):
+    """Define custom stream."""
+    name = ""
+    path = f"/crm/v3/properties/{name}"
+    primary_keys = ["name"]
+    replication_key = "updatedAt"
 
+    @property
+    def schema(self) -> dict:
+        return th.PropertiesList(
+            th.Property('updatedAt', th.DateTimeType, required=True),
+            th.Property('createdAt', th.StringType, required=True),
+            th.Property('name', th.StringType, required=True),
+            th.Property('label', th.StringType, required=False),
+            th.Property('type', th.StringType, required=False),
+            th.Property('fieldType', th.StringType, required=False),
+            th.Property('description', th.StringType, required=False),
+            th.Property('groupName', th.StringType, required=False),
+            th.Property('options',
+                th.ArrayType(
+                    th.ObjectType(
+                        th.Property('label', th.StringType, required=False),
+                        th.Property('value', th.StringType, required=False),
+                        th.Property('displayOrder', th.IntegerType, required=False),
+                        th.Property('hidden', th.BooleanType, required=False),
+                    )
+                ), required=False),
+            th.Property('displayOrder', th.IntegerType, required=False),
+            th.Property('calculated', th.BooleanType, required=False),
+            th.Property('externalOptions', th.BooleanType, required=False),
+
+            th.Property('hasUniqueValue', th.BooleanType, required=False),
+            th.Property('hasUniqueValue', th.BooleanType, required=False),
+            th.Property('hidden', th.BooleanType, required=False),
+            th.Property('hubspotDefined', th.BooleanType, required=False),
+            th.Property('modificationMetadata',
+                th.ObjectType(
+                    th.Property('archivable', th.BooleanType, required=False),
+                    th.Property('readOnlyDefinition', th.BooleanType, required=False),
+                    th.Property('readOnlyOptions', th.BooleanType, required=False),
+                    th.Property('readOnlyValue', th.BooleanType, required=False),
+                ), required=False),
+            th.Property('formField', th.BooleanType, required=False),
+        )
+
+class PropertiesDealStream(PropertiesStream):
+    name = "deals"
+
+class PropertiesMeetingsStream(PropertiesStream):
+    name = "meetings"
+
+class PropertiesCompaniesStream(PropertiesStream):
+    name = "companies"
 
 
 
