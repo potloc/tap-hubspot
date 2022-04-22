@@ -103,19 +103,19 @@ class PropertiesStream(HubspotStream):
         return ret
 class PropertiesDealsStream(PropertiesStream):
     name = "properties_deals"
-    path = f"/crm/v3/properties/{name.replace('properties_', '')}"
+    path = "/crm/v3/properties/deals"
 
 class PropertiesMeetingsStream(PropertiesStream):
     name = "properties_meetings"
-    path = f"/crm/v3/properties/{name.replace('properties_', '')}"
+    path = "/crm/v3/properties/meetings"
 
 class PropertiesCompaniesStream(PropertiesStream):
     name = "properties_companies"
-    path = f"/crm/v3/properties/{name.replace('properties_', '')}"
+    path = "/crm/v3/properties/companies"
 
 class PropertiesContactsStream(PropertiesStream):
     name = "properties_contacts"
-    path = f"/crm/v3/properties/{name.replace('properties_', '')}"
+    path = "/crm/v3/properties/contacts"
 
 
 
