@@ -43,8 +43,9 @@ class MeetingsStream(HubspotStream):
 
     @property
     def schema(self) -> dict:
-        schema, self.properties = self.get_custom_schema()
-        return schema
+        if self.cached_schema is None:
+            self.cached_schema, self.properties = self.get_custom_schema()
+        return self.cached_schema
 
 class OwnersStream(HubspotStream):
     """Define custom stream."""
@@ -67,8 +68,9 @@ class CompaniesStream(HubspotStream):
 
     @property
     def schema(self) -> dict:
-        schema, self.properties = self.get_custom_schema()
-        return schema
+        if self.cached_schema is None:
+            self.cached_schema, self.properties = self.get_custom_schema()
+        return self.cached_schema
 
 class DealsStream(HubspotStream):
     """Define custom stream."""
@@ -84,8 +86,9 @@ class DealsStream(HubspotStream):
 
     @property
     def schema(self) -> dict:
-        schema, self.properties = self.get_custom_schema()
-        return schema
+        if self.cached_schema is None:
+            self.cached_schema, self.properties = self.get_custom_schema()
+        return self.cached_schema
 
 class PropertiesStream(HubspotStream):
     """Define custom stream."""
