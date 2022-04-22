@@ -91,44 +91,18 @@ class DealsStream(HubspotStream):
 
 class PropertiesStream(HubspotStream):
     """Define custom stream."""
-    schema_filepath = None
+    schema_filepath = SCHEMAS_DIR / "properties.json"
     primary_keys = ["name"]
-    replication_key = "name"
-    schema = th.PropertiesList(
-                th.Property('name', th.StringType, required=True),
-                th.Property('updatedAt', th.DateTimeType, required=False),
-                th.Property('createdAt', th.StringType, required=False),
-                th.Property('label', th.StringType, required=False),
-                th.Property('type', th.StringType, required=False),
-                th.Property('fieldType', th.StringType, required=False),
-                th.Property('description', th.StringType, required=False),
-                th.Property('groupName', th.StringType, required=False),
-                th.Property('options',
-                    th.ArrayType(
-                        th.ObjectType(
-                            th.Property('label', th.StringType, required=False),
-                            th.Property('value', th.StringType, required=False),
-                            th.Property('displayOrder', th.IntegerType, required=False),
-                            th.Property('hidden', th.BooleanType, required=False),
-                        )
-                    ), required=False),
-                th.Property('displayOrder', th.IntegerType, required=False),
-                th.Property('calculated', th.BooleanType, required=False),
-                th.Property('externalOptions', th.BooleanType, required=False),
-                th.Property('hasUniqueValue', th.BooleanType, required=False),
-                th.Property('hasUniqueValue', th.BooleanType, required=False),
-                th.Property('hidden', th.BooleanType, required=False),
-                th.Property('hubspotDefined', th.BooleanType, required=False),
-                th.Property('modificationMetadata',
-                    th.ObjectType(
-                        th.Property('archivable', th.BooleanType, required=False),
-                        th.Property('readOnlyDefinition', th.BooleanType, required=False),
-                        th.Property('readOnlyOptions', th.BooleanType, required=False),
-                        th.Property('readOnlyValue', th.BooleanType, required=False),
-                    ), required=False),
-                th.Property('formField', th.BooleanType, required=False),
-            ).to_dict()
+    replication_key = "updatedAt"
 
+    def parse_response(self, response: requests.Response) -> Iterable[dict]:
+        data = response.json()['results']
+        ret = []
+        for e in data:
+            if self.replication_key not in e:
+                e[self.replication_key] = datetime.datetime.now(tz=utc)
+            ret.append(e)
+        return ret
 class PropertiesDealsStream(PropertiesStream):
     name = "properties_deals"
     path = f"/crm/v3/properties/{name.replace('properties_', '')}"
