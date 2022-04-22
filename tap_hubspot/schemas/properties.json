@@ -1,0 +1,89 @@
+{
+    "type": "object",
+    "properties":{
+        "name": {
+            "type": ["null","string"]
+        },
+        "updatedAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+        },
+        "createdAt": {
+            "type": ["null", "string"],
+            "format": "date-time"
+        },
+        "label": {
+            "type": ["null", "string"]
+        },
+        "type": {
+            "type": ["null", "integer"]
+        },
+        "fieldType": {
+            "type": ["null", "string"]
+        },
+        "description": {
+            "type": ["null", "string"]
+        },
+        "groupName": {
+            "type": ["null", "string"]
+        },
+        "options": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "label": {
+                        "type": ["null", "string"]
+                    },
+                    "value": {
+                        "type": ["null", "string"]
+                    },
+                    "displayOrder": {
+                        "type": ["null", "integer"]
+                    },
+                    "hidden": {
+                        "type": ["null", "boolean"]
+                    }
+                }
+            }
+        },
+        "displayOrder": {
+            "type": ["null", "integer"]
+        },
+        "calculated": {
+            "type": ["null", "boolean"]
+        },
+        "externalOptions": {
+            "type": ["null", "boolean"]
+        },
+        "hasUniqueValue": {
+            "type": ["null", "boolean"]
+        },
+        "hidden": {
+            "type": ["null", "boolean"]
+        },
+        "hubspotDefined": {
+            "type": ["null", "boolean"]
+        },
+        "modificationMetadata": {
+            "type": ["null", "object"],
+            "properties": {
+                "archivable": {
+                    "type": ["null", "boolean"]
+                },
+                "readOnlyDefinition": {
+                    "type": ["null", "boolean"]
+                },
+                "readOnlyValue": {
+                    "type": ["null", "boolean"]
+                },
+                "readOnlyOptions": {
+                    "type": ["null", "boolean"]
+                }
+            }
+        },
+        "formField": {
+            "type": ["null", "boolean"]
+        }
+    }
+}

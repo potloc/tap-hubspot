@@ -36,7 +36,6 @@ class MeetingsStream(HubspotStream):
     primary_keys = ["id"]
     replication_key = "updatedAt"
 
-
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
         params['properties'] = ','.join(self.properties)
@@ -54,14 +53,12 @@ class OwnersStream(HubspotStream):
     primary_keys = ["id"]
     replication_key = "updatedAt"
 
-
 class CompaniesStream(HubspotStream):
     """Define custom stream."""
     name = "companies"
     path = "/crm/v3/objects/companies"
     primary_keys = ["id"]
     replication_key = "updatedAt"
-
 
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
@@ -80,7 +77,6 @@ class DealsStream(HubspotStream):
     primary_keys = ["id"]
     replication_key = "updatedAt"
 
-
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
         params['properties'] = ','.join(self.properties)
@@ -90,3 +86,43 @@ class DealsStream(HubspotStream):
     def schema(self) -> dict:
         schema, self.properties = self.get_custom_schema()
         return schema
+
+class PropertiesStream(HubspotStream):
+    """Define custom stream."""
+    schema_filepath = SCHEMAS_DIR / "properties.json"
+    primary_keys = ["name"]
+    replication_key = "updatedAt"
+
+    def parse_response(self, response: requests.Response) -> Iterable[dict]:
+        data = response.json()['results']
+        ret = []
+        for e in data:
+            if self.replication_key not in e:
+                e[self.replication_key] = datetime.datetime.now(tz=utc)
+            ret.append(e)
+        return ret
+class PropertiesDealsStream(PropertiesStream):
+    name = "properties_deals"
+    path = f"/crm/v3/properties/{name.replace('properties_', '')}"
+
+class PropertiesMeetingsStream(PropertiesStream):
+    name = "properties_meetings"
+    path = f"/crm/v3/properties/{name.replace('properties_', '')}"
+
+class PropertiesCompaniesStream(PropertiesStream):
+    name = "properties_companies"
+    path = f"/crm/v3/properties/{name.replace('properties_', '')}"
+
+class PropertiesContactsStream(PropertiesStream):
+    name = "properties_contacts"
+    path = f"/crm/v3/properties/{name.replace('properties_', '')}"
+
+
+
+
+
+
+
+
+
+
