@@ -139,7 +139,7 @@ class HubspotStream(RESTStream):
                 return jsonschema_type
         return sqltype_lookup["string"]  # safe failover to str
 
-    def get_custom_schema(self, poorly_cast: list[str] = []):
+    def get_custom_schema(self, poorly_cast: List[str] = []):
         """Dynamically detect the json schema for the stream.
         This is evaluated prior to any records being retrieved.
 
@@ -175,7 +175,7 @@ class HubspotStream(RESTStream):
         res = response.json()
         return res['results']
 
-    def get_params_from_properties(self, properties: list[dict]) -> list[str]:
+    def get_params_from_properties(self, properties: List[dict]) -> List[str]:
         params = []
         for prop in properties:
             params.append(prop['name'])
