@@ -16,7 +16,7 @@
             "type": ["null", "string"]
         },
         "type": {
-            "type": ["null", "integer"]
+            "type": ["null", "string"]
         },
         "fieldType": {
             "type": ["null", "string"]
