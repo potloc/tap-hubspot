@@ -93,12 +93,7 @@ class PropertiesStream(HubspotStream):
 
     def parse_response(self, response: requests.Response) -> Iterable[dict]:
         data = response.json()['results']
-        ret = []
-        for e in data:
-            if self.replication_key not in e:
-                e[self.replication_key] = datetime.datetime.now(tz=utc)
-            ret.append(e)
-        return ret
+        return [x for x in data if self.replication_key in x]
 class PropertiesDealsStream(PropertiesStream):
     name = "properties_deals"
     path = "/crm/v3/properties/deals"
