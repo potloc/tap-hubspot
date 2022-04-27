@@ -95,10 +95,9 @@ class HubspotStream(RESTStream):
         Retuns the resulting record dict, of None if the record should be excluded
         """
 
-        print("ROW")
-        if self.replication_key:
-            if row['updatedAt'] < self.get_starting_replication_key_value(context):
-                return None
+        # if self.replication_key:
+        #     if row['updatedAt'] < self.get_starting_replication_key_value(context):
+        #         return None
 
 
         return row
