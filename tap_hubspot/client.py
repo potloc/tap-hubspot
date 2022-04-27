@@ -5,10 +5,11 @@ import json
 from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable
 
-from dateutil import parser
+import pytz
 
 from memoization import cached
 
+from singer import utils
 from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.streams import RESTStream
 from singer_sdk.authenticators import BearerTokenAuthenticator
@@ -96,7 +97,9 @@ class HubspotStream(RESTStream):
         Returns row, or None if row is to be excluded"""
 
         if self.replication_key:
-            if parser.parse(row['updatedAt']) < self.get_starting_timestamp(context):
+            e_1 = utils.strptime_to_utc(row[self.replication_key])
+            e_2 = self.get_starting_timestamp(context).astimezone(pytz.utc)
+            if utils.strptime_to_utc(row[self.replication_key]) < self.get_starting_timestamp(context).astimezone(pytz.utc):
                 return None
         return row
 
