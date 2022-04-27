@@ -90,7 +90,11 @@ class HubspotStream(RESTStream):
         yield from extract_jsonpath(self.records_jsonpath, input=response.json())
 
     def post_process(self, row: dict, context: Optional[dict]) -> dict:
-        """As needed, append or transform raw data to match expected structure."""
+        """As needed, append or transform raw data to match expected structure.
+        Returns row, or None if row is to be excluded"""
+        if self.replication_key:
+            if row['udatedAt'] < self.get_starting_replication_key_value(context):
+                return None
         return row
 
     def get_json_schema(self, from_type: str) -> dict:
