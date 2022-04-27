@@ -5,8 +5,11 @@ import json
 from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable
 
+import pytz
+
 from memoization import cached
 
+from singer import utils
 from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.streams import RESTStream
 from singer_sdk.authenticators import BearerTokenAuthenticator
@@ -90,7 +93,12 @@ class HubspotStream(RESTStream):
         yield from extract_jsonpath(self.records_jsonpath, input=response.json())
 
     def post_process(self, row: dict, context: Optional[dict]) -> dict:
-        """As needed, append or transform raw data to match expected structure."""
+        """As needed, append or transform raw data to match expected structure.
+        Returns row, or None if row is to be excluded"""
+
+        if self.replication_key:
+            if utils.strptime_to_utc(row[self.replication_key]) < self.get_starting_timestamp(context).astimezone(pytz.utc):
+                return None
         return row
 
     def get_json_schema(self, from_type: str) -> dict:
