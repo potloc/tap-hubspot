@@ -97,8 +97,6 @@ class HubspotStream(RESTStream):
         Returns row, or None if row is to be excluded"""
 
         if self.replication_key:
-            e_1 = utils.strptime_to_utc(row[self.replication_key])
-            e_2 = self.get_starting_timestamp(context).astimezone(pytz.utc)
             if utils.strptime_to_utc(row[self.replication_key]) < self.get_starting_timestamp(context).astimezone(pytz.utc):
                 return None
         return row
