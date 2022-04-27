@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable
 
 from dateutil import parser
-import datetime, pytz
 
 from memoization import cached
 
@@ -97,6 +96,8 @@ class HubspotStream(RESTStream):
         Returns row, or None if row is to be excluded"""
 
         if self.replication_key:
+            e_1 = parser.parse(row['updatedAt'])
+            e_2 = self.get_starting_timestamp(context)
             if parser.parse(row['updatedAt']) < self.get_starting_timestamp(context):
                 return None
         return row
