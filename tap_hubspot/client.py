@@ -5,6 +5,9 @@ import json
 from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable
 
+from dateutil import parser
+import datetime, pytz
+
 from memoization import cached
 
 from singer_sdk.helpers.jsonpath import extract_jsonpath
@@ -92,8 +95,9 @@ class HubspotStream(RESTStream):
     def post_process(self, row: dict, context: Optional[dict]) -> dict:
         """As needed, append or transform raw data to match expected structure.
         Returns row, or None if row is to be excluded"""
+
         if self.replication_key:
-            if row['updatedAt'] < self.get_starting_timestamp(context):
+            if parser.parse(row['updatedAt']) < self.get_starting_timestamp(context):
                 return None
         return row
 
