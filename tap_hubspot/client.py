@@ -93,7 +93,7 @@ class HubspotStream(RESTStream):
         """As needed, append or transform raw data to match expected structure.
         Returns row, or None if row is to be excluded"""
         if self.replication_key:
-            if row['udatedAt'] < self.get_starting_replication_key_value(context):
+            if row['updatedAt'] < self.get_starting_replication_key_value(context):
                 return None
         return row
 
