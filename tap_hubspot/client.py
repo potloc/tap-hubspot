@@ -74,7 +74,6 @@ class HubspotStream(RESTStream):
         if next_page_token:
             params["after"] = next_page_token
         params['limit'] = 100
-        print(context)
         return params
 
     def prepare_request_payload(
@@ -91,15 +90,7 @@ class HubspotStream(RESTStream):
         yield from extract_jsonpath(self.records_jsonpath, input=response.json())
 
     def post_process(self, row: dict, context: Optional[dict]) -> dict:
-        """As needed, append or transform raw data to match expected structure.
-        Retuns the resulting record dict, of None if the record should be excluded
-        """
-
-        # if self.replication_key:
-        #     if row['updatedAt'] < self.get_starting_replication_key_value(context):
-        #         return None
-
-
+        """As needed, append or transform raw data to match expected structure."""
         return row
 
     def get_json_schema(self, from_type: str) -> dict:
