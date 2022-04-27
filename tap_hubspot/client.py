@@ -22,6 +22,8 @@ class HubspotStream(RESTStream):
 
     records_jsonpath = "$.results[*]"  # Or override `parse_response`.
     next_page_token_jsonpath = "$.paging.next.after"  # Or override `get_next_page_token`.
+    replication_key = "updatedAt"
+    replication_method = "INCREMENTAL"
     cached_schema = None
     properties = []
 

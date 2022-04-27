@@ -34,7 +34,6 @@ class MeetingsStream(HubspotStream):
     name = "meetings"
     path = f"/crm/v3/objects/meetings"
     primary_keys = ["id"]
-    replication_key = "updatedAt"
 
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
@@ -52,14 +51,12 @@ class OwnersStream(HubspotStream):
     name = "owners"
     path = "/crm/v3/owners"
     primary_keys = ["id"]
-    replication_key = "updatedAt"
 
 class CompaniesStream(HubspotStream):
     """Define custom stream."""
     name = "companies"
     path = "/crm/v3/objects/companies"
     primary_keys = ["id"]
-    replication_key = "updatedAt"
 
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
@@ -77,7 +74,6 @@ class DealsStream(HubspotStream):
     name = "deals"
     path = "/crm/v3/objects/deals"
     primary_keys = ["id"]
-    replication_key = "updatedAt"
 
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
@@ -94,7 +90,6 @@ class PropertiesStream(HubspotStream):
     """Define custom stream."""
     schema_filepath = SCHEMAS_DIR / "properties.json"
     primary_keys = ["name"]
-    replication_key = "updatedAt"
 
     def parse_response(self, response: requests.Response) -> Iterable[dict]:
         data = response.json()['results']
