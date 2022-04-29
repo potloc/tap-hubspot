@@ -97,8 +97,11 @@ class HubspotStream(RESTStream):
         Returns row, or None if row is to be excluded"""
 
         if self.replication_key:
+            print("POST PROCESS")
+            print(row)
             if utils.strptime_to_utc(row[self.replication_key]) < self.get_starting_timestamp(context).astimezone(pytz.utc):
                 return None
+        print("WAS CLEARED")
         return row
 
     def get_json_schema(self, from_type: str) -> dict:
