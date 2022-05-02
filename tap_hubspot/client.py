@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable
 
 import pytz
+import singer
 
 from memoization import cached
 
@@ -16,7 +17,7 @@ from singer_sdk.authenticators import BearerTokenAuthenticator
 from singer_sdk import typing as th  # JSON schema typing helpers
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
-
+LOGGER = singer.get_logger()
 
 class HubspotStream(RESTStream):
     """Hubspot stream class."""
@@ -97,11 +98,11 @@ class HubspotStream(RESTStream):
         Returns row, or None if row is to be excluded"""
 
         if self.replication_key:
-            print("POST PROCESS")
-            print(row)
+            LOGGER.info("POST PROCESS")
+            LOGGER.info(row)
             if utils.strptime_to_utc(row[self.replication_key]) < self.get_starting_timestamp(context).astimezone(pytz.utc):
                 return None
-        print("WAS CLEARED")
+        LOGGER.info("WAS CLEARED")
         return row
 
     def get_json_schema(self, from_type: str) -> dict:
