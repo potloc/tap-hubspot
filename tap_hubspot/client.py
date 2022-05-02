@@ -100,7 +100,7 @@ class HubspotStream(RESTStream):
         if self.replication_key:
             LOGGER.info("POST PROCESS")
             LOGGER.info(row)
-            if utils.strptime_to_utc(row[self.replication_key]) < self.get_starting_timestamp(context).astimezone(pytz.utc):
+            if utils.strptime_to_utc(row[self.replication_key]) <= self.get_starting_timestamp(context).astimezone(pytz.utc):
                 return None
         LOGGER.info(utils.strptime_to_utc(row[self.replication_key]))
         LOGGER.info(self.get_starting_timestamp(context).astimezone(pytz.utc))
