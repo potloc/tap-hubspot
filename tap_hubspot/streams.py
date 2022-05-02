@@ -85,23 +85,6 @@ class DealsStream(HubspotStream):
         if self.cached_schema is None:
             self.cached_schema, self.properties = self.get_custom_schema()
         return self.cached_schema
-
-class DealsStream(HubspotStream):
-    """Define custom stream."""
-    name = "deals"
-    path = "/crm/v3/objects/deals"
-    primary_keys = ["id"]
-
-    def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
-        params = super().get_url_params(context, next_page_token)
-        params['properties'] = ','.join(self.properties)
-        return params
-
-    @property
-    def schema(self) -> dict:
-        if self.cached_schema is None:
-            self.cached_schema, self.properties = self.get_custom_schema()
-        return self.cached_schema
 class ContactsStream(HubspotStream):
     """Define custom stream."""
     name = "contacts"
