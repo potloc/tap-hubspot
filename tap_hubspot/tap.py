@@ -6,6 +6,7 @@ from typing import List
 from singer_sdk import Tap, Stream
 from singer_sdk import typing as th  # JSON schema typing helpers
 from tap_hubspot.streams import (
+    ContactsStream ,
     CompaniesStream,
     DealsStream,
     MeetingsStream,
@@ -17,6 +18,7 @@ from tap_hubspot.streams import (
 )
 
 STREAM_TYPES = [
+    ContactsStream,
     CompaniesStream,
     DealsStream,
     MeetingsStream,
