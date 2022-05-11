@@ -127,7 +127,13 @@ class PropertiesContactsStream(PropertiesStream):
     path = "/crm/v3/properties/contacts"
 
 
+class AssociationsStream(HubspotStream):
+    name="associations_deals_companies"
+    path = "/crm/v4/objects/deals/{id}/associations/companies"
 
+    parent_stream_type = DealsStream
+
+    ignore_parent_replication_keys = True
 
 
 
