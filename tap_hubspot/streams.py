@@ -133,9 +133,9 @@ class PropertiesContactsStream(PropertiesStream):
     path = "/crm/v3/properties/contacts"
 
 
-class AssociationsStream(HubspotStream):
+class AssociationsDealsToCompaniesStream(HubspotStream):
     name="associations_deals_companies"
-    path = "/crm/v4/objects/deals/{id}/associations/companies"
+    path = "/crm/v4/objects/deals/{deal_id}/associations/companies"
 
     parent_stream_type = DealsStream
 
