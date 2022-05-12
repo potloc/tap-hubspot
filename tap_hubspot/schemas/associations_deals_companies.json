@@ -1,11 +1,12 @@
 {
-    "type": "object",
+    "type": ["object", "null"],
     "properties":{
-        "id": ["null", "string"],
+        "id": {
+            "type": ["null","string"]
+        },
         "toObjectId": {
             "type": ["null","integer"]
-        },
-        "associationTypes": {
+        },  "associationTypes": {
             "type": "array",
             "items": {
                 "type": "object",
@@ -24,3 +25,4 @@
         }
     }
   }
+
