@@ -85,6 +85,12 @@ class DealsStream(HubspotStream):
         if self.cached_schema is None:
             self.cached_schema, self.properties = self.get_custom_schema()
         return self.cached_schema
+
+    def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
+        """Return a context dictionary for child streams."""
+        return {
+            "deal_id": record["id"],
+        }
 class ContactsStream(HubspotStream):
     """Define custom stream."""
     name = "contacts"
@@ -127,7 +133,34 @@ class PropertiesContactsStream(PropertiesStream):
     path = "/crm/v3/properties/contacts"
 
 
+class AssociationsDealsToCompaniesStream(HubspotStream):
+    name="associations_deals_companies"
+    path = "/crm/v4/objects/deals/{deal_id}/associations/companies"
+    deal_id = ""
+    replication_method = "FULL_TABLE"
+    replication_key = ""
+    parent_stream_type = DealsStream
 
+    ignore_parent_replication_keys = True
+
+    def get_url_params(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Dict[str, Any]:
+        """Return a dictionary of values to be used in URL parameterization."""
+        params = super().get_url_params(context, next_page_token)
+        self.deal_id = context['deal_id']
+        return params
+
+    def parse_response(self, response: requests.Response) -> Iterable[dict]:
+        data = response.json()['results']
+        ret = []
+        for e in data:
+            elem = e
+            elem['id'] = self.deal_id
+            ret.append(elem)
+
+
+        return ret
 
 
 
