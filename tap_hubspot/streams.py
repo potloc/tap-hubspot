@@ -137,6 +137,8 @@ class AssociationsDealsToCompaniesStream(HubspotStream):
     name="associations_deals_companies"
     path = "/crm/v4/objects/deals/{deal_id}/associations/companies"
     deal_id = ""
+    replication_method = "FULL_TABLE"
+    replication_key = ""
     parent_stream_type = DealsStream
 
     ignore_parent_replication_keys = True
