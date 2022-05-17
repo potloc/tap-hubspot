@@ -29,69 +29,6 @@ utc=pytz.UTC
 
 
 
-class ArchivedCompaniesStream(HubspotStream):
-    """Define custom stream."""
-    name = "archived_companies"
-    schema_filepath = SCHEMAS_DIR / "companies.json"
-    path = "/crm/v3/objects/companies"
-    primary_keys = ["id"]
-
-    def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
-        params = super().get_url_params(context, next_page_token)
-        params['properties'] = ','.join(self.properties)
-        params['archived'] = True
-        return params
-
-    @property
-    def schema(self) -> dict:
-        if self.cached_schema is None:
-            self.cached_schema, self.properties = self.get_custom_schema(name = "companies")
-        return self.cached_schema
-
-class ArchivedContactsStream(HubspotStream):
-    """Define custom stream."""
-    name = "archived_contacts"
-    schema_filepath = SCHEMAS_DIR / "contacts.json"
-    path = "/crm/v3/objects/contacts"
-    primary_keys = ["id"]
-
-    def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
-        params = super().get_url_params(context, next_page_token)
-        params['properties'] = ','.join(self.properties)
-        params['archived'] = True
-        return params
-
-    @property
-    def schema(self) -> dict:
-        if self.cached_schema is None:
-            self.cached_schema, self.properties = self.get_custom_schema(name = "contacts")
-        return self.cached_schema
-
-class ArchivedDealsStream(HubspotStream):
-    """Define custom stream."""
-    name = "archived_deals"
-    schema_filepath = SCHEMAS_DIR / "deals.json"
-    path = "/crm/v3/objects/deals"
-    primary_keys = ["id"]
-
-    def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
-        params = super().get_url_params(context, next_page_token)
-        params['properties'] = ','.join(self.properties)
-        params['archived'] = True
-        return params
-
-    @property
-    def schema(self) -> dict:
-        if self.cached_schema is None:
-            self.cached_schema, self.properties = self.get_custom_schema(name = "deals")
-        return self.cached_schema
-
-    def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
-        """Return a context dictionary for child streams."""
-        return {
-            "deal_id": record["id"],
-        }
-
 class MeetingsStream(HubspotStream):
     name = "meetings"
     path = f"/crm/v3/objects/meetings"
@@ -131,6 +68,22 @@ class CompaniesStream(HubspotStream):
             self.cached_schema, self.properties = self.get_custom_schema()
         return self.cached_schema
 
+class ArchivedCompaniesStream(CompaniesStream):
+    """Define custom stream."""
+    name = "archived_companies"
+    schema_filepath = ""
+
+    def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
+        params = super().get_url_params(context, next_page_token)
+        params['archived'] = True
+        return params
+
+    @property
+    def schema(self) -> dict:
+        if self.cached_schema is None:
+            self.cached_schema, self.properties = self.get_custom_schema(name="companies")
+        return self.cached_schema
+
 class DealsStream(HubspotStream):
     """Define custom stream."""
     name = "deals"
@@ -153,6 +106,23 @@ class DealsStream(HubspotStream):
         return {
             "deal_id": record["id"],
         }
+
+class ArchivedDealsStream(DealsStream):
+    """Define custom stream."""
+    name = "archived_deals"
+    schema_filepath = ""
+
+    def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
+        params = super().get_url_params(context, next_page_token)
+        params['archived'] = True
+        return params
+
+    @property
+    def schema(self) -> dict:
+        if self.cached_schema is None:
+            self.cached_schema, self.properties = self.get_custom_schema(name = "deals")
+        return self.cached_schema
+
 class ContactsStream(HubspotStream):
     """Define custom stream."""
     name = "contacts"
@@ -169,6 +139,25 @@ class ContactsStream(HubspotStream):
         if self.cached_schema is None:
             self.cached_schema, self.properties = self.get_custom_schema()
         return self.cached_schema
+
+class ArchivedContactsStream(ContactsStream):
+    """Define custom stream."""
+    name = "archived_contacts"
+    schema_filepath = ""
+
+    def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
+        params = super().get_url_params(context, next_page_token)
+        params['archived'] = True
+        return params
+
+    @property
+    def schema(self) -> dict:
+        if self.cached_schema is None:
+            self.cached_schema, self.properties = self.get_custom_schema(name = "contacts")
+        return self.cached_schema
+
+
+
 
 class PropertiesStream(HubspotStream):
     """Define custom stream."""
