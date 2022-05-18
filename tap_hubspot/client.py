@@ -150,7 +150,7 @@ class HubspotStream(RESTStream):
                 return jsonschema_type
         return sqltype_lookup["string"]  # safe failover to str
 
-    def get_custom_schema(self, poorly_cast: List[str] = []):
+    def get_custom_schema(self, name:str = None, poorly_cast: List[str] = []):
         """Dynamically detect the json schema for the stream.
         This is evaluated prior to any records being retrieved.
 
@@ -159,8 +159,7 @@ class HubspotStream(RESTStream):
         internal_properties: List[th.Property] = []
         properties: List[th.Property] = []
 
-
-        properties_hub = self.get_properties()
+        properties_hub = self.get_properties(n=name)
         params = []
 
         for prop in properties_hub:
@@ -181,8 +180,11 @@ class HubspotStream(RESTStream):
             ))
         return th.PropertiesList(*properties).to_dict(), params
 
-    def get_properties(self) -> List[dict]:
-        response = requests.get(f"{self.url_base}/crm/v3/properties/{self.name}", headers=self.http_headers)
+    def get_properties(self, n: str=None) -> List[dict]:
+        name = n
+        if n is None:
+            name = self.name
+        response = requests.get(f"{self.url_base}/crm/v3/properties/{name}", headers=self.http_headers)
         res = response.json()
         return res['results']
 
