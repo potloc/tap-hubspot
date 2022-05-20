@@ -56,10 +56,12 @@ class CompaniesStream(HubspotStream):
     name = "companies"
     path = "/crm/v3/objects/companies"
     primary_keys = ["id"]
+    partitions = [{"archived": True}, {"archived": False}]
 
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
         params['properties'] = ','.join(self.properties)
+        params['archived'] = context['archived']
         return params
 
     @property
@@ -68,31 +70,25 @@ class CompaniesStream(HubspotStream):
             self.cached_schema, self.properties = self.get_custom_schema()
         return self.cached_schema
 
-class ArchivedCompaniesStream(CompaniesStream):
-    """Define custom stream."""
-    name = "archived_companies"
-    schema_filepath = ""
 
-    def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
-        params = super().get_url_params(context, next_page_token)
-        params['archived'] = True
-        return params
+    def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
+        """Return a context dictionary for child streams."""
+        return {
+            "archived": record["archived"]
+        }
 
-    @property
-    def schema(self) -> dict:
-        if self.cached_schema is None:
-            self.cached_schema, self.properties = self.get_custom_schema(name="companies")
-        return self.cached_schema
 
 class DealsStream(HubspotStream):
     """Define custom stream."""
     name = "deals"
     path = "/crm/v3/objects/deals"
     primary_keys = ["id"]
+    partitions = [{"archived": True}, {"archived": False}]
 
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
         params['properties'] = ','.join(self.properties)
+        params['archived'] = context['archived']
         return params
 
     @property
@@ -105,33 +101,22 @@ class DealsStream(HubspotStream):
         """Return a context dictionary for child streams."""
         return {
             "deal_id": record["id"],
+            "archived": record["archived"]
         }
 
-class ArchivedDealsStream(DealsStream):
-    """Define custom stream."""
-    name = "archived_deals"
-    schema_filepath = ""
 
-    def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
-        params = super().get_url_params(context, next_page_token)
-        params['archived'] = True
-        return params
-
-    @property
-    def schema(self) -> dict:
-        if self.cached_schema is None:
-            self.cached_schema, self.properties = self.get_custom_schema(name = "deals")
-        return self.cached_schema
 
 class ContactsStream(HubspotStream):
     """Define custom stream."""
     name = "contacts"
     path = "/crm/v3/objects/contacts"
     primary_keys = ["id"]
+    partitions = [{"archived": True}, {"archived": False}]
 
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
         params['properties'] = ','.join(self.properties)
+        params['archived'] = context['archived']
         return params
 
     @property
@@ -140,23 +125,11 @@ class ContactsStream(HubspotStream):
             self.cached_schema, self.properties = self.get_custom_schema()
         return self.cached_schema
 
-class ArchivedContactsStream(ContactsStream):
-    """Define custom stream."""
-    name = "archived_contacts"
-    schema_filepath = ""
-
-    def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
-        params = super().get_url_params(context, next_page_token)
-        params['archived'] = True
-        return params
-
-    @property
-    def schema(self) -> dict:
-        if self.cached_schema is None:
-            self.cached_schema, self.properties = self.get_custom_schema(name = "contacts")
-        return self.cached_schema
-
-
+    def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
+        """Return a context dictionary for child streams."""
+        return {
+            "archived": record["archived"]
+        }
 
 
 class PropertiesStream(HubspotStream):
