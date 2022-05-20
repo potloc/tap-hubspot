@@ -89,10 +89,12 @@ class DealsStream(HubspotStream):
     name = "deals"
     path = "/crm/v3/objects/deals"
     primary_keys = ["id"]
+    partitions = [{"archived": True}, {"archived": False}]
 
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
         params['properties'] = ','.join(self.properties)
+        params['archived'] = context['archived']
         return params
 
     @property
@@ -105,7 +107,9 @@ class DealsStream(HubspotStream):
         """Return a context dictionary for child streams."""
         return {
             "deal_id": record["id"],
+            "archived": record["archived"]
         }
+
 
 class ArchivedDealsStream(DealsStream):
     """Define custom stream."""
