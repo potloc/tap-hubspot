@@ -56,10 +56,12 @@ class CompaniesStream(HubspotStream):
     name = "companies"
     path = "/crm/v3/objects/companies"
     primary_keys = ["id"]
+    partitions = [{"archived": True}, {"archived": False}]
 
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
         params['properties'] = ','.join(self.properties)
+        params['archived'] = context['archived']
         return params
 
     @property
@@ -67,6 +69,12 @@ class CompaniesStream(HubspotStream):
         if self.cached_schema is None:
             self.cached_schema, self.properties = self.get_custom_schema()
         return self.cached_schema
+
+    def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
+        """Return a context dictionary for child streams."""
+        return {
+            "archived": record["archived"]
+        }
 
 class DealsStream(HubspotStream):
     """Define custom stream."""
@@ -100,10 +108,12 @@ class ContactsStream(HubspotStream):
     name = "contacts"
     path = "/crm/v3/objects/contacts"
     primary_keys = ["id"]
+    partitions = [{"archived": True}, {"archived": False}]
 
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
         params['properties'] = ','.join(self.properties)
+        params['archived'] = context['archived']
         return params
 
     @property
@@ -111,6 +121,12 @@ class ContactsStream(HubspotStream):
         if self.cached_schema is None:
             self.cached_schema, self.properties = self.get_custom_schema()
         return self.cached_schema
+
+    def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
+        """Return a context dictionary for child streams."""
+        return {
+            "archived": record["archived"]
+        }
 
 class PropertiesStream(HubspotStream):
     """Define custom stream."""
