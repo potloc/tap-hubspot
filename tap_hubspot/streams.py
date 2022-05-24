@@ -163,6 +163,7 @@ class AssociationsDealsToCompaniesStream(HubspotStream):
     deal_id = ""
     replication_method = "FULL_TABLE"
     primary_keys = ["id", "toObjectId"]
+    state_partitioning_keys = []
     replication_key = ""
     parent_stream_type = DealsStream
 
