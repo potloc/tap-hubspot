@@ -20,17 +20,17 @@ from tap_hubspot.streams import (
 
 STREAM_TYPES = [
     AssociationsDealsToCompaniesStream,
-    # ContactsStream,
-    # CompaniesStream,
+    ContactsStream,
+    CompaniesStream,
     DealsStream,
-    # MeetingsStream,
+    MeetingsStream,
 
-    # PropertiesCompaniesStream,
-    # PropertiesContactsStream,
-    # PropertiesDealsStream,
-    # PropertiesMeetingsStream,
+    PropertiesCompaniesStream,
+    PropertiesContactsStream,
+    PropertiesDealsStream,
+    PropertiesMeetingsStream,
 
-    # OwnersStream,
+    OwnersStream,
 ]
 
 
