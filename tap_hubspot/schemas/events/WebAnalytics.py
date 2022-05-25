@@ -6,7 +6,7 @@ schema = th.PropertiesList(
     th.Property("eventType", th.StringType),
     th.Property("occurredAt", th.DateTimeType),
     th.Property("id", th.StringType),
-    th.Property("Properties",
+    th.Property("properties",
         th.ObjectType(
             th.Property("hs_action_execution_index", th.StringType),
             th.Property("hs_flow_id", th.StringType),
