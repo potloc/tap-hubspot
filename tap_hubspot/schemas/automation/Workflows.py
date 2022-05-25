@@ -15,7 +15,7 @@ schema = th.PropertiesList(
     ),
     th.Property("portalId", th.IntegerType),
     th.Property("insertedAt", th.IntegerType),
-    th.Property("updatedAt", th.IntegerType),
+    th.Property("updatedAt", th.DateTimeType),
     th.Property("creationSource",
         th.ObjectType(
             th.Property("sourceApplication",

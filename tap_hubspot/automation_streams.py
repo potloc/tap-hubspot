@@ -38,6 +38,15 @@ class AutomationStream(HubspotStream):
     records_jsonpath = "$.workflows[*]"  # Or override `parse_response`.
     schema_filepath = ""
 
+    def parse_response(self, response: requests.Response) -> Iterable[dict]:
+        """Parse the response and return an iterator of result rows."""
+        self.total_emails = response.json()['workflows']
+        data = response.json()
+        ret = [dict(d, updatedAt=datetime.fromtimestamp(d["updatedAt"]/1000, tz=utc)) for d in data["workflows"]]
+        data["workflows"] = ret
+        yield from extract_jsonpath(self.records_jsonpath, input=data)
+
+
     def post_process(self, row: dict, context: Optional[dict]) -> dict:
         """As needed, append or transform raw data to match expected structure.
         Returns row, or None if row is to be excluded"""
