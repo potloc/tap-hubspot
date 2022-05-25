@@ -63,8 +63,7 @@ class MarketingEmailsStream(MarketingStream):
         """Parse the response and return an iterator of result rows."""
         self.total_emails = response.json()['total']
         data = response.json()
-        ret = []
-        ret = [dict(d, updated=datetime.fromtimestamp(d["updated"]/1000, tz=utc)) for d in data["objects"]
+        ret = [dict(d, updated=datetime.fromtimestamp(d["updated"]/1000, tz=utc)) for d in data["objects"]]
         data["objects"] = ret
         yield from extract_jsonpath(self.records_jsonpath, input=data)
 
