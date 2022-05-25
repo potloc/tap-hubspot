@@ -32,7 +32,7 @@ from tap_hubspot.events_streams import (
 STREAM_TYPES = [
     ## CRM
     # AssociationsDealsToCompaniesStream,
-    # ContactsStream,
+    ContactsStream,
     # CompaniesStream,
     # DealsStream,
     # MeetingsStream,
