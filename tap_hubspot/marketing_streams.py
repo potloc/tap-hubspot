@@ -64,10 +64,7 @@ class MarketingEmailsStream(MarketingStream):
         self.total_emails = response.json()['total']
         data = response.json()
         ret = []
-        for d in data["objects"]:
-            val = d
-            val["updated"] = datetime.fromtimestamp(d["updated"]/1000, tz=utc)
-            ret.append(val)
+        ret = [dict(d, updated=datetime.fromtimestamp(d["updated"]/1000, tz=utc)) for d in data["objects"]
         data["objects"] = ret
         yield from extract_jsonpath(self.records_jsonpath, input=data)
 
