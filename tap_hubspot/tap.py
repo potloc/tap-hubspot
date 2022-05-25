@@ -27,16 +27,16 @@ from tap_hubspot.marketing_streams import (
 
 STREAM_TYPES = [
     ## CRM
-    # AssociationsDealsToCompaniesStream,
-    # ContactsStream,
-    # CompaniesStream,
-    # DealsStream,
-    # MeetingsStream,
-    # PropertiesCompaniesStream,
-    # PropertiesContactsStream,
-    # PropertiesDealsStream,
-    # PropertiesMeetingsStream,
-    # OwnersStream,
+    AssociationsDealsToCompaniesStream,
+    ContactsStream,
+    CompaniesStream,
+    DealsStream,
+    MeetingsStream,
+    PropertiesCompaniesStream,
+    PropertiesContactsStream,
+    PropertiesDealsStream,
+    PropertiesMeetingsStream,
+    OwnersStream,
 
     ## Marketing
     MarketingEmailsStream,
