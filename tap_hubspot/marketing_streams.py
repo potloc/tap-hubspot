@@ -1,5 +1,6 @@
 """Stream type classes for tap-hubspot."""
 # from black import Report
+from asyncio.log import logger
 from math import inf
 import requests
 import singer
@@ -8,6 +9,7 @@ import json
 from dateutil import parser
 import datetime, pytz
 import time
+from datetime import datetime
 
 from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable
@@ -36,6 +38,7 @@ from tap_hubspot.schemas.marketing import (
     Campaigns,
     Forms
 )
+
 class MarketingStream(HubspotStream):
     records_jsonpath = "$.results[*]"  # Or override `parse_response`.
     next_page_token_jsonpath = "$.paging.next.after"  # Or override `get_next_page_token`.
@@ -59,14 +62,21 @@ class MarketingEmailsStream(MarketingStream):
     def parse_response(self, response: requests.Response) -> Iterable[dict]:
         """Parse the response and return an iterator of result rows."""
         self.total_emails = response.json()['total']
-        yield from extract_jsonpath(self.records_jsonpath, input=response.json())
+        data = response.json()
+        ret = []
+        for d in data["objects"]:
+            val = d
+            val["updated"] = datetime.fromtimestamp(d["updated"]/1000, tz=utc)
+            ret.append(val)
+        data["objects"] = ret
+        yield from extract_jsonpath(self.records_jsonpath, input=data)
 
     def post_process(self, row: dict, context: Optional[dict]) -> dict:
         """As needed, append or transform raw data to match expected structure.
         Returns row, or None if row is to be excluded"""
 
         if self.replication_key:
-            if row[self.replication_key] <= int(time.time()):
+            if row[self.replication_key].timestamp() <= self.get_starting_timestamp(context).astimezone(pytz.utc).timestamp():
                 return None
         return row
 
@@ -99,14 +109,6 @@ class MarketingCampaignIdsStream(MarketingStream):
 
     schema = CampaignIds.schema
 
-    def post_process(self, row: dict, context: Optional[dict]) -> dict:
-        """As needed, append or transform raw data to match expected structure.
-        Returns row, or None if row is to be excluded"""
-
-        if self.replication_key:
-            if row[self.replication_key] <= int(time.time()):
-                return None
-        return row
 
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
@@ -141,7 +143,7 @@ class MarketingCampaignsStream(MarketingStream):
         Returns row, or None if row is to be excluded"""
 
         if self.replication_key:
-            if row[self.replication_key] <= int(time.time()):
+            if row[self.replication_key] <= int(self.get_starting_timestamp(context).astimezone(pytz.utc).strftime('%s')):
                 return None
         return row
 

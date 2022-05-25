@@ -69,7 +69,7 @@ schema = th.PropertiesList(
     th.Property("subject", th.StringType),
     th.Property("subscriptionName", th.StringType),
     th.Property("transactional", th.BooleanType),
-    th.Property("updated", th.NumberType),
+    th.Property("updated", th.DateTimeType),
     th.Property("url", th.StringType),
     th.Property("useRssHeadlineAsSubject", th.BooleanType),
 ).to_dict()
