@@ -43,7 +43,7 @@ class EventsStream(HubspotStream):
     schema_filepath = ""
 
 class WebAnalyticsStream(EventsStream):
-    name = "WebAnalytics_v3"
+    name = "web_analytics_v3"
     path = "/events/v3/events/"
     primary_keys = ["id"]
     schema = WebAnalytics.schema
