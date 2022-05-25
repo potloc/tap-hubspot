@@ -25,6 +25,10 @@ from tap_hubspot.marketing_streams import (
     MarketingFormsStream,
 )
 
+from tap_hubspot.events_streams import (
+    WebAnalyticsStream,
+)
+
 STREAM_TYPES = [
     ## CRM
     AssociationsDealsToCompaniesStream,
@@ -43,6 +47,9 @@ STREAM_TYPES = [
     MarketingCampaignIdsStream,
     MarketingCampaignsStream,
     MarketingFormsStream,
+
+    ## Events
+    WebAnalyticsStream,
 
 ]
 

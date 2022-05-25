@@ -128,7 +128,8 @@ class ContactsStream(HubspotStream):
     def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
         """Return a context dictionary for child streams."""
         return {
-            "archived": record["archived"]
+            "archived": record["archived"],
+            "contact_id": record["id"]
         }
 
 
@@ -187,10 +188,4 @@ class AssociationsDealsToCompaniesStream(HubspotStream):
 
 
         return ret
-
-
-
-
-
-
 
