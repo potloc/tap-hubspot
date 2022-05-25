@@ -12,61 +12,56 @@ schema = th.PropertiesList(
             th.Property("platformOwnsActions", th.BooleanType),
             th.Property("lastSuccessfulMigrationTimestamp", th.IntegerType)
         )
-    )
+    ),
+    th.Property("portalId", th.IntegerType),
+    th.Property("insertedAt", th.IntegerType),
+    th.Property("updatedAt", th.IntegerType),
+    th.Property("creationSource",
+        th.ObjectType(
+            th.Property("sourceApplication",
+                th.ObjectType(
+                    th.Property("source", th.StringType),
+                    th.Property("serviceName", th.StringType)
+                )
+            ),
+            th.Property("createdByUser",
+                th.ObjectType(
+                    th.Property("userId", th.IntegerType),
+                    th.Property("userEmail", th.StringType),
+                )
+            ),
+            th.Property("createdAt", th.IntegerType)
+        ),
+    ),
+    th.Property("updateSource",
+        th.ObjectType(
+            th.Property("sourceApplication",
+                th.ObjectType(
+                    th.Property("source", th.StringType),
+                    th.Property("serviceName", th.StringType)
+                )
+            ),
+            th.Property("updatedByUser",
+                th.ObjectType(
+                    th.Property("userId", th.IntegerType),
+                    th.Property("userEmail", th.StringType),
+                )
+            ),
+            th.Property("updatedAt", th.IntegerType)
+        ),
+    ),
+    th.Property("originalAuthorId", th.IntegerType),
+    th.Property("contactListIds",
+        th.ObjectType(
+                th.Property("enrolled", th.IntegerType),
+                th.Property("active", th.IntegerType),
+                th.Property("completed", th.IntegerType),
+                th.Property("succeeded", th.IntegerType),
+        )
+    ),
+    th.Property("description", th.StringType),
+    th.Property("type", th.StringType),
+    th.Property("enabled", th.BooleanType),
+    th.Property("id", th.IntegerType),
+    th.Property("name", th.StringType),
 ).to_dict()
-
-
-# {
-#             "migrationStatus": {
-#                 "portalId": 2851660,
-#                 "flowId": 14601641,
-#                 "workflowId": 3130639,
-#                 "migrationStatus": "EXECUTION_MIGRATED",
-#                 "enrollmentMigrationStatus": "CLASSIC_OWNED",
-#                 "platformOwnsActions": true,
-#                 "lastSuccessfulMigrationTimestamp": 1576368463600
-#             },
-#             "portalId": 2851660,
-#             "insertedAt": 1530711782341,
-#             "updatedAt": 1635366059897,
-#             "creationSource": {
-#                 "sourceApplication": {
-#                     "source": "WORKFLOWS_APP",
-#                     "serviceName": "https://app.hubspot.com/workflows/2851660/create"
-#                 },
-#                 "createdByUser": {
-#                     "userId": 4478465,
-#                     "userEmail": "ferdinand@potloc.com"
-#                 },
-#                 "createdAt": 1530711782307
-#             },
-#             "updateSource": {
-#                 "sourceApplication": {
-#                     "source": "DIRECT_API",
-#                     "serviceName": "AutomationPlatformService-userweb"
-#                 },
-#                 "updatedByUser": {
-#                     "userId": 25273227,
-#                     "userEmail": "nelly.harb@potloc.com"
-#                 },
-#                 "updatedAt": 1635366059897
-#             },
-#             "originalAuthorUserId": 4478465,
-#             "contactListIds": {
-#                 "enrolled": 750,
-#                 "active": 751,
-#                 "completed": 752,
-#                 "succeeded": 753
-#             },
-#             "personaTagIds": [],
-#             "lastUpdatedByUserId": 25273227,
-#             "contactCounts": {
-#                 "active": 0,
-#                 "enrolled": 366
-#             },
-#             "description": "",
-#             "type": "DRIP_DELAY",
-#             "enabled": false,
-#             "id": 3130639,
-#             "name": "[FUNNEL] From MQL to SQL"
-#         },
