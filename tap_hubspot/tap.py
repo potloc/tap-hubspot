@@ -29,6 +29,10 @@ from tap_hubspot.events_streams import (
     WebAnalyticsStream,
 )
 
+from tap_hubspot.analytics_streams import (
+    AnalyticsViewsStream,
+)
+
 STREAM_TYPES = [
     ## CRM
     AssociationsDealsToCompaniesStream,
@@ -50,6 +54,9 @@ STREAM_TYPES = [
 
     ## Events
     WebAnalyticsStream,
+
+    ## Analytics
+    AnalyticsViewsStream,
 
 ]
 
