@@ -40,32 +40,23 @@ from tap_hubspot.automation_streams import (
 
 
 STREAM_TYPES = [
-    # ## CRM
-    # AssociationsDealsToCompaniesStream,
-    # ContactsStream,
-    # CompaniesStream,
-    # DealsStream,
-    # MeetingsStream,
-    # PropertiesCompaniesStream,
-    # PropertiesContactsStream,
-    # PropertiesDealsStream,
-    # PropertiesMeetingsStream,
-    # OwnersStream,
+    ## CRM
+    AssociationsDealsToCompaniesStream,
+    ContactsStream,
+    CompaniesStream,
+    DealsStream,
+    MeetingsStream,
+    PropertiesCompaniesStream,
+    PropertiesContactsStream,
+    PropertiesDealsStream,
+    PropertiesMeetingsStream,
+    OwnersStream,
 
-    # ## Marketing
-    # MarketingEmailsStream,
-    # MarketingCampaignIdsStream,
-    # MarketingCampaignsStream,
-    # MarketingFormsStream,
-
-    # ## Events
-    # WebAnalyticsStream,
-
-    ## Analytics
-    # AnalyticsViewsStream,
-
-    ## Automation
-    WorkflowsStream
+    ## Marketing
+    MarketingEmailsStream,
+    MarketingCampaignIdsStream,
+    MarketingCampaignsStream,
+    MarketingFormsStream,
 
     ## Events
     WebAnalyticsStream,
@@ -73,6 +64,8 @@ STREAM_TYPES = [
     ## Analytics
     AnalyticsViewsStream,
 
+    ## Automation
+    WorkflowsStream
 ]
 
 
