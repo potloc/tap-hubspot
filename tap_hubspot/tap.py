@@ -67,6 +67,12 @@ STREAM_TYPES = [
     ## Automation
     WorkflowsStream
 
+    ## Events
+    WebAnalyticsStream,
+
+    ## Analytics
+    AnalyticsViewsStream,
+
 ]
 
 
