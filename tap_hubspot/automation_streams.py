@@ -3,28 +3,20 @@
 from math import inf
 import requests
 import singer
-import json
 
-from dateutil import parser
 import datetime, pytz
-import time
 from datetime import datetime
 
 from pathlib import Path
-from typing import Any, Dict, Optional, Union, List, Iterable
+from typing import Optional, Iterable
 
 from singer_sdk import typing as th  # JSON Schema typing helpers
 from pathlib import Path
 from typing import Any, Dict, Optional, Union, List, Iterable
 
-from memoization import cached
-
 from singer_sdk.helpers.jsonpath import extract_jsonpath
-from singer_sdk.streams import RESTStream
-from singer_sdk.authenticators import BearerTokenAuthenticator
 from singer_sdk import typing as th  # JSON schema typing helpers
 from tap_hubspot.client import HubspotStream
-from tap_hubspot.streams import ContactsStream
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
