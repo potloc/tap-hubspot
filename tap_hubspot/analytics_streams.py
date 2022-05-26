@@ -57,11 +57,7 @@ class AnalyticsViewsStream(AnalyticsStream):
     def parse_response(self, response: requests.Response) -> Iterable[dict]:
         """Parse the response and return an iterator of result rows."""
         data = response.json()
-        ret = []
-        for d in data:
-            val = d
-            val["updatedDate"] = datetime.strptime(d["updatedDate"], "%Y-%m-%d").astimezone(pytz.utc)
-            ret.append(val)
+        ret = [dict(d, updatedDate=datetime.strptime(d["updatedDate"], "%Y-%m-%d").astimezone(pytz.utc)) for d in data]
         data = ret
         yield from extract_jsonpath(self.records_jsonpath, input=data)
 
