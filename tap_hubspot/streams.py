@@ -100,8 +100,8 @@ class DealsStream(HubspotStream):
     def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
         """Return a context dictionary for child streams."""
         return {
+            "archived": record["archived"],
             "deal_id": record["id"],
-            "archived": record["archived"]
         }
 
 
