@@ -31,7 +31,8 @@ LOGGER = singer.get_logger()
 utc=pytz.UTC
 
 from tap_hubspot.schemas.events import (
-    WebAnalytics,
+    WebAnalyticsContacts,
+    WebAnalyticsDeals
 )
 class EventsStream(HubspotStream):
     records_jsonpath = "$.results[*]"  # Or override `parse_response`.
@@ -46,7 +47,7 @@ class WebAnalyticsContactsStream(EventsStream):
     name = "web_analytics_contacts_v3"
     path = "/events/v3/events/"
     primary_keys = ["id"]
-    schema = WebAnalytics.schema
+    schema = WebAnalyticsContacts.schema
     parent_stream_type = ContactsStream
     ignore_parent_replication_key = False
     replication_key = "occurredAt"
@@ -61,7 +62,7 @@ class WebAnalyticsDealsStream(EventsStream):
     name = "web_analytics_deals_v3"
     path = "/events/v3/events/"
     primary_keys = ["id"]
-    schema = WebAnalytics.schema
+    schema = WebAnalyticsDeals.schema
     parent_stream_type = DealsStream
     ignore_parent_replication_key = False
     replication_key = "occurredAt"
