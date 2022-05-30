@@ -23,7 +23,7 @@ from singer_sdk.streams import RESTStream
 from singer_sdk.authenticators import BearerTokenAuthenticator
 from singer_sdk import typing as th  # JSON schema typing helpers
 from tap_hubspot.client import HubspotStream
-from tap_hubspot.streams import ContactsStream
+from tap_hubspot.streams import ContactsStream, DealsStream
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
@@ -42,8 +42,8 @@ class EventsStream(HubspotStream):
     properties = []
     schema_filepath = ""
 
-class WebAnalyticsStream(EventsStream):
-    name = "web_analytics_v3"
+class WebAnalyticsContactsStream(EventsStream):
+    name = "web_analytics_contacts_v3"
     path = "/events/v3/events/"
     primary_keys = ["id"]
     schema = WebAnalytics.schema
@@ -57,3 +57,17 @@ class WebAnalyticsStream(EventsStream):
         params["objectId"] = context["contact_id"]
         return params
 
+class WebAnalyticsDealsStream(EventsStream):
+    name = "web_analytics_deals_v3"
+    path = "/events/v3/events/"
+    primary_keys = ["id"]
+    schema = WebAnalytics.schema
+    parent_stream_type = DealsStream
+    ignore_parent_replication_key = False
+    replication_key = "occurredAt"
+
+    def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
+        params = super().get_url_params(context, next_page_token)
+        params["objectType"] = "deal"
+        params["objectId"] = context["deal_id"]
+        return params
