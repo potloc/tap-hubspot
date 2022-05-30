@@ -13,7 +13,11 @@ schema = th.PropertiesList(
             th.Property("hs_action_executed_timestamp", th.StringType),
             th.Property("hs_action_id", th.StringType),
             th.Property("hs_enrollment_id", th.StringType),
-            th.Property("hs_delayed_object_type", th.StringType)
+            th.Property("hs_delayed_object_type", th.StringType),
+            th.Property("hs_list_id", th.StringType),
+            th.Property("hs_object_seg_source", th.StringType),
+            th.Property("hs_first_added_timestamp", th.StringType),
+            th.Property("hs_list_change_status", th.StringType),
         )
     ),
 ).to_dict()
