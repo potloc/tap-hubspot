@@ -1,13 +1,13 @@
 from singer_sdk import typing as th  # JSON Schema typing helpers
 
 schema = th.PropertiesList(
-    th.Property("id", th.NumberType),
+    th.Property("id", th.IntegerType),
     th.Property("title", th.StringType),
-    th.Property("createdAt", th.NumberType),
-    th.Property("creatorId", th.NumberType),
-    th.Property("deletedAt", th.NumberType),
+    th.Property("createdAt", th.IntegerType),
+    th.Property("creatorId", th.IntegerType),
+    th.Property("deletedAt", th.IntegerType),
     th.Property("updatedDate", th.DateTimeType),
-    th.Property("updaterId", th.NumberType),
+    th.Property("updaterId", th.IntegerType),
     th.Property("reportPropertyFilters",
         th.ArrayType(
             th.ObjectType(
