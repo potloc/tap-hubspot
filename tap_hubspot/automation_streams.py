@@ -49,7 +49,7 @@ class AutomationStream(HubspotStream):
         return row
 
 class WorkflowsStream(AutomationStream):
-    name = "wokrflows_v3"
+    name = "workflows_v3"
     path = "/automation/v3/workflows"
     primary_keys = ["id"]
     schema = Workflows.schema
