@@ -123,7 +123,7 @@ class HubspotStream(RESTStream):
             "datetime": th.DateTimeType(),
             "date": th.DateType(),
             "int": th.IntegerType(),
-            "number": th.NumberType(),
+            "number": th.IntegerType(),
             "decimal": th.NumberType(),
             "double": th.NumberType(),
             "float": th.NumberType(),
@@ -134,18 +134,19 @@ class HubspotStream(RESTStream):
             "variant": th.StringType(),
         }
         sqltype_lookup_hubspot: Dict[str, dict] = {
-            # "timestamp": th.DateTimeType(),
-            # "datetime": th.DateTimeType(),
-            # "date": th.DateType(),
+            "timestamp": th.DateTimeType(),
+            "datetime": th.DateTimeType(),
+            "date": th.DateType(),
             "string": th.StringType(),
-            # "bool": th.BooleanType(),
-            # "variant": th.StringType(),
+            "bool": th.BooleanType(),
+            "variant": th.StringType(),
+            "number": th.NumberType()
         }
         if isinstance(from_type, str):
             type_name = from_type
         else:
             raise ValueError("Expected `str` or a SQLAlchemy `TypeEngine` object or type.")
-        for sqltype, jsonschema_type in sqltype_lookup_hubspot.items():
+        for sqltype, jsonschema_type in sqltype_lookup.items():
             if sqltype.lower() in type_name.lower():
                 return jsonschema_type
         return sqltype_lookup["string"]  # safe failover to str
