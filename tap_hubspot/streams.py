@@ -190,7 +190,7 @@ class AssociationsDealsToCompaniesStream(HubspotStream):
         return ret
 
 
-class AssociationsDealsContacts(HubspotStream):
+class AssociationsDealsToContactsStream(HubspotStream):
     name="associations_deals_contacts"
     path = "/crm/v4/objects/deals/{deal_id}/associations/contacts"
     deal_id = ""
