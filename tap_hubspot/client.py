@@ -134,13 +134,13 @@ class HubspotStream(RESTStream):
             "variant": th.StringType(),
         }
         sqltype_lookup_hubspot: Dict[str, dict] = {
-            "timestamp": th.DateTimeType(),
-            "datetime": th.DateTimeType(),
-            "date": th.DateType(),
+            # "timestamp": th.DateTimeType(),
+            # "datetime": th.DateTimeType(),
+            # "date": th.DateType(),
             "string": th.StringType(),
-            "bool": th.BooleanType(),
-            "variant": th.StringType(),
-            "number": th.NumberType()
+            # "bool": th.BooleanType(),
+            # "variant": th.StringType(),
+            # "number": th.NumberType()
         }
         if isinstance(from_type, str):
             type_name = from_type
