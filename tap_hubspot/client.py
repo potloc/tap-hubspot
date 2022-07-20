@@ -173,14 +173,15 @@ class HubspotStream(RESTStream):
             else:
                 internal_properties.append(th.Property(name, type))
 
-        properties.append(th.Property('updatedAt', th.DateTimeType()))
+        properties.append(th.Property('updatedAt', th.StringType()))
         properties.append(th.Property('createdAt', th.DateTimeType()))
         properties.append(th.Property('id', th.StringType()))
         properties.append(th.Property('archived', th.BooleanType()))
         properties.append(th.Property(
                 'properties', th.ObjectType(*internal_properties)
             ))
-        return th.PropertiesList(*properties).to_dict(), params
+        ret = th.PropertiesList(*properties).to_dict()
+        return ret, params
 
     def get_properties(self) -> List[dict]:
         response = requests.get(f"{self.url_base}/crm/v3/properties/{self.name}", headers=self.http_headers)
