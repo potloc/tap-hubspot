@@ -123,7 +123,7 @@ class HubspotStream(RESTStream):
             "datetime": th.DateTimeType(),
             "date": th.DateType(),
             "int": th.IntegerType(),
-            "number": th.NumberType(),
+            "number": th.IntegerType(),
             "decimal": th.NumberType(),
             "double": th.NumberType(),
             "float": th.NumberType(),
@@ -140,6 +140,7 @@ class HubspotStream(RESTStream):
             "string": th.StringType(),
             # "bool": th.BooleanType(),
             # "variant": th.StringType(),
+            # "number": th.NumberType()
         }
         if isinstance(from_type, str):
             type_name = from_type
