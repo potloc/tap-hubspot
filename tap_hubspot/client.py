@@ -123,7 +123,7 @@ class HubspotStream(RESTStream):
             "datetime": th.DateTimeType(),
             "date": th.DateType(),
             "int": th.IntegerType(),
-            "number": th.IntegerType(),
+            "number": th.NumberType(),
             "decimal": th.NumberType(),
             "double": th.NumberType(),
             "float": th.NumberType(),
@@ -140,7 +140,6 @@ class HubspotStream(RESTStream):
             "string": th.StringType(),
             # "bool": th.BooleanType(),
             # "variant": th.StringType(),
-            # "number": th.NumberType()
         }
         if isinstance(from_type, str):
             type_name = from_type
@@ -180,8 +179,8 @@ class HubspotStream(RESTStream):
         properties.append(th.Property(
                 'properties', th.ObjectType(*internal_properties)
             ))
-        ret = th.PropertiesList(*properties).to_dict()
-        return ret, params
+
+        return th.PropertiesList(*properties).to_dict(), params
 
     def get_properties(self) -> List[dict]:
         response = requests.get(f"{self.url_base}/crm/v3/properties/{self.name}", headers=self.http_headers)
