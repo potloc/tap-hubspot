@@ -223,9 +223,41 @@ class AssociationsDealsToContactsStream(HubspotStream):
 
         return ret
 
-class AssociationsContactsToDeals(HubspotStream):
+class AssociationsContactsToDealsStream(HubspotStream):
     name="associations_contacts_deals"
     path = "/crm/v4/objects/contacts/{contact_id}/associations/deals"
+    deal_id = ""
+    replication_method = "FULL_TABLE"
+    primary_keys = ["id", "toObjectId"]
+    state_partitioning_keys = []
+    replication_key = ""
+    parent_stream_type = ContactsStream
+    schema_filepath = SCHEMAS_DIR / "associations_all.json"
+
+    ignore_parent_replication_keys = True
+
+    def get_url_params(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Dict[str, Any]:
+        """Return a dictionary of values to be used in URL parameterization."""
+        params = super().get_url_params(context, next_page_token)
+        self.contact_id = context['contact_id']
+        return params
+
+    def parse_response(self, response: requests.Response) -> Iterable[dict]:
+        data = response.json()['results']
+        ret = []
+        for e in data:
+            elem = e
+            elem['id'] = self.contact_id
+            ret.append(elem)
+
+
+        return ret
+
+class AssociationsContactsToCompaniesStream(HubspotStream):
+    name="associations_contacts_companies"
+    path = "/crm/v4/objects/contacts/{contact_id}/associations/companies"
     deal_id = ""
     replication_method = "FULL_TABLE"
     primary_keys = ["id", "toObjectId"]

@@ -6,6 +6,8 @@ from typing import List
 from singer_sdk import Tap, Stream
 from singer_sdk import typing as th
 from tap_hubspot.streams import (
+    AssociationsContactsToCompaniesStream,
+    AssociationsContactsToDealsStream,
     AssociationsDealsToCompaniesStream,
     AssociationsDealsToContactsStream,
     ContactsStream ,
@@ -42,33 +44,35 @@ from tap_hubspot.automation_streams import (
 
 STREAM_TYPES = [
     ## CRM
-    AssociationsDealsToCompaniesStream,
-    AssociationsDealsToContactsStream,
+    AssociationsContactsToCompaniesStream,
+    # AssociationsContactsToDealsStream,
+    # AssociationsDealsToCompaniesStream,
+    # AssociationsDealsToContactsStream,
     ContactsStream,
-    CompaniesStream,
-    DealsStream,
-    MeetingsStream,
-    PropertiesCompaniesStream,
-    PropertiesContactsStream,
-    PropertiesDealsStream,
-    PropertiesMeetingsStream,
-    OwnersStream,
+    # CompaniesStream,
+    # DealsStream,
+    # MeetingsStream,
+    # PropertiesCompaniesStream,
+    # PropertiesContactsStream,
+    # PropertiesDealsStream,
+    # PropertiesMeetingsStream,
+    # OwnersStream,
 
-    ## Marketing
-    MarketingEmailsStream,
-    MarketingCampaignIdsStream,
-    MarketingCampaignsStream,
-    MarketingFormsStream,
+    # ## Marketing
+    # MarketingEmailsStream,
+    # MarketingCampaignIdsStream,
+    # MarketingCampaignsStream,
+    # MarketingFormsStream,
 
-    # Events
-    WebAnalyticsContactsStream,
-    WebAnalyticsDealsStream,
+    # # Events
+    # WebAnalyticsContactsStream,
+    # WebAnalyticsDealsStream,
 
-    ## Analytics
-    AnalyticsViewsStream,
+    # ## Analytics
+    # AnalyticsViewsStream,
 
-    ## Automation
-    WorkflowsStream
+    # ## Automation
+    # WorkflowsStream
 ]
 
 
