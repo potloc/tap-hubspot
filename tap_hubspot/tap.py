@@ -52,6 +52,7 @@ STREAM_TYPES = [
     AssociationsContactsToDealsStream,
     AssociationsDealsToCompaniesStream,
     AssociationsDealsToContactsStream,
+    ContactsStream,
     CompaniesStream,
     ContactsStream,
     DealsStream,

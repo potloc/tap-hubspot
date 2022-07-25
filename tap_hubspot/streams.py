@@ -203,6 +203,7 @@ class AssociationsDealsToContactsStream(HubspotStream):
     parent_stream_type = DealsStream
     schema_filepath = SCHEMAS_DIR / "associations_all.json"
 
+
     ignore_parent_replication_keys = True
 
     def get_url_params(
