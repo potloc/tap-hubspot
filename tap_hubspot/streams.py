@@ -167,6 +167,7 @@ class AssociationsDealsToCompaniesStream(HubspotStream):
     state_partitioning_keys = []
     replication_key = ""
     parent_stream_type = DealsStream
+    schema_filepath = SCHEMAS_DIR / "associations_all.json"
 
     ignore_parent_replication_keys = True
 
@@ -199,6 +200,7 @@ class AssociationsDealsToContactsStream(HubspotStream):
     state_partitioning_keys = []
     replication_key = ""
     parent_stream_type = DealsStream
+    schema_filepath = SCHEMAS_DIR / "associations_all.json"
 
     ignore_parent_replication_keys = True
 
