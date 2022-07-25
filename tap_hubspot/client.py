@@ -179,7 +179,6 @@ class HubspotStream(RESTStream):
         properties.append(th.Property(
                 'properties', th.ObjectType(*internal_properties)
             ))
-
         return th.PropertiesList(*properties).to_dict(), params
 
     def get_properties(self) -> List[dict]:
