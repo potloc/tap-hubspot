@@ -1,6 +1,7 @@
 """Hubspot tap class."""
 
 from typing import List
+
 # from black import main
 
 from singer_sdk import Tap, Stream
@@ -12,7 +13,7 @@ from tap_hubspot.streams import (
     AssociationsContactsToDealsStream,
     AssociationsDealsToCompaniesStream,
     AssociationsDealsToContactsStream,
-    ContactsStream ,
+    ContactsStream,
     CompaniesStream,
     DealsStream,
     MeetingsStream,
@@ -32,7 +33,7 @@ from tap_hubspot.marketing_streams import (
 
 from tap_hubspot.events_streams import (
     WebAnalyticsContactsStream,
-    WebAnalyticsDealsStream
+    WebAnalyticsDealsStream,
 )
 
 from tap_hubspot.analytics_streams import (
@@ -54,7 +55,6 @@ STREAM_TYPES = [
     AssociationsDealsToContactsStream,
     ContactsStream,
     CompaniesStream,
-    ContactsStream,
     DealsStream,
     MeetingsStream,
     PropertiesCompaniesStream,
@@ -77,32 +77,52 @@ STREAM_TYPES = [
     AnalyticsViewsStream,
 
     ## Automation
-    WorkflowsStream
+    WorkflowsStream,
 ]
 
 
 class TapHubspot(Tap):
     """Hubspot tap class."""
+
     name = "tap-hubspot"
 
     config_jsonschema = th.PropertiesList(
         th.Property(
-            "access_token",
+            "client_id",
             th.StringType,
             required=True,
+            description="PRIVATE client id for Hubspot API",
+        ),
+        th.Property(
+            "client_secret",
+            th.StringType,
+            required=True,
+            description="PRIVATE client secret for Hubspot API",
+        ),
+        th.Property(
+            "refresh_token",
+            th.StringType,
+            required=True,
+            description="PRIVATE refresh token for Hubspot API",
+        ),
+        th.Property(
+            "access_token",
+            th.StringType,
+            required=False,
             description="PRIVATE Access Token for Hubspot API",
         ),
         th.Property(
             "start_date",
             th.DateTimeType,
             required=True,
-            description="The earliest record date to sync"
-        )
+            description="The earliest record date to sync",
+        ),
     ).to_dict()
 
     def discover_streams(self) -> List[Stream]:
         """Return a list of discovered streams."""
         return [stream_class(tap=self) for stream_class in STREAM_TYPES]
+
 
 if __name__ == "__main__":
     TapHubspot.cli()
