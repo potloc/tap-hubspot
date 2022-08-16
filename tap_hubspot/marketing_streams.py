@@ -36,7 +36,7 @@ from tap_hubspot.schemas.marketing import (
     Emails,
     CampaignIds,
     Campaigns,
-    Forms
+    Forms,
 )
 
 class MarketingStream(HubspotStream):
@@ -161,3 +161,68 @@ class MarketingFormsStream(MarketingStream):
     primary_keys = ["id"]
     schema = Forms.schema
 
+
+class MarketingListsStream(HubspotStream):
+    """Define stream for Marketing Lists."""
+
+    # todo: update when Hubspot updates API to v3
+    name = "lists_v1"
+    path = "/contacts/v1/lists"
+    primary_keys = ["listId"]
+    replication_method = "FULL_TABLE"
+    replication_key = ""
+    next_page_token_jsonpath = "$.has-more"
+    records_jsonpath = "$.lists[*]"
+
+    def get_next_page_token(
+            self, response: requests.Response, previous_token: Optional[Any]
+    ) -> Optional[Any]:
+        """Return a token for identifying next page or None if no more pages."""
+        if self.next_page_token_jsonpath:
+            all_matches = extract_jsonpath(
+                self.next_page_token_jsonpath, response.json()
+            )
+            has_more = next(iter(all_matches), None)
+            if has_more:
+                all_matches = extract_jsonpath("$.offset", response.json())
+                first_offset_match = next(iter(all_matches), None)
+                next_page_token = first_offset_match
+            else:
+                return None
+        else:
+            next_page_token = response.headers.get("X-Next-Page", None)
+
+        return next_page_token
+
+    def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
+        params = super().get_url_params(context, next_page_token)
+        params['count'] = 100
+        params['offset'] = next_page_token if next_page_token else 0
+        return params
+
+    def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
+        """Return a context dictionary for child streams."""
+        return {"listId": record["listId"]}
+
+
+class MarketingListContactsStream(MarketingListsStream):
+    records_jsonpath = "$.contacts[*]"
+    name = "list_contacts_v1"
+    path = "/contacts/v1/lists/{listId}/contacts/all"
+    primary_keys = ["canonical-vid"]
+    replication_method = "FULL_TABLE"
+    replication_key = ""
+    parent_stream_type = MarketingListsStream
+
+    def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
+        params = super().get_url_params(context, next_page_token)
+        params['count'] = 100
+        params['vidOffset'] = next_page_token if next_page_token else 0
+        return params
+
+    def post_process(self, row: dict, context: Optional[dict]) -> dict:
+        """As needed, append or transform raw data to match expected structure.
+        Returns row, or None if row is to be excluded"""
+
+        row["listId"] = context["listId"]
+        return row

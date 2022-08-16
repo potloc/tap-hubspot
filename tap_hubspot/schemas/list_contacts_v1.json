@@ -1,0 +1,70 @@
+{
+  "type": "object",
+  "properties": {
+    "listId": {
+      "type": ["integer", "null"]
+    },
+    "addedAt": {
+      "type": ["integer", "null"]
+    },
+    "vid": {
+      "type": ["integer", "null"]
+    },
+    "canonical-vid": {
+      "type": ["integer", "null"]
+    },
+    "merged-vids": {
+      "type": ["array", "null", "string"]
+    },
+    "merge-audits": {
+      "type": ["array", "null", "string"]
+    },
+    "portal-id": {
+      "type": ["integer", "null"]
+    },
+    "is-contact": {
+      "type": ["boolean", "null"]
+    },
+    "properties": {
+      "type": ["object", "null"],
+      "properties": {}
+    },
+    "form-submissions": {
+      "type": ["array", "null", "string"]
+    },
+    "identity-profiles": {
+      "type": ["array", "null", "string"],
+      "items": {
+        "type": "object",
+        "properties": {
+          "vid": {
+            "type": ["integer", "null"]
+          },
+          "saved-at-timestamp": {
+            "type": ["integer", "null"]
+          },
+          "deleted-changed-timestamp": {
+            "type": ["integer", "null"]
+          },
+          "identities": {
+            "type": ["array", "null"],
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": ["string", "null"]
+                },
+                "value": {
+                  "type": ["string", "null"]
+                },
+                "timestamp": {
+                  "type": ["integer", "null"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

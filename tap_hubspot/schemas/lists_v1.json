@@ -1,0 +1,84 @@
+{
+  "type": "object",
+  "properties": {
+    "listId": {
+      "type": ["integer", "null"]
+    },
+    "name": {
+      "type": ["string", "null"]
+    },
+    "createAt": {
+      "type": ["integer", "null"]
+    },
+    "updatedAt": {
+      "type": ["integer", "null"]
+    },
+    "dynamic": {
+      "type": ["boolean", "null"]
+    },
+    "filters": {
+      "type": ["array", "null", "string"],
+      "items": {
+        "type": ["array", "null"],
+        "items": {
+          "type": ["object", "null"],
+          "properties": {
+            "filterFamily": {
+              "type": ["string", "null"]
+            },
+            "withinTimeMode": {
+              "type": ["string", "null"]
+            },
+            "checkPastVersions": {
+              "type": ["boolean", "null"]
+            },
+            "type": {
+              "type": ["string", "null"]
+            },
+            "property": {
+              "type": ["string", "null"]
+            },
+            "value": {
+              "type": ["string", "null"]
+            },
+            "operator": {
+              "type": ["string", "null"]
+            }
+          }
+        }
+      }
+    },
+    "metaData": {
+      "type": ["object", "null"],
+      "properties": {
+        "processing": {
+          "type": ["string", "null"]
+        },
+        "size": {
+          "type": ["integer", "null"]
+        },
+        "error": {
+          "type": ["string", "null"]
+        },
+        "lastProcessingStateChangeAt": {
+          "type": ["integer", "null"]
+        },
+        "lastSizeChangeAt": {
+          "type": ["integer", "null"]
+        }
+      }
+    },
+    "portalId": {
+      "type": ["integer", "null"]
+    },
+    "listType": {
+      "type": ["string", "null"]
+    },
+    "internalListId": {
+      "type": ["integer", "null"]
+    },
+    "deleteable": {
+      "type": ["boolean", "null"]
+    }
+  }
+}
