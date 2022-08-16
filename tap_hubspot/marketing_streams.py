@@ -209,7 +209,7 @@ class MarketingListContactsStream(MarketingListsStream):
     records_jsonpath = "$.contacts[*]"
     name = "list_contacts_v1"
     path = "/contacts/v1/lists/{listId}/contacts/all"
-    primary_keys = ["canonical-vid"]
+    primary_keys = ["canonical-vid", "listId"]
     replication_method = "FULL_TABLE"
     replication_key = ""
     parent_stream_type = MarketingListsStream
