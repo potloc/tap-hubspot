@@ -168,6 +168,7 @@ class MarketingFormsStream(MarketingStream):
         if next_page_token:
             params["after"] = next_page_token
         params["count"] = 100
+        params["formTypes"] = "all"
         return params
 
 
