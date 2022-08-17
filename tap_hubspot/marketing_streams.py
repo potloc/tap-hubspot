@@ -171,28 +171,24 @@ class MarketingListsStream(HubspotStream):
     primary_keys = ["listId"]
     replication_method = "FULL_TABLE"
     replication_key = ""
-    next_page_token_jsonpath = "$.has-more"
+    next_page_token_jsonpath = "$.offset"
     records_jsonpath = "$.lists[*]"
 
     def get_next_page_token(
             self, response: requests.Response, previous_token: Optional[Any]
     ) -> Optional[Any]:
         """Return a token for identifying next page or None if no more pages."""
-        if self.next_page_token_jsonpath:
+        all_matches = extract_jsonpath("$.has-more", response.json())
+        has_more = next(iter(all_matches), None)
+        if has_more:
             all_matches = extract_jsonpath(
-                self.next_page_token_jsonpath, response.json()
+                self.next_page_token_jsonpath
+                , response.json()
             )
-            has_more = next(iter(all_matches), None)
-            if has_more:
-                all_matches = extract_jsonpath("$.offset", response.json())
-                first_offset_match = next(iter(all_matches), None)
-                next_page_token = first_offset_match
-            else:
-                return None
+            first_offset_match = next(iter(all_matches), None)
+            return first_offset_match
         else:
-            next_page_token = response.headers.get("X-Next-Page", None)
-
-        return next_page_token
+            return None
 
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
@@ -213,6 +209,7 @@ class MarketingListContactsStream(MarketingListsStream):
     replication_method = "FULL_TABLE"
     replication_key = ""
     parent_stream_type = MarketingListsStream
+    next_page_token_jsonpath = "$.vid-offset"
 
     def get_url_params(self, context: Optional[dict], next_page_token: Optional[Any]) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
