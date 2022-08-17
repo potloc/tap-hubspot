@@ -3,7 +3,7 @@ from singer_sdk import typing as th  # JSON Schema typing helpers
 schema = th.PropertiesList(
     th.Property("id", th.StringType),
     th.Property("name", th.StringType),
-    th.Property("createAt", th.DateTimeType),
+    th.Property("createdAt", th.DateTimeType),
     th.Property("updatedAt", th.DateTimeType),
     th.Property("archived", th.BooleanType),
     th.Property("fieldGroups",
@@ -38,4 +38,6 @@ schema = th.PropertiesList(
         )
     ),
     th.Property("formType", th.StringType),
+    th.Property("displayOptions", th.StringType),
+    th.Property("legalConsentOptions", th.StringType),
 ).to_dict()

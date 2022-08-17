@@ -154,12 +154,21 @@ class MarketingCampaignsStream(MarketingStream):
         return params
 
 
-
 class MarketingFormsStream(MarketingStream):
     name = "forms_v3"
     path = "/marketing/v3/forms/"
     primary_keys = ["id"]
     schema = Forms.schema
+
+    def get_url_params(
+            self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Dict[str, Any]:
+        """Return a dictionary of values to be used in URL parameterization."""
+        params: dict = {}
+        if next_page_token:
+            params["after"] = next_page_token
+        params["count"] = 100
+        return params
 
 
 class MarketingListsStream(HubspotStream):
