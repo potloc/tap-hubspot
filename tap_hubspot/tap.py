@@ -1,6 +1,7 @@
 """Hubspot tap class."""
 
 from typing import List
+
 # from black import main
 
 from singer_sdk import Tap, Stream
@@ -12,7 +13,7 @@ from tap_hubspot.streams import (
     AssociationsContactsToDealsStream,
     AssociationsDealsToCompaniesStream,
     AssociationsDealsToContactsStream,
-    ContactsStream ,
+    ContactsStream,
     CompaniesStream,
     DealsStream,
     MeetingsStream,
@@ -32,7 +33,7 @@ from tap_hubspot.marketing_streams import (
 
 from tap_hubspot.events_streams import (
     WebAnalyticsContactsStream,
-    WebAnalyticsDealsStream
+    WebAnalyticsDealsStream,
 )
 
 from tap_hubspot.analytics_streams import (
@@ -46,43 +47,40 @@ from tap_hubspot.automation_streams import (
 
 STREAM_TYPES = [
     ## CRM
-    AssociationsCompaniesToContactsStream,
-    AssociationsCompaniesToDealsStream,
-    AssociationsContactsToCompaniesStream,
+    # AssociationsCompaniesToContactsStream,
+    # AssociationsCompaniesToDealsStream,
+    # AssociationsContactsToCompaniesStream,
     AssociationsContactsToDealsStream,
-    AssociationsDealsToCompaniesStream,
-    AssociationsDealsToContactsStream,
-    ContactsStream,
-    CompaniesStream,
-    ContactsStream,
-    DealsStream,
-    MeetingsStream,
-    PropertiesCompaniesStream,
-    PropertiesContactsStream,
-    PropertiesDealsStream,
-    PropertiesMeetingsStream,
-    OwnersStream,
-
-    ## Marketing
-    MarketingEmailsStream,
-    MarketingCampaignIdsStream,
-    MarketingCampaignsStream,
-    MarketingFormsStream,
-
-    # Events
-    WebAnalyticsContactsStream,
-    WebAnalyticsDealsStream,
-
-    ## Analytics
-    AnalyticsViewsStream,
-
-    ## Automation
-    WorkflowsStream
+    # AssociationsDealsToCompaniesStream,
+    # AssociationsDealsToContactsStream,
+    # ContactsStream,
+    # CompaniesStream,
+    # ContactsStream,
+    # DealsStream,
+    # MeetingsStream,
+    # PropertiesCompaniesStream,
+    # PropertiesContactsStream,
+    # PropertiesDealsStream,
+    # PropertiesMeetingsStream,
+    # OwnersStream,
+    # ## Marketing
+    # MarketingEmailsStream,
+    # MarketingCampaignIdsStream,
+    # MarketingCampaignsStream,
+    # MarketingFormsStream,
+    # # Events
+    # WebAnalyticsContactsStream,
+    # WebAnalyticsDealsStream,
+    # ## Analytics
+    # AnalyticsViewsStream,
+    # ## Automation
+    # WorkflowsStream,
 ]
 
 
 class TapHubspot(Tap):
     """Hubspot tap class."""
+
     name = "tap-hubspot"
 
     config_jsonschema = th.PropertiesList(
@@ -96,13 +94,14 @@ class TapHubspot(Tap):
             "start_date",
             th.DateTimeType,
             required=True,
-            description="The earliest record date to sync"
-        )
+            description="The earliest record date to sync",
+        ),
     ).to_dict()
 
     def discover_streams(self) -> List[Stream]:
         """Return a list of discovered streams."""
         return [stream_class(tap=self) for stream_class in STREAM_TYPES]
+
 
 if __name__ == "__main__":
     TapHubspot.cli()
