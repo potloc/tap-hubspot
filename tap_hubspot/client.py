@@ -32,6 +32,7 @@ class HubspotStream(RESTStream):
     cached_schema = None
     properties = []
     hoauth = None
+    extra_retry_statuses: List[int] = [429, 104]
 
     @property
     def schema_filepath(self) -> Path:
