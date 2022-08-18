@@ -56,7 +56,8 @@ def test_standard_tap_tests(requests_mock):
     streams2 = [
         "https://api.hubapi.com/marketing-emails/v1/emails/with-statistics?limit=100&offset=100&orderBy=created",
         "https://api.hubapi.com/automation/v3/workflows?limit=100",
-        "",
+        "https://api.hubapi.com/marketing/v3/forms/?count=100&formTypes=all",
+        "https://api.hubapi.com/contacts/v1/lists?limit=100&count=100&offset=0",
     ]
     for s in streams2:
         requests_mock.get(
