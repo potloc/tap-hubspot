@@ -55,7 +55,7 @@ STREAM_TYPES = [
     # AssociationsDealsToContactsStream,
     # ContactsStream,
     # CompaniesStream,
-    # ContactsStream,
+    ContactsStream,
     # DealsStream,
     # MeetingsStream,
     # PropertiesCompaniesStream,
