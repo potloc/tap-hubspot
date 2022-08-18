@@ -115,7 +115,7 @@ class DealsStream(HubspotStream):
 class ContactsStream(HubspotStream):
     """Define custom stream."""
 
-    name = "contacts_2"
+    name = "contacts"
     path = "/crm/v3/objects/contacts"
     primary_keys = ["id"]
     partitions = [{"archived": True}, {"archived": False}]
@@ -235,7 +235,7 @@ class AssociationsDealsToContactsStream(HubspotStream):
 
 
 class AssociationsContactsToDealsStream(HubspotStream):
-    name = "associations_contacts_deals_2"
+    name = "associations_contacts_deals"
     path = "/crm/v4/objects/contacts/{contact_id}/associations/deals"
     deal_id = ""
     replication_method = "FULL_TABLE"
