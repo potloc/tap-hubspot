@@ -235,10 +235,10 @@ class AssociationsDealsToContactsStream(HubspotStream):
 
 
 class AssociationsContactsToDealsStream(HubspotStream):
-    name = "associations_contacts_deals"
+    name = "associations_contacts_deals_2"
     path = "/crm/v4/objects/contacts/{contact_id}/associations/deals"
     deal_id = ""
-    replication_method = "FULL_TABLE"
+    replication_method = "INCREMENTAL"
     primary_keys = ["id", "toObjectId"]
     state_partitioning_keys = []
     replication_key = ""
