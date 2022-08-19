@@ -118,7 +118,6 @@ class ContactsStream(HubspotStream):
     name = "contacts"
     path = "/crm/v3/objects/contacts"
     primary_keys = ["id"]
-    replication_method = "FULL_TABLE"
     partitions = [{"archived": True}, {"archived": False}]
 
     def get_url_params(
@@ -236,26 +235,25 @@ class AssociationsDealsToContactsStream(HubspotStream):
 
 
 class AssociationsContactsToDealsStream(HubspotStream):
-    contact_id = 37341901
     name = "associations_contacts_deals"
-    path = "/crm/v4/objects/contacts/37341901/associations/deals"
+    path = "/crm/v4/objects/contacts/{contact_id}/associations/deals"
     deal_id = ""
     replication_method = "FULL_TABLE"
     primary_keys = ["id", "toObjectId"]
     state_partitioning_keys = []
     replication_key = ""
-    # parent_stream_type = ContactsStream
+    parent_stream_type = ContactsStream
     schema_filepath = SCHEMAS_DIR / "associations_all.json"
 
     ignore_parent_replication_keys = True
 
-    # def get_url_params(
-    #     self, context: Optional[dict], next_page_token: Optional[Any]
-    # ) -> Dict[str, Any]:
-    #     """Return a dictionary of values to be used in URL parameterization."""
-    #     params = super().get_url_params(context, next_page_token)
-    #     self.contact_id = context["contact_id"]
-    #     return params
+    def get_url_params(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Dict[str, Any]:
+        """Return a dictionary of values to be used in URL parameterization."""
+        params = super().get_url_params(context, next_page_token)
+        self.contact_id = context["contact_id"]
+        return params
 
     def parse_response(self, response: requests.Response) -> Iterable[dict]:
         data = response.json()["results"]
