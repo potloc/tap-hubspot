@@ -1,13 +1,14 @@
 """REST client handling, including HubspotStream base class."""
-
+import backoff
 import requests
 from pathlib import Path
-from typing import Any, Dict, Optional, List, Iterable
+from typing import Any, Dict, Optional, List, Iterable, Callable
 
 import pytz
 import singer
 
 from singer import utils
+from singer_sdk.exceptions import RetriableAPIError
 from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.streams import RESTStream
 from singer_sdk import typing as th
@@ -32,7 +33,6 @@ class HubspotStream(RESTStream):
     cached_schema = None
     properties = []
     hoauth = None
-    extra_retry_statuses: List[int] = [429, 104]
 
     @property
     def schema_filepath(self) -> Path:
@@ -200,3 +200,30 @@ class HubspotStream(RESTStream):
         for prop in properties:
             params.append(prop["name"])
         return params
+
+    def request_decorator(self, func: Callable) -> Callable:
+        """Instantiate a decorator for handling request failures.
+
+        Uses a wait generator defined in `backoff_wait_generator` to
+        determine backoff behaviour. Try limit is defined in
+        `backoff_max_tries`, and will trigger the event defined in
+        `backoff_handler` before retrying. Developers may override one or
+        all of these methods to provide custom backoff or retry handling.
+
+        Args:
+            func: Function to decorate.
+
+        Returns:
+            A decorated method.
+        """
+        decorator: Callable = backoff.on_exception(
+            self.backoff_wait_generator,
+            (
+                RetriableAPIError,
+                requests.exceptions.ReadTimeout,
+                requests.exceptions.ConnectionError,
+            ),
+            max_tries=self.backoff_max_tries,
+            on_backoff=self.backoff_handler,
+        )(func)
+        return decorator
