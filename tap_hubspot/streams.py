@@ -181,7 +181,7 @@ class AssociationsDealsToCompaniesStream(HubspotStream):
     parent_stream_type = DealsStream
     schema_filepath = SCHEMAS_DIR / "associations_all.json"
 
-    ignore_parent_replication_keys = True
+    ignore_parent_replication_keys = False
 
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
@@ -213,7 +213,7 @@ class AssociationsDealsToContactsStream(HubspotStream):
     parent_stream_type = DealsStream
     schema_filepath = SCHEMAS_DIR / "associations_all.json"
 
-    ignore_parent_replication_keys = True
+    ignore_parent_replication_keys = False
 
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
@@ -277,7 +277,7 @@ class AssociationsContactsToCompaniesStream(HubspotStream):
     parent_stream_type = ContactsStream
     schema_filepath = SCHEMAS_DIR / "associations_all.json"
 
-    ignore_parent_replication_keys = True
+    ignore_parent_replication_keys = False
 
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
@@ -309,7 +309,7 @@ class AssociationsCompaniesToContactsStream(HubspotStream):
     parent_stream_type = CompaniesStream
     schema_filepath = SCHEMAS_DIR / "associations_all.json"
 
-    ignore_parent_replication_keys = True
+    ignore_parent_replication_keys = False
 
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
@@ -341,7 +341,7 @@ class AssociationsCompaniesToDealsStream(HubspotStream):
     parent_stream_type = CompaniesStream
     schema_filepath = SCHEMAS_DIR / "associations_all.json"
 
-    ignore_parent_replication_keys = True
+    ignore_parent_replication_keys = False
 
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
