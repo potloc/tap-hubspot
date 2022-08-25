@@ -16,7 +16,7 @@ plugins:
     - name: start_date
       value: '2010-01-01T00:00:00Z'
     config:
-      value: '2010-01-01T00:00:00Z'
+      start_date: '2010-01-01T00:00:00Z'
   loaders:
   - name: target-jsonl
     variant: andyh1203
