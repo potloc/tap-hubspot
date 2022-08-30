@@ -8,6 +8,7 @@ schema = th.PropertiesList(
     th.Property("archived", th.BooleanType),
     th.Property("fieldGroups",
         th.CustomType({"anyOf": [{"type": "string"}, {"type": "null"}, {"type:": "array"}]})
+        # todo: doesn't play well with flattening
         # th.ArrayType(
         #     th.ObjectType(
         #         th.Property("groupType", th.StringType),
@@ -63,6 +64,7 @@ schema = th.PropertiesList(
         th.Property("communicationConsentText", th.StringType),
         th.Property("communicationsCheckboxes",
             th.CustomType({"anyOf": [{"type": "string"}, {"type": "null"}, {"type:": "array"}]})
+            # todo: doesn't play well with flattening
             # th.ArrayType(
             #     th.ObjectType(
             #         th.Property("label", th.StringType),

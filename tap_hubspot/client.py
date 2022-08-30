@@ -29,7 +29,6 @@ class HubspotStream(RESTStream):
     replication_method = "INCREMENTAL"
     cached_schema = None
     properties = []
-    hoauth = None
 
     @property
     def schema_filepath(self) -> Path:
