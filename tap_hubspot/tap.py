@@ -64,7 +64,6 @@ STREAM_TYPES = [
     PropertiesDealsStream,
     PropertiesMeetingsStream,
     OwnersStream,
-
     ## Marketing
     MarketingEmailsStream,
     MarketingCampaignIdsStream,
@@ -72,14 +71,11 @@ STREAM_TYPES = [
     MarketingFormsStream,
     MarketingListsStream,
     MarketingListContactsStream,
-
     # Events
     WebAnalyticsContactsStream,
     WebAnalyticsDealsStream,
-
     ## Analytics
     AnalyticsViewsStream,
-
     ## Automation
     WorkflowsStream,
 ]
@@ -101,8 +97,8 @@ class TapHubspot(Tap):
             "start_date",
             th.DateTimeType,
             required=True,
-            description="The earliest record date to sync"
-        )
+            description="The earliest record date to sync",
+        ),
     ).to_dict()
 
     def discover_streams(self) -> List[Stream]:
