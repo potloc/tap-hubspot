@@ -11,9 +11,8 @@ from singer import utils
 from singer_sdk.exceptions import RetriableAPIError
 from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.streams import RESTStream
+from singer_sdk.authenticators import BearerTokenAuthenticator
 from singer_sdk import typing as th
-
-from tap_hubspot.auth import HubspotOAuthAuthenticator
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 LOGGER = singer.get_logger()
@@ -25,9 +24,7 @@ class HubspotStream(RESTStream):
     url_base = "https://api.hubapi.com"
 
     records_jsonpath = "$.results[*]"  # Or override `parse_response`.
-    next_page_token_jsonpath = (
-        "$.paging.next.after"  # Or override `get_next_page_token`.
-    )
+    next_page_token_jsonpath = "$.paging.next.after"  # Or override `get_next_page_token`.
     replication_key = "updatedAt"
     replication_method = "INCREMENTAL"
     cached_schema = None
@@ -39,20 +36,22 @@ class HubspotStream(RESTStream):
         return SCHEMAS_DIR / f"{self.name}.json"
 
     @property
-    def authenticator(self) -> HubspotOAuthAuthenticator:
+    def authenticator(self) -> BearerTokenAuthenticator:
         """Return a new authenticator object."""
-
-        if self.hoauth is None:
-            self.hoauth = HubspotOAuthAuthenticator(
-                stream=self,
-                auth_endpoint="https://api.hubapi.com/oauth/v1/token",
-            )
-        return self.hoauth
+        return BearerTokenAuthenticator.create_for_stream(
+            self,
+            token=self.config.get("access_token"),
+        )
 
     @property
     def http_headers(self) -> dict:
         """Return the http headers needed."""
-        return self.authenticator.auth_headers
+        headers = {}
+        if "user_agent" in self.config:
+            headers["User-Agent"] = self.config.get("user_agent")
+        if "access_token" in self.config:
+            headers["Authorization"] = f"Bearer {self.config.get('access_token')}"
+        return headers
 
     def get_next_page_token(
         self, response: requests.Response, previous_token: Optional[Any]
@@ -76,7 +75,7 @@ class HubspotStream(RESTStream):
         params: dict = {}
         if next_page_token:
             params["after"] = next_page_token
-        params["limit"] = 100
+        params['limit'] = 100
         return params
 
     def prepare_request_payload(
@@ -97,9 +96,7 @@ class HubspotStream(RESTStream):
         Returns row, or None if row is to be excluded"""
 
         if self.replication_key:
-            if utils.strptime_to_utc(
-                row[self.replication_key]
-            ) <= self.get_starting_timestamp(context).astimezone(pytz.utc):
+            if utils.strptime_to_utc(row[self.replication_key]) <= self.get_starting_timestamp(context).astimezone(pytz.utc):
                 return None
         return row
 
@@ -145,9 +142,7 @@ class HubspotStream(RESTStream):
         if isinstance(from_type, str):
             type_name = from_type
         else:
-            raise ValueError(
-                "Expected `str` or a SQLAlchemy `TypeEngine` object or type."
-            )
+            raise ValueError("Expected `str` or a SQLAlchemy `TypeEngine` object or type.")
         for sqltype, jsonschema_type in sqltype_lookup_hubspot.items():
             if sqltype.lower() in type_name.lower():
                 return jsonschema_type
@@ -166,28 +161,25 @@ class HubspotStream(RESTStream):
         params = []
 
         for prop in properties_hub:
-            name = prop["name"]
+            name = prop['name']
             params.append(name)
-            type = self.get_json_schema(prop["type"])
+            type = self.get_json_schema(prop['type'])
             if name in poorly_cast:
                 internal_properties.append(th.Property(name, th.StringType()))
             else:
                 internal_properties.append(th.Property(name, type))
 
-        properties.append(th.Property("updatedAt", th.DateTimeType()))
-        properties.append(th.Property("createdAt", th.DateTimeType()))
-        properties.append(th.Property("id", th.StringType()))
-        properties.append(th.Property("archived", th.BooleanType()))
-        properties.append(
-            th.Property("properties", th.ObjectType(*internal_properties))
-        )
+        properties.append(th.Property('updatedAt', th.DateTimeType()))
+        properties.append(th.Property('createdAt', th.DateTimeType()))
+        properties.append(th.Property('id', th.StringType()))
+        properties.append(th.Property('archived', th.BooleanType()))
+        properties.append(th.Property(
+                'properties', th.ObjectType(*internal_properties)
+            ))
         return th.PropertiesList(*properties).to_dict(), params
 
     def get_properties(self) -> List[dict]:
-        response = requests.get(
-            f"{self.url_base}/crm/v3/properties/{self.name}",
-            headers=self.http_headers,
-        )
+        response = requests.get(f"{self.url_base}/crm/v3/properties/{self.name}", headers=self.http_headers)
         res = response.json()
 
         try:
@@ -198,7 +190,7 @@ class HubspotStream(RESTStream):
     def get_params_from_properties(self, properties: List[dict]) -> List[str]:
         params = []
         for prop in properties:
-            params.append(prop["name"])
+            params.append(prop['name'])
         return params
 
     def request_decorator(self, func: Callable) -> Callable:

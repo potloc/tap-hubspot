@@ -92,35 +92,17 @@ class TapHubspot(Tap):
 
     config_jsonschema = th.PropertiesList(
         th.Property(
-            "client_id",
-            th.StringType,
-            required=True,
-            description="PRIVATE client id for Hubspot API",
-        ),
-        th.Property(
-            "client_secret",
-            th.StringType,
-            required=True,
-            description="PRIVATE client secret for Hubspot API",
-        ),
-        th.Property(
-            "refresh_token",
-            th.StringType,
-            required=True,
-            description="PRIVATE refresh token for Hubspot API",
-        ),
-        th.Property(
             "access_token",
             th.StringType,
-            required=False,
+            required=True,
             description="PRIVATE Access Token for Hubspot API",
         ),
         th.Property(
             "start_date",
             th.DateTimeType,
             required=True,
-            description="The earliest record date to sync",
-        ),
+            description="The earliest record date to sync"
+        )
     ).to_dict()
 
     def discover_streams(self) -> List[Stream]:

@@ -11,12 +11,6 @@ plugins:
     - catalog
     - discover
     settings:
-    - name: client_id
-      kind: password
-    - name: client_secret
-      kind: password
-    - name: refresh_token
-      kind: password
     - name: access_token
       kind: password
     - name: flattening_enabled
@@ -27,7 +21,13 @@ plugins:
     config:
       start_date: '2010-01-01T00:00:00Z'
       flattening_enabled: true
-      flattening_max_depth: 5
+      flattening_max_depth: 7
+    select:
+#      - contacts.*
+#      - companies.*
+#      - lists_v1.*
+#      - list_contacts_v1.*
+      - forms_v3.*
   loaders:
   - name: target-jsonl
     variant: andyh1203

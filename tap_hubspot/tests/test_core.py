@@ -7,9 +7,7 @@ from singer_sdk.testing import get_standard_tap_tests
 from tap_hubspot.tap import TapHubspot
 
 SAMPLE_CONFIG = {
-    "client_id": "clientid",
-    "client_secret": "clientsecret",
-    "refresh_token": "refreshtoken",
+    "access_token": "accesstoken",
     "start_date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d"),
 }
 
@@ -17,17 +15,6 @@ SAMPLE_CONFIG = {
 # Run standard built-in tap tests from the SDK:
 def test_standard_tap_tests(requests_mock):
     """Run standard tap tests from the SDK."""
-    requests_mock.post(
-        "https://api.hubapi.com/oauth/v1/token",
-        json={
-            "refresh_token": "refreshtoken",
-            "expires_in": 100,
-            "access_token": "accesstoken",
-            "id_token": "idtoken",
-            "token_type": "tokentype",
-        },
-    )
-
     for stream in ["contacts", "companies", "deals", "meetings"]:
         requests_mock.get(
             f"https://api.hubapi.com/crm/v3/properties/{stream}",
