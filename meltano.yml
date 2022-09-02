@@ -20,8 +20,6 @@ plugins:
       value: '2010-01-01T00:00:00Z'
     config:
       start_date: '2010-01-01T00:00:00Z'
-      flattening_enabled: true
-      flattening_max_depth: 7
   loaders:
   - name: target-jsonl
     variant: andyh1203
