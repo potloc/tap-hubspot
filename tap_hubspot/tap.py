@@ -29,6 +29,8 @@ from tap_hubspot.marketing_streams import (
     MarketingCampaignIdsStream,
     MarketingCampaignsStream,
     MarketingFormsStream,
+    MarketingListsStream,
+    MarketingListContactsStream,
 )
 
 from tap_hubspot.events_streams import (
@@ -55,7 +57,6 @@ STREAM_TYPES = [
     AssociationsDealsToContactsStream,
     ContactsStream,
     CompaniesStream,
-    ContactsStream,
     DealsStream,
     MeetingsStream,
     PropertiesCompaniesStream,
@@ -68,6 +69,8 @@ STREAM_TYPES = [
     MarketingCampaignIdsStream,
     MarketingCampaignsStream,
     MarketingFormsStream,
+    MarketingListsStream,
+    MarketingListContactsStream,
     # Events
     WebAnalyticsContactsStream,
     WebAnalyticsDealsStream,

@@ -14,6 +14,10 @@
       },
       "archived": {
           "type": ["null", "boolean"]
+      },
+      "archivedAt": {
+          "type": ["null", "string"],
+          "format": "date-time"
       }
   }
 }

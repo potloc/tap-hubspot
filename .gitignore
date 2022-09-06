@@ -114,3 +114,4 @@ catalog.json
 
 # Custom Debug
 *.vscode
+*.idea

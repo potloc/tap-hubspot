@@ -1,23 +1,22 @@
 """REST client handling, including HubspotStream base class."""
-
+import backoff
 import requests
-import json
 from pathlib import Path
-from typing import Any, Dict, Optional, Union, List, Iterable
+from typing import Any, Dict, Optional, List, Iterable, Callable
 
 import pytz
 import singer
 
-from memoization import cached
-
 from singer import utils
+from singer_sdk.exceptions import RetriableAPIError
 from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.streams import RESTStream
 from singer_sdk.authenticators import BearerTokenAuthenticator
-from singer_sdk import typing as th  # JSON schema typing helpers
+from singer_sdk import typing as th
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 LOGGER = singer.get_logger()
+
 
 class HubspotStream(RESTStream):
     """Hubspot stream class."""
@@ -31,11 +30,9 @@ class HubspotStream(RESTStream):
     cached_schema = None
     properties = []
 
-
     @property
     def schema_filepath(self) -> Path:
         return SCHEMAS_DIR / f"{self.name}.json"
-
 
     @property
     def authenticator(self) -> BearerTokenAuthenticator:
@@ -159,7 +156,6 @@ class HubspotStream(RESTStream):
         internal_properties: List[th.Property] = []
         properties: List[th.Property] = []
 
-
         properties_hub = self.get_properties()
         params = []
 
@@ -184,10 +180,41 @@ class HubspotStream(RESTStream):
     def get_properties(self) -> List[dict]:
         response = requests.get(f"{self.url_base}/crm/v3/properties/{self.name}", headers=self.http_headers)
         res = response.json()
-        return res['results']
+
+        try:
+            return res["results"]
+        except KeyError:
+            raise KeyError(f"Error retrieving the API query results: {res}")
 
     def get_params_from_properties(self, properties: List[dict]) -> List[str]:
         params = []
         for prop in properties:
             params.append(prop['name'])
         return params
+
+    def request_decorator(self, func: Callable) -> Callable:
+        """Instantiate a decorator for handling request failures.
+
+        Uses a wait generator defined in `backoff_wait_generator` to
+        determine backoff behaviour. Try limit is defined in
+        `backoff_max_tries`, and will trigger the event defined in
+        `backoff_handler` before retrying. Developers may override one or
+        all of these methods to provide custom backoff or retry handling.
+
+        Args:
+            func: Function to decorate.
+
+        Returns:
+            A decorated method.
+        """
+        decorator: Callable = backoff.on_exception(
+            self.backoff_wait_generator,
+            (
+                RetriableAPIError,
+                requests.exceptions.ReadTimeout,
+                requests.exceptions.ConnectionError,
+            ),
+            max_tries=self.backoff_max_tries,
+            on_backoff=self.backoff_handler,
+        )(func)
+        return decorator
