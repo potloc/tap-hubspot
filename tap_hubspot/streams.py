@@ -176,7 +176,7 @@ class AssociationsDealsToCompaniesStream(HubspotStream):
     deal_id = ""
     replication_method = "FULL_TABLE"
     primary_keys = ["id", "toObjectId"]
-    state_partitioning_keys = []
+    state_partitioning_keys = ["id"]
     replication_key = ""
     parent_stream_type = DealsStream
     schema_filepath = SCHEMAS_DIR / "associations_all.json"
@@ -208,7 +208,7 @@ class AssociationsDealsToContactsStream(HubspotStream):
     deal_id = ""
     replication_method = "FULL_TABLE"
     primary_keys = ["id", "toObjectId"]
-    state_partitioning_keys = []
+    state_partitioning_keys = ["id"]
     replication_key = ""
     parent_stream_type = DealsStream
     schema_filepath = SCHEMAS_DIR / "associations_all.json"
@@ -240,7 +240,7 @@ class AssociationsContactsToDealsStream(HubspotStream):
     deal_id = ""
     replication_method = "FULL_TABLE"
     primary_keys = ["id", "toObjectId"]
-    state_partitioning_keys = []
+    state_partitioning_keys = ["id"]
     replication_key = ""
     parent_stream_type = ContactsStream
     schema_filepath = SCHEMAS_DIR / "associations_all.json"
@@ -272,7 +272,7 @@ class AssociationsContactsToCompaniesStream(HubspotStream):
     deal_id = ""
     replication_method = "FULL_TABLE"
     primary_keys = ["id", "toObjectId"]
-    state_partitioning_keys = []
+    state_partitioning_keys = ["id"]
     replication_key = ""
     parent_stream_type = ContactsStream
     schema_filepath = SCHEMAS_DIR / "associations_all.json"
@@ -304,7 +304,7 @@ class AssociationsCompaniesToContactsStream(HubspotStream):
     deal_id = ""
     replication_method = "FULL_TABLE"
     primary_keys = ["id", "toObjectId"]
-    state_partitioning_keys = []
+    state_partitioning_keys = ["id"]
     replication_key = ""
     parent_stream_type = CompaniesStream
     schema_filepath = SCHEMAS_DIR / "associations_all.json"
@@ -336,7 +336,7 @@ class AssociationsCompaniesToDealsStream(HubspotStream):
     deal_id = ""
     replication_method = "FULL_TABLE"
     primary_keys = ["id", "toObjectId"]
-    state_partitioning_keys = []
+    state_partitioning_keys = ["id"]
     replication_key = ""
     parent_stream_type = CompaniesStream
     schema_filepath = SCHEMAS_DIR / "associations_all.json"
