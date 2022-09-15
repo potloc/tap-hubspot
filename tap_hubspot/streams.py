@@ -176,12 +176,12 @@ class AssociationsDealsToCompaniesStream(HubspotStream):
     deal_id = ""
     replication_method = "FULL_TABLE"
     primary_keys = ["id", "toObjectId"]
-    state_partitioning_keys = []
+    state_partitioning_keys = ["id"]
     replication_key = ""
     parent_stream_type = DealsStream
     schema_filepath = SCHEMAS_DIR / "associations_all.json"
 
-    ignore_parent_replication_keys = False
+    ignore_parent_replication_keys = True
 
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
@@ -208,12 +208,12 @@ class AssociationsDealsToContactsStream(HubspotStream):
     deal_id = ""
     replication_method = "FULL_TABLE"
     primary_keys = ["id", "toObjectId"]
-    state_partitioning_keys = []
+    state_partitioning_keys = ["id"]
     replication_key = ""
     parent_stream_type = DealsStream
     schema_filepath = SCHEMAS_DIR / "associations_all.json"
 
-    ignore_parent_replication_keys = False
+    ignore_parent_replication_keys = True
 
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
@@ -240,7 +240,7 @@ class AssociationsContactsToDealsStream(HubspotStream):
     deal_id = ""
     replication_method = "FULL_TABLE"
     primary_keys = ["id", "toObjectId"]
-    state_partitioning_keys = []
+    state_partitioning_keys = ["id"]
     replication_key = ""
     parent_stream_type = ContactsStream
     schema_filepath = SCHEMAS_DIR / "associations_all.json"
@@ -272,12 +272,12 @@ class AssociationsContactsToCompaniesStream(HubspotStream):
     deal_id = ""
     replication_method = "FULL_TABLE"
     primary_keys = ["id", "toObjectId"]
-    state_partitioning_keys = []
+    state_partitioning_keys = ["id"]
     replication_key = ""
     parent_stream_type = ContactsStream
     schema_filepath = SCHEMAS_DIR / "associations_all.json"
 
-    ignore_parent_replication_keys = False
+    ignore_parent_replication_keys = True
 
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
@@ -304,12 +304,12 @@ class AssociationsCompaniesToContactsStream(HubspotStream):
     deal_id = ""
     replication_method = "FULL_TABLE"
     primary_keys = ["id", "toObjectId"]
-    state_partitioning_keys = []
+    state_partitioning_keys = ["id"]
     replication_key = ""
     parent_stream_type = CompaniesStream
     schema_filepath = SCHEMAS_DIR / "associations_all.json"
 
-    ignore_parent_replication_keys = False
+    ignore_parent_replication_keys = True
 
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
@@ -336,12 +336,12 @@ class AssociationsCompaniesToDealsStream(HubspotStream):
     deal_id = ""
     replication_method = "FULL_TABLE"
     primary_keys = ["id", "toObjectId"]
-    state_partitioning_keys = []
+    state_partitioning_keys = ["id"]
     replication_key = ""
     parent_stream_type = CompaniesStream
     schema_filepath = SCHEMAS_DIR / "associations_all.json"
 
-    ignore_parent_replication_keys = False
+    ignore_parent_replication_keys = True
 
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
