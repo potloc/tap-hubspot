@@ -37,6 +37,12 @@
         "timestamp": {
           "type": ["null", "integer"],
           "format": "date-time"
+        },
+        "activityType": {
+          "type": ["null","string"]
+        },
+        "teamId": {
+          "type": ["null","string"]
         }
       }
     },
