@@ -44,6 +44,8 @@ This tap:
   - [Contacts](https://developers.hubspot.com/docs/methods/contacts/get_contacts)
   - [Contact Lists](http://developers.hubspot.com/docs/methods/lists/get_lists)
   - [Deals](http://developers.hubspot.com/docs/methods/deals/get_deals_modified)
+  - [Meetings](https://developers.hubspot.com/docs/api/crm/meetings)
+  - [Calls](https://developers.hubspot.com/docs/api/crm/calls)
   - [Deal Pipelines](https://developers.hubspot.com/docs/methods/deal-pipelines/get-all-deal-pipelines)
   - [Email Events](http://developers.hubspot.com/docs/methods/email/get_events)
   - [Forms](http://developers.hubspot.com/docs/methods/forms/v2/get_forms)
