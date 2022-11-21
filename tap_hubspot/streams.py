@@ -47,6 +47,25 @@ class MeetingsStream(HubspotStream):
         return self.cached_schema
 
 
+class CallsStream(HubspotStream):
+    name = "calls"
+    path = f"/crm/v3/objects/calls"
+    primary_keys = ["id"]
+
+    def get_url_params(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Dict[str, Any]:
+        params = super().get_url_params(context, next_page_token)
+        params["properties"] = ",".join(self.properties)
+        return params
+
+    @property
+    def schema(self) -> dict:
+        if self.cached_schema is None:
+            self.cached_schema, self.properties = self.get_custom_schema()
+        return self.cached_schema
+
+
 class OwnersStream(HubspotStream):
     """Define custom stream."""
 
