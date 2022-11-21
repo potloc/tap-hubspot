@@ -46,7 +46,6 @@ This tap:
   - [Deals](http://developers.hubspot.com/docs/methods/deals/get_deals_modified)
   - [Deal Pipelines](https://developers.hubspot.com/docs/methods/deal-pipelines/get-all-deal-pipelines)
   - [Email Events](http://developers.hubspot.com/docs/methods/email/get_events)
-  - [Engagements](https://developers.hubspot.com/docs/methods/engagements/get-all-engagements)
   - [Forms](http://developers.hubspot.com/docs/methods/forms/v2/get_forms)
   - [Keywords](http://developers.hubspot.com/docs/methods/keywords/get_keywords)
   - [Owners](http://developers.hubspot.com/docs/methods/owners/get_owners)
