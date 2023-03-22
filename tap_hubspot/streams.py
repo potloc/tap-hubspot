@@ -113,10 +113,16 @@ class DealsStream(HubspotStream):
         self, context: Optional[dict], next_page_token: Optional[Any]
     ) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
-        params["properties"] = ",".join(self.properties)
-        params["archived"] = context["archived"]
-        return params
+   
+        all_properties = self.properties
 
+        chunks = self.get_properties_chunks(all_properties, 300)
+        for chunk in chunks:
+            params["properties"] = ",".join(chunk)
+            params["archived"] = context["archived"]
+        
+            yield params
+    
     @property
     def schema(self) -> dict:
         if self.cached_schema is None:
@@ -143,9 +149,15 @@ class ContactsStream(HubspotStream):
         self, context: Optional[dict], next_page_token: Optional[Any]
     ) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
-        params["properties"] = ",".join(self.properties)
-        params["archived"] = context["archived"]
-        return params
+
+        all_properties = self.properties
+
+        chunks = self.get_properties_chunks(all_properties, 500)
+        for chunk in chunks:
+            params["properties"] = ",".join(chunk)
+            params["archived"] = context["archived"]
+          
+            yield params
 
     @property
     def schema(self) -> dict:
