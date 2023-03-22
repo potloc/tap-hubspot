@@ -109,6 +109,13 @@ class DealsStream(HubspotStream):
         params["associations"] = ",".join(HUBSPOT_OBJECTS)
         return params
 
+        chunks = self.get_properties_chunks(all_properties, 300)
+        for chunk in chunks:
+            params["properties"] = ",".join(chunk)
+            params["archived"] = context["archived"]
+        
+            yield params
+    
     @property
     def schema(self) -> dict:
         if self.cached_schema is None:
