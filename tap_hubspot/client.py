@@ -180,13 +180,13 @@ class HubspotStream(RESTStream):
     def get_properties(self) -> List[dict]:
         response = requests.get(f"{self.url_base}/crm/v3/properties/{self.name}", headers=self.http_headers)
         try:
-            res = response.json()
+            data = response.json()
             response.raise_for_status()
-            return res.get("results", [])
+            return data.get("results", [])
         except requests.exceptions.HTTPError as e:
             LOGGER.warning(
                 "Dynamic discovery of properties failed with an exception, "
-                f"continuing gracefully with no dynamic properties: {e}, {res}"
+                f"continuing gracefully with no dynamic properties: {e}, {data}"
             )
             return []
 
