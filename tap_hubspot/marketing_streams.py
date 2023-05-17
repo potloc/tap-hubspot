@@ -3,7 +3,6 @@
 from asyncio.log import logger
 from math import inf
 import requests
-
 import json
 
 from dateutil import parser
@@ -28,7 +27,6 @@ from tap_hubspot.client import HubspotStream
 from tap_hubspot.schemas.marketing import CampaignIds
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
-
 
 utc=pytz.UTC
 
