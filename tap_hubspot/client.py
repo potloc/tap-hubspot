@@ -15,7 +15,6 @@ from singer_sdk import typing as th
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
 
-
 class HubspotStream(RESTStream):
     """Hubspot stream class."""
 
