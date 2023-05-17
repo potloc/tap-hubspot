@@ -2,7 +2,7 @@
 # from black import Report
 from math import inf
 import requests
-import singer
+
 
 import datetime, pytz
 from datetime import datetime
@@ -20,7 +20,7 @@ from tap_hubspot.client import HubspotStream
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
-LOGGER = singer.get_logger()
+
 utc=pytz.UTC
 
 from tap_hubspot.schemas.automation import (

@@ -2,7 +2,7 @@
 # from black import Report
 from math import inf
 import requests
-import singer
+
 import json
 
 from dateutil import parser
@@ -27,7 +27,7 @@ from tap_hubspot.streams import ContactsStream, DealsStream
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
-LOGGER = singer.get_logger()
+
 utc=pytz.UTC
 
 from tap_hubspot.schemas.events import (

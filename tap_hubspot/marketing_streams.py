@@ -3,7 +3,7 @@
 from asyncio.log import logger
 from math import inf
 import requests
-import singer
+
 import json
 
 from dateutil import parser
@@ -29,7 +29,7 @@ from tap_hubspot.schemas.marketing import CampaignIds
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
-LOGGER = singer.get_logger()
+
 utc=pytz.UTC
 
 from tap_hubspot.schemas.marketing import (
