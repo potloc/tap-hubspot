@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional, List, Iterable, Callable
 
 import pytz
-
+from datetime import datetime
 from singer_sdk.exceptions import RetriableAPIError
 from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.streams import RESTStream
@@ -13,7 +13,6 @@ from singer_sdk.authenticators import BearerTokenAuthenticator
 from singer_sdk import typing as th
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
-
 
 class HubspotStream(RESTStream):
     """Hubspot stream class."""
@@ -86,6 +85,19 @@ class HubspotStream(RESTStream):
     def parse_response(self, response: requests.Response) -> Iterable[dict]:
         """Parse the response and return an iterator of result rows."""
         yield from extract_jsonpath(self.records_jsonpath, input=response.json())
+
+    def post_process(self, row: dict, context: Optional[dict]) -> dict:
+        """As needed, append or transform raw data to match expected structure.
+        Returns row, or None if row is to be excluded"""
+        self.logger.info("TIMESTAMP")
+        self.logger.info(datetime.strptime(row[self.replication_key], '%Y-%m-%dT%H:%M:%S.%fZ'))
+        self.logger.info(self.get_starting_timestamp(context).astimezone(pytz.utc))
+        # self.logger.info(datetime.row[self.replication_key] <= self.get_starting_timestamp(context).astimezone(pytz.utc))
+        # self.logger.info(self.get_starting_timestamp(context).astimezone(pytz.utc))
+        # if self.replication_key:
+        #     if datetime.strptime(row[self.replication_key]) <= self.get_starting_timestamp(context).astimezone(pytz.utc):
+        #         return None
+        return row
 
     def get_json_schema(self, from_type: str) -> dict:
         """Return the JSON Schema dict that describes the sql type.
