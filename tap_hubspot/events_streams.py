@@ -2,7 +2,6 @@
 # from black import Report
 from math import inf
 import requests
-
 import json
 
 from dateutil import parser
@@ -26,7 +25,6 @@ from tap_hubspot.client import HubspotStream
 from tap_hubspot.streams import ContactsStream, DealsStream
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
-
 
 utc=pytz.UTC
 
