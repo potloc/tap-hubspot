@@ -1,7 +1,6 @@
 """Stream type classes for tap-hubspot."""
 # from black import Report
 import requests
-import singer
 import json
 
 from dateutil import parser
@@ -24,7 +23,6 @@ from tap_hubspot.client import HubspotStream
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
-LOGGER = singer.get_logger()
 utc = pytz.UTC
 
 
