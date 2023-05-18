@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional, List, Iterable, Callable
 
 import pytz
-from datetime import datetime
+from singer_sdk._singerlib.utils import strptime_to_utc
 from singer_sdk.exceptions import RetriableAPIError
 from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.streams import RESTStream
@@ -13,7 +13,6 @@ from singer_sdk.authenticators import BearerTokenAuthenticator
 from singer_sdk import typing as th
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
-
 class HubspotStream(RESTStream):
     """Hubspot stream class."""
 
@@ -89,14 +88,9 @@ class HubspotStream(RESTStream):
     def post_process(self, row: dict, context: Optional[dict]) -> dict:
         """As needed, append or transform raw data to match expected structure.
         Returns row, or None if row is to be excluded"""
-        self.logger.info("TIMESTAMP")
-        self.logger.info(datetime.strptime(row[self.replication_key], '%Y-%m-%dT%H:%M:%S.%fZ'))
-        self.logger.info(self.get_starting_timestamp(context).astimezone(pytz.utc))
-        # self.logger.info(datetime.row[self.replication_key] <= self.get_starting_timestamp(context).astimezone(pytz.utc))
-        # self.logger.info(self.get_starting_timestamp(context).astimezone(pytz.utc))
-        # if self.replication_key:
-        #     if datetime.strptime(row[self.replication_key]) <= self.get_starting_timestamp(context).astimezone(pytz.utc):
-        #         return None
+        if self.replication_key:
+            if strptime_to_utc(row[self.replication_key]) <= self.get_starting_timestamp(context).astimezone(pytz.utc):
+                return None
         return row
 
     def get_json_schema(self, from_type: str) -> dict:
@@ -184,7 +178,7 @@ class HubspotStream(RESTStream):
             response.raise_for_status()
             return data.get("results", [])
         except requests.exceptions.HTTPError as e:
-            LOGGER.warning(
+            self.logger.warning(
                 "Dynamic discovery of properties failed with an exception, "
                 f"continuing gracefully with no dynamic properties: {e}, {data}"
             )
