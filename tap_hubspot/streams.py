@@ -128,6 +128,11 @@ class DealsStream(HubspotStream):
             "deal_id": record["id"],
         }
 
+    def post_process(self, row: dict, context: Optional[dict]) -> dict:
+        """As needed, append or transform raw data to match expected structure.
+        Returns row"""
+        return row
+
 
 class ContactsStream(HubspotStream):
     """Define custom stream."""
