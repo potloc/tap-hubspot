@@ -85,13 +85,13 @@ class HubspotStream(RESTStream):
         """Parse the response and return an iterator of result rows."""
         yield from extract_jsonpath(self.records_jsonpath, input=response.json())
 
-    def post_process(self, row: dict, context: Optional[dict]) -> dict:
-        """As needed, append or transform raw data to match expected structure.
-        Returns row, or None if row is to be excluded"""
-        if self.replication_key:
-            if strptime_to_utc(row[self.replication_key]) <= self.get_starting_timestamp(context).astimezone(pytz.utc):
-                return None
-        return row
+    # def post_process(self, row: dict, context: Optional[dict]) -> dict:
+    #     """As needed, append or transform raw data to match expected structure.
+    #     Returns row, or None if row is to be excluded"""
+    #     if self.replication_key:
+    #         if strptime_to_utc(row[self.replication_key]) <= self.get_starting_timestamp(context).astimezone(pytz.utc):
+    #             return None
+    #     return row
 
     def get_json_schema(self, from_type: str) -> dict:
         """Return the JSON Schema dict that describes the sql type.
