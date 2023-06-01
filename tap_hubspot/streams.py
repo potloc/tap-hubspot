@@ -156,7 +156,6 @@ class ContactsStream(HubspotStream):
         return {"archived": record["archived"], "contact_id": record["id"]}
 
 
-
 class PropertiesStream(HubspotStream):
     """Define custom stream."""
 
