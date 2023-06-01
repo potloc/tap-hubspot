@@ -98,11 +98,6 @@ class CompaniesStream(HubspotStream):
         """Return a context dictionary for child streams."""
         return {"archived": record["archived"], "company_id": record["id"]}
 
-    def post_process(self, row: dict, context: Optional[dict]) -> dict:
-        """As needed, append or transform raw data to match expected structure.
-        Returns row"""
-        return row
-
 
 class DealsStream(HubspotStream):
     """Define custom stream."""
@@ -133,11 +128,6 @@ class DealsStream(HubspotStream):
             "deal_id": record["id"],
         }
 
-    def post_process(self, row: dict, context: Optional[dict]) -> dict:
-        """As needed, append or transform raw data to match expected structure.
-        Returns row"""
-        return row
-
 
 class ContactsStream(HubspotStream):
     """Define custom stream."""
@@ -164,11 +154,6 @@ class ContactsStream(HubspotStream):
     def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
         """Return a context dictionary for child streams."""
         return {"archived": record["archived"], "contact_id": record["id"]}
-
-    def post_process(self, row: dict, context: Optional[dict]) -> dict:
-        """As needed, append or transform raw data to match expected structure.
-        Returns row"""
-        return row
 
 
 class PropertiesStream(HubspotStream):
