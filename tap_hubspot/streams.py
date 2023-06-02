@@ -86,6 +86,7 @@ class CompaniesStream(HubspotStream):
         params = super().get_url_params(context, next_page_token)
         params["properties"] = ",".join(self.properties)
         params["archived"] = context["archived"]
+        params["associations"] = "contacts,companies,deals"
         return params
 
     @property
@@ -113,6 +114,7 @@ class DealsStream(HubspotStream):
         params = super().get_url_params(context, next_page_token)
         params["properties"] = ",".join(self.properties)
         params["archived"] = context["archived"]
+        params["associations"] = "contacts,companies,deals"
         return params
 
     @property
@@ -143,6 +145,7 @@ class ContactsStream(HubspotStream):
         params = super().get_url_params(context, next_page_token)
         params["properties"] = ",".join(self.properties)
         params["archived"] = context["archived"]
+        params["associations"] = "contacts,companies,deals"
         return params
 
     @property
