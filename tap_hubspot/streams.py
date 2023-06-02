@@ -131,7 +131,7 @@ class DealsStream(HubspotStream):
             "deal_id": record["id"],
         }
     
-    def parse_response(self, response: Response) -> Iterable[dict]:
+    def parse_response(self, response) -> Iterable[dict]:
         self.logger.info(response)
         return super().parse_response(response)
 
