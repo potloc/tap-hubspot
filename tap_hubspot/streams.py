@@ -138,7 +138,7 @@ class DealsStream(HubspotStream):
             self.logger.info(e.get("associations", ""))
         return super().parse_response(response)
 
-    def post_process(self, row: dict, context: dict | None) -> dict:
+    def post_process(self, row: dict, context) -> dict:
         self.logger.info("post_process")
         self.logger.info(row)
         return super().post_process(row, context)
