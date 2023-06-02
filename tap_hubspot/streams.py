@@ -132,8 +132,16 @@ class DealsStream(HubspotStream):
         }
     
     def parse_response(self, response) -> Iterable[dict]:
-        self.logger.info(response.json()["results"])
+        data = response.json()["results"]
+        for e in data:
+            self.logger.info("response")
+            self.logger.info(e.get("associations", ""))
         return super().parse_response(response)
+
+    def post_process(self, row: dict, context: dict | None) -> dict:
+        self.logger.info("post_process")
+        self.logger.info(row)
+        return super().post_process(row, context)
 
 
 class ContactsStream(HubspotStream):
