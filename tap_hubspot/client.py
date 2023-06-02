@@ -166,6 +166,32 @@ class HubspotStream(RESTStream):
         properties.append(th.Property('createdAt', th.DateTimeType()))
         properties.append(th.Property('id', th.StringType()))
         properties.append(th.Property('archived', th.BooleanType()))
+        properties.append(th.Property('associations', th.ObjectType(
+            th.Property("companies", th.ObjectType(
+                th.Property("results", th.ArrayType(
+                    th.ObjectType(
+                        th.Property("id", th.StringType()),
+                        th.Property("type", th.StringType())
+                    )
+                ))
+            )),
+            th.Property("contacts", th.ObjectType(
+                th.Property("results", th.ArrayType(
+                    th.ObjectType(
+                        th.Property("id", th.StringType()),
+                        th.Property("type", th.StringType())
+                    )
+                ))
+            )),
+            th.Property("deals", th.ObjectType(
+                th.Property("results", th.ArrayType(
+                    th.ObjectType(
+                        th.Property("id", th.StringType()),
+                        th.Property("type", th.StringType())
+                    )
+                ))
+            ))
+        )))
         properties.append(th.Property(
                 'properties', th.ObjectType(*internal_properties)
             ))
