@@ -102,7 +102,7 @@ class CompaniesStream(HubspotStream):
 
 class DealsStream(HubspotStream):
     """Define custom stream."""
-
+    _LOG_REQUEST_METRICS_URL=True
     name = "deals"
     path = "/crm/v3/objects/deals"
     primary_keys = ["id"]
@@ -133,7 +133,6 @@ class DealsStream(HubspotStream):
 
 class ContactsStream(HubspotStream):
     """Define custom stream."""
-
     name = "contacts"
     path = "/crm/v3/objects/contacts"
     primary_keys = ["id"]
