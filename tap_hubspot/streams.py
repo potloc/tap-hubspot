@@ -102,7 +102,6 @@ class CompaniesStream(HubspotStream):
 
 class DealsStream(HubspotStream):
     """Define custom stream."""
-    _LOG_REQUEST_METRICS_URL=True
     name = "deals"
     path = "/crm/v3/objects/deals"
     primary_keys = ["id"]
@@ -112,7 +111,7 @@ class DealsStream(HubspotStream):
         self, context: Optional[dict], next_page_token: Optional[Any]
     ) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
-        # params["properties"] = ",".join(self.properties)
+        params["properties"] = ",".join(self.properties)
         params["archived"] = context["archived"]
         params["associations"] = "contacts,companies,deals"
         self.logger.info(params)
