@@ -115,6 +115,7 @@ class DealsStream(HubspotStream):
         params["properties"] = ",".join(self.properties)
         params["archived"] = context["archived"]
         params["associations"] = "contacts,companies,deals"
+        self.logger.info(params)
         return params
 
     @property
