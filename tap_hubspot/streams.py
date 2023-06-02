@@ -112,7 +112,7 @@ class DealsStream(HubspotStream):
         self, context: Optional[dict], next_page_token: Optional[Any]
     ) -> Dict[str, Any]:
         params = super().get_url_params(context, next_page_token)
-        params["properties"] = ",".join(self.properties)
+        # params["properties"] = ",".join(self.properties)
         params["archived"] = context["archived"]
         params["associations"] = "contacts,companies,deals"
         self.logger.info(params)
@@ -130,6 +130,10 @@ class DealsStream(HubspotStream):
             "archived": record["archived"],
             "deal_id": record["id"],
         }
+    
+    def parse_response(self, response: Response) -> Iterable[dict]:
+        self.logger.info(response)
+        return super().parse_response(response)
 
 
 class ContactsStream(HubspotStream):
