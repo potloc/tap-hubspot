@@ -133,7 +133,7 @@ class DealsStream(HubspotStream):
 
 class ContactsStream(HubspotStream):
     """Define custom stream."""
-    
+
     name = "contacts"
     path = "/crm/v3/objects/contacts"
     primary_keys = ["id"]
