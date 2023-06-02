@@ -132,7 +132,7 @@ class DealsStream(HubspotStream):
         }
     
     def parse_response(self, response) -> Iterable[dict]:
-        self.logger.info(response)
+        self.logger.info(response.json()["results"])
         return super().parse_response(response)
 
 
