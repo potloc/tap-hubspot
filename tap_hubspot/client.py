@@ -85,6 +85,7 @@ class HubspotStream(RESTStream):
         """Parse the response and return an iterator of result rows."""
         yield from extract_jsonpath(self.records_jsonpath, input=response.json())
 
+
     def get_json_schema(self, from_type: str) -> dict:
         """Return the JSON Schema dict that describes the sql type.
 
