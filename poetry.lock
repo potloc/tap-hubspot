@@ -628,7 +628,7 @@ python-versions = ">=2.5, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "singer-sdk"
-version = "0.26.0"
+version = "0.29.0"
 description = "A framework for building Singer taps"
 category = "main"
 optional = false
@@ -637,7 +637,7 @@ python-versions = ">=3.7.1,<3.12"
 [package.dependencies]
 backoff = ">=2.0.0,<3.0"
 click = ">=8.0,<9.0"
-cryptography = ">=3.4.6,<41.0.0"
+cryptography = ">=3.4.6,<42.0.0"
 fs = ">=2.4.16,<3.0.0"
 importlib-metadata = {version = "<5.0.0", markers = "python_version < \"3.8\""}
 importlib-resources = {version = "5.12.0", markers = "python_version < \"3.9\""}
@@ -655,9 +655,10 @@ requests = ">=2.25.1,<3.0.0"
 simplejson = ">=3.17.6,<4.0.0"
 sqlalchemy = ">=1.4,<2.0"
 typing-extensions = ">=4.2.0,<5.0.0"
+urllib3 = ">=1.26,<2"
 
 [package.extras]
-docs = ["furo (>=2022.12.7,<2024.0.0)", "myst-parser (>=0.17.2,<1.1.0)", "sphinx (>=4.5,<6.0)", "sphinx-autobuild (>=2021.3.14,<2022.0.0)", "sphinx-copybutton (>=0.3.1,<0.6.0)", "sphinx-reredirects (>=0.1.1,<0.2.0)"]
+docs = ["furo (>=2022.12.7,<2024.0.0)", "myst-parser (>=0.17.2,<1.1.0)", "sphinx (>=4.5,<6.0)", "sphinx-autobuild (>=2021.3.14,<2022.0.0)", "sphinx-copybutton (>=0.3.1,<0.6.0)", "sphinx-inline-tabs (>=2023.4.21)", "sphinx-reredirects (>=0.1.1,<0.2.0)"]
 s3 = ["fs-s3fs (>=1.1.1,<2.0.0)"]
 testing = ["pytest (>=7.2.1,<8.0.0)", "pytest-durations (>=1.2.0,<2.0.0)"]
 
@@ -830,7 +831,7 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "1.1"
 python-versions = "<3.11,>=3.7.1"
-content-hash = "0308763baa90bb24567413d64ffa488913e210fef8cfb83906ccecb28c2883f4"
+content-hash = "39a15d842b573536980b1c064dee7384acd5e7a1e6061827c3bca640957de3e7"
 
 [metadata.files]
 appdirs = [
@@ -1387,8 +1388,8 @@ simplejson = [
     {file = "simplejson-3.19.1.tar.gz", hash = "sha256:6277f60848a7d8319d27d2be767a7546bc965535b28070e310b3a9af90604a4c"},
 ]
 singer-sdk = [
-    {file = "singer_sdk-0.26.0-py3-none-any.whl", hash = "sha256:bd506a28734eb8c343dba3ac4ff01881f0bf65e75b9d35b0a3b264ee4540924d"},
-    {file = "singer_sdk-0.26.0.tar.gz", hash = "sha256:b0b8d26a667a2c213128b750f1d9deddc9b8c286937cf6c38a3a5ee0f7eee815"},
+    {file = "singer_sdk-0.29.0-py3-none-any.whl", hash = "sha256:b24dabd0cfd820e37efaedfc0bc0a131b75ec486131e2c87aa20794dde858171"},
+    {file = "singer_sdk-0.29.0.tar.gz", hash = "sha256:66ec185831d8049fac4c2c686b56dd91da9a17becf6194afdada0b0d6331ce37"},
 ]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
