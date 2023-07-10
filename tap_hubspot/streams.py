@@ -1,24 +1,21 @@
 """Stream type classes for tap-hubspot."""
 # from black import Report
-import requests
+import datetime
 import json
+from pathlib import Path
+from typing import Any, Dict, Iterable, List, Optional, Union
 
+import pytz
+import requests
 from dateutil import parser
-import datetime, pytz
-
-from pathlib import Path
-from typing import Any, Dict, Optional, Union, List, Iterable
-
-from singer_sdk import typing as th  # JSON Schema typing helpers
-from pathlib import Path
-from typing import Any, Dict, Optional, Union, List, Iterable
-
 from memoization import cached
-
+from singer_sdk import (
+    typing as th,  # JSON Schema typing helpers; JSON schema typing helpers
+)
+from singer_sdk.authenticators import BearerTokenAuthenticator
 from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.streams import RESTStream
-from singer_sdk.authenticators import BearerTokenAuthenticator
-from singer_sdk import typing as th  # JSON schema typing helpers
+
 from tap_hubspot.client import HubspotStream
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
@@ -28,7 +25,7 @@ utc = pytz.UTC
 
 class MeetingsStream(HubspotStream):
     name = "meetings"
-    path = f"/crm/v3/objects/meetings"
+    path = "/crm/v3/objects/meetings"
     primary_keys = ["id"]
 
     def get_url_params(
@@ -47,7 +44,7 @@ class MeetingsStream(HubspotStream):
 
 class CallsStream(HubspotStream):
     name = "calls"
-    path = f"/crm/v3/objects/calls"
+    path = "/crm/v3/objects/calls"
     primary_keys = ["id"]
 
     def get_url_params(
