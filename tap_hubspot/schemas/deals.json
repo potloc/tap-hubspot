@@ -1,40 +1,23 @@
 {
   "type": "object",
-  "properties": {
-    "portalId": {
-      "type": ["null", "integer"]
-    },
-    "dealId": {
-      "type": ["null", "integer"]
-    },
-    "isDeleted": {
-      "type": ["null", "boolean"]
-    },
-    "updatedAt": {
-      "type": ["null", "string"]
-    },
-    "associations": {
-      "type": ["null", "object"],
-      "properties": {
-        "associatedVids": {
-          "type": ["null", "array"],
-          "items": {
-            "type": ["null", "integer"]
-          }
-        },
-        "associatedCompanyIds": {
-          "type": ["null", "array"],
-          "items": {
-            "type": ["null", "integer"]
-          }
-        },
-        "associatedDealIds": {
-          "type": ["null", "array"],
-          "items": {
-            "type": ["null", "integer"]
-          }
-        }
+  "properties":{
+      "id": {
+          "type": ["null","string"]
+      },
+      "createdAt": {
+          "type": ["null", "string"],
+          "format": "date-time"
+      },
+      "updatedAt": {
+          "type": ["null", "string"],
+          "format": "date-time"
+      },
+      "archived": {
+          "type": ["null", "boolean"]
+      },
+      "archivedAt": {
+          "type": ["null", "string"],
+          "format": "date-time"
       }
-    }
   }
 }
