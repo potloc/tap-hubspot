@@ -389,3 +389,25 @@ class QuotesStream(HubspotStream):
         if self.cached_schema is None:
             self.cached_schema, self.properties = self.get_custom_schema()
         return self.cached_schema
+
+class LineItemsStream(HubspotStream):
+    _LOG_REQUEST_METRIC_URLS=True
+    name = "line_items"
+    path = "/crm/v3/objects/line_items"
+    primary_keys = ["id"]
+    partitions = [{"archived": True}, {"archived": False}]
+
+    def get_url_params(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Dict[str, Any]:
+        params = super().get_url_params(context, next_page_token)
+        params["properties"] = ",".join(self.properties)
+        params["archived"] = context["archived"]
+        params["associations"] = ",".join(HUBSPOT_OBJECTS)
+        return params
+
+    @property
+    def schema(self) -> dict:
+        if self.cached_schema is None:
+            self.cached_schema, self.properties = self.get_custom_schema()
+        return self.cached_schema

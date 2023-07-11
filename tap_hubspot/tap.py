@@ -37,6 +37,7 @@ from tap_hubspot.streams import (
     PropertiesDealsStream,
     PropertiesMeetingsStream,
     QuotesStream,
+    LineItemsStream,
 )
 
 # from black import main
@@ -60,6 +61,7 @@ STREAM_TYPES = [
     DealsStream,
     MeetingsStream,
     CallsStream,
+    LineItemsStream,
     QuotesStream,
     PropertiesCompaniesStream,
     PropertiesContactsStream,
