@@ -1,25 +1,40 @@
 """REST client handling, including HubspotStream base class."""
-import backoff
-import requests
 from pathlib import Path
-from typing import Any, Dict, Optional, List, Iterable, Callable
+from typing import Any, Callable, Dict, Iterable, List, Optional
 
+import backoff
 import pytz
+import requests
+from singer_sdk import typing as th
 from singer_sdk._singerlib.utils import strptime_to_utc
+from singer_sdk.authenticators import BearerTokenAuthenticator
 from singer_sdk.exceptions import RetriableAPIError
 from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.streams import RESTStream
-from singer_sdk.authenticators import BearerTokenAuthenticator
-from singer_sdk import typing as th
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
+HUBSPOT_OBJECTS = [
+    "deals",
+    "companies",
+    "contacts",
+    "meetings",
+    "quotes",
+    "calls",
+    "notes",
+    "tasks",
+    "emails",
+]
+
+
 class HubspotStream(RESTStream):
     """Hubspot stream class."""
 
     url_base = "https://api.hubapi.com"
 
     records_jsonpath = "$.results[*]"  # Or override `parse_response`.
-    next_page_token_jsonpath = "$.paging.next.after"  # Or override `get_next_page_token`.
+    next_page_token_jsonpath = (
+        "$.paging.next.after"  # Or override `get_next_page_token`.
+    )
     replication_key = "updatedAt"
     replication_method = "INCREMENTAL"
     cached_schema = None
@@ -69,7 +84,7 @@ class HubspotStream(RESTStream):
         params: dict = {}
         if next_page_token:
             params["after"] = next_page_token
-        params['limit'] = 100
+        params["limit"] = 100
         return params
 
     def prepare_request_payload(
@@ -84,7 +99,6 @@ class HubspotStream(RESTStream):
     def parse_response(self, response: requests.Response) -> Iterable[dict]:
         """Parse the response and return an iterator of result rows."""
         yield from extract_jsonpath(self.records_jsonpath, input=response.json())
-
 
     def get_json_schema(self, from_type: str) -> dict:
         """Return the JSON Schema dict that describes the sql type.
@@ -128,7 +142,9 @@ class HubspotStream(RESTStream):
         if isinstance(from_type, str):
             type_name = from_type
         else:
-            raise ValueError("Expected `str` or a SQLAlchemy `TypeEngine` object or type.")
+            raise ValueError(
+                "Expected `str` or a SQLAlchemy `TypeEngine` object or type."
+            )
         for sqltype, jsonschema_type in sqltype_lookup_hubspot.items():
             if sqltype.lower() in type_name.lower():
                 return jsonschema_type
@@ -144,56 +160,55 @@ class HubspotStream(RESTStream):
         properties: List[th.Property] = []
 
         properties_hub = self.get_properties()
+        objects = HUBSPOT_OBJECTS
         params = []
 
         for prop in properties_hub:
-            name = prop['name']
+            name = prop["name"]
             params.append(name)
-            type = self.get_json_schema(prop['type'])
+            type = self.get_json_schema(prop["type"])
             if name in poorly_cast:
                 internal_properties.append(th.Property(name, th.StringType()))
             else:
                 internal_properties.append(th.Property(name, type))
 
-        properties.append(th.Property('updatedAt', th.DateTimeType()))
-        properties.append(th.Property('createdAt', th.DateTimeType()))
-        properties.append(th.Property('id', th.StringType()))
-        properties.append(th.Property('archived', th.BooleanType()))
+        properties.append(th.Property("updatedAt", th.DateTimeType()))
+        properties.append(th.Property("createdAt", th.DateTimeType()))
+        properties.append(th.Property("id", th.StringType()))
+        properties.append(th.Property("archived", th.BooleanType()))
+
+        # Add in associations
+        associations_properties = []
+
+        for obj in objects:
+            associations_properties.append(
+                th.Property(
+                    f"{obj}",
+                    th.ObjectType(
+                        th.Property(
+                            "results",
+                            th.ArrayType(
+                                th.ObjectType(
+                                    th.Property("id", th.StringType()),
+                                    th.Property("type", th.StringType()),
+                                )
+                            ),
+                        )
+                    ),
+                ),
+            )
         properties.append(
-            th.Property('associations', th.ObjectType(
-                th.Property("companies", th.ObjectType(
-                    th.Property("results", th.ArrayType(
-                        th.ObjectType(
-                            th.Property("id", th.StringType()),
-                            th.Property("type", th.StringType())
-                        )
-                    ))
-                )),
-                th.Property("contacts", th.ObjectType(
-                    th.Property("results", th.ArrayType(
-                        th.ObjectType(
-                            th.Property("id", th.StringType()),
-                            th.Property("type", th.StringType())
-                        )
-                    ))
-                )),
-                th.Property("deals", th.ObjectType(
-                    th.Property("results", th.ArrayType(
-                        th.ObjectType(
-                            th.Property("id", th.StringType()),
-                            th.Property("type", th.StringType())
-                        )
-                    ))
-                ))
-            ))
+            th.Property("associations", th.ObjectType(*associations_properties))
         )
-        properties.append(th.Property(
-                'properties', th.ObjectType(*internal_properties)
-            ))
+        properties.append(
+            th.Property("properties", th.ObjectType(*internal_properties))
+        )
         return th.PropertiesList(*properties).to_dict(), params
 
     def get_properties(self) -> List[dict]:
-        response = requests.get(f"{self.url_base}/crm/v3/properties/{self.name}", headers=self.http_headers)
+        response = requests.get(
+            f"{self.url_base}/crm/v3/properties/{self.name}", headers=self.http_headers
+        )
         try:
             data = response.json()
             response.raise_for_status()
@@ -208,7 +223,7 @@ class HubspotStream(RESTStream):
     def get_params_from_properties(self, properties: List[dict]) -> List[str]:
         params = []
         for prop in properties:
-            params.append(prop['name'])
+            params.append(prop["name"])
         return params
 
     def request_decorator(self, func: Callable) -> Callable:
