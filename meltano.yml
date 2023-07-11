@@ -25,6 +25,8 @@ plugins:
       start_date: '2010-01-01T00:00:00Z'
     select:
       - deals.*
+      - quotes.*
+      - line_items.*
   loaders:
   - name: target-jsonl
     variant: andyh1203

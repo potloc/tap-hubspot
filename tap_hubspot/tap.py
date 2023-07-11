@@ -2,10 +2,23 @@
 
 from typing import List
 
-# from black import main
-
-from singer_sdk import Tap, Stream
+from singer_sdk import Stream, Tap
 from singer_sdk import typing as th
+
+from tap_hubspot.analytics_streams import AnalyticsViewsStream
+from tap_hubspot.automation_streams import WorkflowsStream
+from tap_hubspot.events_streams import (
+    WebAnalyticsContactsStream,
+    WebAnalyticsDealsStream,
+)
+from tap_hubspot.marketing_streams import (
+    MarketingCampaignIdsStream,
+    MarketingCampaignsStream,
+    MarketingEmailsStream,
+    MarketingFormsStream,
+    MarketingListContactsStream,
+    MarketingListsStream,
+)
 from tap_hubspot.streams import (
     AssociationsCompaniesToContactsStream,
     AssociationsCompaniesToDealsStream,
@@ -13,39 +26,26 @@ from tap_hubspot.streams import (
     AssociationsContactsToDealsStream,
     AssociationsDealsToCompaniesStream,
     AssociationsDealsToContactsStream,
-    ContactsStream,
+    CallsStream,
     CompaniesStream,
+    ContactsStream,
     DealsStream,
     MeetingsStream,
-    CallsStream,
     OwnersStream,
     PropertiesCompaniesStream,
     PropertiesContactsStream,
     PropertiesDealsStream,
     PropertiesMeetingsStream,
+    QuotesStream,
+    LineItemsStream,
 )
 
-from tap_hubspot.marketing_streams import (
-    MarketingEmailsStream,
-    MarketingCampaignIdsStream,
-    MarketingCampaignsStream,
-    MarketingFormsStream,
-    MarketingListsStream,
-    MarketingListContactsStream,
-)
+# from black import main
 
-from tap_hubspot.events_streams import (
-    WebAnalyticsContactsStream,
-    WebAnalyticsDealsStream,
-)
 
-from tap_hubspot.analytics_streams import (
-    AnalyticsViewsStream,
-)
 
-from tap_hubspot.automation_streams import (
-    WorkflowsStream,
-)
+
+
 
 
 STREAM_TYPES = [
@@ -61,6 +61,8 @@ STREAM_TYPES = [
     DealsStream,
     MeetingsStream,
     CallsStream,
+    LineItemsStream,
+    QuotesStream,
     PropertiesCompaniesStream,
     PropertiesContactsStream,
     PropertiesDealsStream,
