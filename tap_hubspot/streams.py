@@ -72,7 +72,7 @@ class CompaniesStream(HubspotStream):
         params = super().get_url_params(context, next_page_token)
         params["properties"] = ",".join(self.properties)
         params["archived"] = context["archived"]
-        params["associations"] = "contacts,companies,deals"
+        params["associations"] = ",".join(HUBSPOT_OBJECTS)
         return params
 
     @property
@@ -88,7 +88,6 @@ class CompaniesStream(HubspotStream):
 
 class DealsStream(HubspotStream):
     """Define custom stream."""
-
     name = "deals"
     path = "/crm/v3/objects/deals"
     primary_keys = ["id"]
@@ -100,7 +99,7 @@ class DealsStream(HubspotStream):
         params = super().get_url_params(context, next_page_token)
         params["properties"] = ",".join(self.properties)
         params["archived"] = context["archived"]
-        params["associations"] = "contacts,companies,deals"
+        params["associations"] = ",".join(HUBSPOT_OBJECTS)
         return params
 
     @property
@@ -131,7 +130,7 @@ class ContactsStream(HubspotStream):
         params = super().get_url_params(context, next_page_token)
         params["properties"] = ",".join(self.properties)
         params["archived"] = context["archived"]
-        params["associations"] = "contacts,companies,deals"
+        params["associations"] = ",".join(HUBSPOT_OBJECTS)
         return params
 
     @property
