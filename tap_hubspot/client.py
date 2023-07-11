@@ -23,6 +23,7 @@ HUBSPOT_OBJECTS = [
     "notes",
     "tasks",
     "emails",
+    "lines_items",
 ]
 
 
