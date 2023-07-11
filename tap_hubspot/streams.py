@@ -1,22 +1,11 @@
 """Stream type classes for tap-hubspot."""
 # from black import Report
-import datetime
-import json
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Union
 
 import pytz
 import requests
-from dateutil import parser
-from memoization import cached
-from singer_sdk import (
-    typing as th,  # JSON Schema typing helpers; JSON schema typing helpers
-)
-from singer_sdk.authenticators import BearerTokenAuthenticator
-from singer_sdk.helpers.jsonpath import extract_jsonpath
-from singer_sdk.streams import RESTStream
-
-from tap_hubspot.client import HubspotStream
+from tap_hubspot.client import HUBSPOT_OBJECTS, HubspotStream
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
@@ -377,3 +366,26 @@ class AssociationsCompaniesToDealsStream(HubspotStream):
             ret.append(elem)
 
         return ret
+
+
+class QuotesStream(HubspotStream):
+    _LOG_REQUEST_METRIC_URLS=True
+    name = "quotes"
+    path = "/crm/v3/objects/quotes"
+    primary_keys = ["id"]
+    partitions = [{"archived": True}, {"archived": False}]
+
+    def get_url_params(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Dict[str, Any]:
+        params = super().get_url_params(context, next_page_token)
+        params["properties"] = ",".join(self.properties)
+        params["archived"] = context["archived"]
+        params["associations"] = ",".join(HUBSPOT_OBJECTS)
+        return params
+
+    @property
+    def schema(self) -> dict:
+        if self.cached_schema is None:
+            self.cached_schema, self.properties = self.get_custom_schema()
+        return self.cached_schema
