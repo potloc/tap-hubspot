@@ -369,7 +369,6 @@ class AssociationsCompaniesToDealsStream(HubspotStream):
 
 
 class QuotesStream(HubspotStream):
-    _LOG_REQUEST_METRIC_URLS=True
     name = "quotes"
     path = "/crm/v3/objects/quotes"
     primary_keys = ["id"]
@@ -391,7 +390,6 @@ class QuotesStream(HubspotStream):
         return self.cached_schema
 
 class LineItemsStream(HubspotStream):
-    _LOG_REQUEST_METRIC_URLS=True
     name = "line_items"
     path = "/crm/v3/objects/line_items"
     primary_keys = ["id"]
