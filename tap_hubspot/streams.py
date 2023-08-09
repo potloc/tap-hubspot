@@ -64,10 +64,6 @@ class OwnersStream(HubspotStream):
         params["archived"] = context["archived"]
         return params
 
-    def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
-        """Return a context dictionary for child streams."""
-        return {"archived": record["archived"], "owner_id": record["id"]}
-
 
 class CompaniesStream(HubspotStream):
     """Define custom stream."""
