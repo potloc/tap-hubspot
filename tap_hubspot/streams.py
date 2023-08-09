@@ -9,7 +9,6 @@ from tap_hubspot.client import HUBSPOT_OBJECTS, HubspotStream
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
-
 utc = pytz.UTC
 
 
