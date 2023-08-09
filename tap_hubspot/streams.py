@@ -74,7 +74,6 @@ class OwnersStream(HubspotStream):
         return {"archived": record["archived"], "owner_id": record["id"]}
 
 
-
 class CompaniesStream(HubspotStream):
     """Define custom stream."""
 
