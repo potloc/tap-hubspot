@@ -52,10 +52,17 @@ class CallsStream(HubspotStream):
 
 class OwnersStream(HubspotStream):
     """Define custom stream."""
-
     name = "owners"
     path = "/crm/v3/owners"
     primary_keys = ["id"]
+    partitions = [{"archived": True}, {"archived": False}]
+
+    def get_url_params(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Dict[str, Any]:
+        params = super().get_url_params(context, next_page_token)
+        params["archived"] = context["archived"]
+        return params
 
 
 class CompaniesStream(HubspotStream):
