@@ -9,9 +9,6 @@ from tap_hubspot.client import HUBSPOT_OBJECTS, HubspotStream
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
-from tap_hubspot.schemas import (
-    Owners,
-)
 
 utc = pytz.UTC
 
@@ -59,7 +56,6 @@ class OwnersStream(HubspotStream):
     name = "owners"
     path = "/crm/v3/owners"
     primary_keys = ["id"]
-    # schema = Owners.schema
     partitions = [{"archived": True}, {"archived": False}]
 
     def get_url_params(
