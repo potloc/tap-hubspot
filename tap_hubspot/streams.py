@@ -9,6 +9,10 @@ from tap_hubspot.client import HUBSPOT_OBJECTS, HubspotStream
 
 SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
 
+from tap_hubspot.schemas import (
+    Owners,
+)
+
 utc = pytz.UTC
 
 
@@ -52,10 +56,23 @@ class CallsStream(HubspotStream):
 
 class OwnersStream(HubspotStream):
     """Define custom stream."""
-
     name = "owners"
     path = "/crm/v3/owners"
     primary_keys = ["id"]
+    # schema = Owners.schema
+    partitions = [{"archived": True}, {"archived": False}]
+
+    def get_url_params(
+        self, context: Optional[dict], next_page_token: Optional[Any]
+    ) -> Dict[str, Any]:
+        params = super().get_url_params(context, next_page_token)
+        params["archived"] = context["archived"]
+        return params
+
+    def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
+        """Return a context dictionary for child streams."""
+        return {"archived": record["archived"], "owner_id": record["id"]}
+
 
 
 class CompaniesStream(HubspotStream):
