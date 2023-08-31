@@ -10,10 +10,10 @@ keywords = [
 license = "Apache 2.0"
 
 [tool.poetry.dependencies]
-python = "<3.11,>=3.7.1"
+python = "<3.12,>=3.7.1"
 requests = "^2.25.1"
-singer-sdk = "^0.4.5"
-attrs = "^21.4.0"
+singer-sdk = "^0.29.0"
+attrs = "^23.0.0"
 atomicwrites = "^1.4.0"
 
 [tool.poetry.dev-dependencies]

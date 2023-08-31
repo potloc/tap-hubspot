@@ -1,6 +1,9 @@
 version: 1
 send_anonymous_usage_stats: false
 project_id: 40eb93e3-36f8-492b-bb71-deec50c35380
+default_environment: test
+environments:
+- name: test
 plugins:
   extractors:
   - name: tap-hubspot
@@ -20,6 +23,11 @@ plugins:
       value: '2010-01-01T00:00:00Z'
     config:
       start_date: '2010-01-01T00:00:00Z'
+    select:
+      - deals.*
+      - quotes.*
+      - line_items.*
+      - owners.*
   loaders:
   - name: target-jsonl
     variant: andyh1203
