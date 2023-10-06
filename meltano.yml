@@ -27,6 +27,7 @@ plugins:
       - deals.*
       - quotes.*
       - line_items.*
+      - owners.*
   loaders:
   - name: target-jsonl
     variant: andyh1203
