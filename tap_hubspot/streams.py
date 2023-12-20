@@ -17,11 +17,23 @@ class MeetingsStream(HubspotStream):
     path = "/crm/v3/objects/meetings"
     primary_keys = ["id"]
 
+    def get_selected_properties(self) -> List[dict]:
+        selected = []
+        for key, value in self.metadata.items():
+            if(len(key) > 0):
+                self.logger.info(key[-1])
+            if(value.selected and len(key) > 0):
+                selected.append(key[-1])
+        
+        return selected
+
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
     ) -> Dict[str, Any]:
+        selected_properties = self.get_selected_properties()
+        hub_properties = list(set(self.properties).intersection(selected_properties))
         params = super().get_url_params(context, next_page_token)
-        params["properties"] = ",".join(self.properties)
+        params["properties"] = ",".join(hub_properties)
         return params
 
     @property
@@ -36,11 +48,23 @@ class CallsStream(HubspotStream):
     path = "/crm/v3/objects/calls"
     primary_keys = ["id"]
 
+    def get_selected_properties(self) -> List[dict]:
+        selected = []
+        for key, value in self.metadata.items():
+            if(len(key) > 0):
+                self.logger.info(key[-1])
+            if(value.selected and len(key) > 0):
+                selected.append(key[-1])
+        
+        return selected
+
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
     ) -> Dict[str, Any]:
+        selected_properties = self.get_selected_properties()
+        hub_properties = list(set(self.properties).intersection(selected_properties))
         params = super().get_url_params(context, next_page_token)
-        params["properties"] = ",".join(self.properties)
+        params["properties"] = ",".join(hub_properties)
         return params
 
     @property
@@ -89,7 +113,6 @@ class CompaniesStream(HubspotStream):
     ) -> Dict[str, Any]:
         selected_properties = self.get_selected_properties()
         hub_properties = list(set(self.properties).intersection(selected_properties))
-
         params = super().get_url_params(context, next_page_token)
         params["properties"] = ",".join(hub_properties)
         params["archived"] = context["archived"]
@@ -114,11 +137,23 @@ class DealsStream(HubspotStream):
     primary_keys = ["id"]
     partitions = [{"archived": True}, {"archived": False}]
 
+    def get_selected_properties(self) -> List[dict]:
+        selected = []
+        for key, value in self.metadata.items():
+            if(len(key) > 0):
+                self.logger.info(key[-1])
+            if(value.selected and len(key) > 0):
+                selected.append(key[-1])
+        
+        return selected
+
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
     ) -> Dict[str, Any]:
+        selected_properties = self.get_selected_properties()
+        hub_properties = list(set(self.properties).intersection(selected_properties))
         params = super().get_url_params(context, next_page_token)
-        params["properties"] = ",".join(self.properties)
+        params["properties"] = ",".join(hub_properties)
         params["archived"] = context["archived"]
         params["associations"] = ",".join(HUBSPOT_OBJECTS)
         return params
@@ -145,11 +180,23 @@ class ContactsStream(HubspotStream):
     primary_keys = ["id"]
     partitions = [{"archived": True}, {"archived": False}]
 
+    def get_selected_properties(self) -> List[dict]:
+        selected = []
+        for key, value in self.metadata.items():
+            if(len(key) > 0):
+                self.logger.info(key[-1])
+            if(value.selected and len(key) > 0):
+                selected.append(key[-1])
+        
+        return selected
+
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
     ) -> Dict[str, Any]:
+        selected_properties = self.get_selected_properties()
+        hub_properties = list(set(self.properties).intersection(selected_properties))
         params = super().get_url_params(context, next_page_token)
-        params["properties"] = ",".join(self.properties)
+        params["properties"] = ",".join(hub_properties)
         params["archived"] = context["archived"]
         params["associations"] = ",".join(HUBSPOT_OBJECTS)
         return params
@@ -394,11 +441,23 @@ class QuotesStream(HubspotStream):
     primary_keys = ["id"]
     partitions = [{"archived": True}, {"archived": False}]
 
+    def get_selected_properties(self) -> List[dict]:
+        selected = []
+        for key, value in self.metadata.items():
+            if(len(key) > 0):
+                self.logger.info(key[-1])
+            if(value.selected and len(key) > 0):
+                selected.append(key[-1])
+        
+        return selected
+
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
     ) -> Dict[str, Any]:
+        selected_properties = self.get_selected_properties()
+        hub_properties = list(set(self.properties).intersection(selected_properties))
         params = super().get_url_params(context, next_page_token)
-        params["properties"] = ",".join(self.properties)
+        params["properties"] = ",".join(hub_properties)
         params["archived"] = context["archived"]
         params["associations"] = ",".join(HUBSPOT_OBJECTS)
         return params
@@ -415,11 +474,23 @@ class LineItemsStream(HubspotStream):
     primary_keys = ["id"]
     partitions = [{"archived": True}, {"archived": False}]
 
+    def get_selected_properties(self) -> List[dict]:
+        selected = []
+        for key, value in self.metadata.items():
+            if(len(key) > 0):
+                self.logger.info(key[-1])
+            if(value.selected and len(key) > 0):
+                selected.append(key[-1])
+        
+        return selected
+
     def get_url_params(
         self, context: Optional[dict], next_page_token: Optional[Any]
     ) -> Dict[str, Any]:
+        selected_properties = self.get_selected_properties()
+        hub_properties = list(set(self.properties).intersection(selected_properties))
         params = super().get_url_params(context, next_page_token)
-        params["properties"] = ",".join(self.properties)
+        params["properties"] = ",".join(hub_properties)
         params["archived"] = context["archived"]
         params["associations"] = ",".join(HUBSPOT_OBJECTS)
         return params
