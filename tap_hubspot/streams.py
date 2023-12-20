@@ -20,8 +20,6 @@ class MeetingsStream(HubspotStream):
     def get_selected_properties(self) -> List[dict]:
         selected = []
         for key, value in self.metadata.items():
-            if(len(key) > 0):
-                self.logger.info(key[-1])
             if(value.selected and len(key) > 0):
                 selected.append(key[-1])
         
@@ -51,8 +49,6 @@ class CallsStream(HubspotStream):
     def get_selected_properties(self) -> List[dict]:
         selected = []
         for key, value in self.metadata.items():
-            if(len(key) > 0):
-                self.logger.info(key[-1])
             if(value.selected and len(key) > 0):
                 selected.append(key[-1])
         
@@ -100,8 +96,6 @@ class CompaniesStream(HubspotStream):
     def get_selected_properties(self) -> List[dict]:
         selected = []
         for key, value in self.metadata.items():
-            if(len(key) > 0):
-                self.logger.info(key[-1])
             if(value.selected and len(key) > 0):
                 selected.append(key[-1])
         
@@ -140,8 +134,6 @@ class DealsStream(HubspotStream):
     def get_selected_properties(self) -> List[dict]:
         selected = []
         for key, value in self.metadata.items():
-            if(len(key) > 0):
-                self.logger.info(key[-1])
             if(value.selected and len(key) > 0):
                 selected.append(key[-1])
         
@@ -183,8 +175,6 @@ class ContactsStream(HubspotStream):
     def get_selected_properties(self) -> List[dict]:
         selected = []
         for key, value in self.metadata.items():
-            if(len(key) > 0):
-                self.logger.info(key[-1])
             if(value.selected and len(key) > 0):
                 selected.append(key[-1])
         
@@ -444,8 +434,6 @@ class QuotesStream(HubspotStream):
     def get_selected_properties(self) -> List[dict]:
         selected = []
         for key, value in self.metadata.items():
-            if(len(key) > 0):
-                self.logger.info(key[-1])
             if(value.selected and len(key) > 0):
                 selected.append(key[-1])
         
@@ -477,8 +465,6 @@ class LineItemsStream(HubspotStream):
     def get_selected_properties(self) -> List[dict]:
         selected = []
         for key, value in self.metadata.items():
-            if(len(key) > 0):
-                self.logger.info(key[-1])
             if(value.selected and len(key) > 0):
                 selected.append(key[-1])
         
