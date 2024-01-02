@@ -88,10 +88,11 @@ class HubspotStream(RESTStream):
         return params
     
     def get_selected_properties(self) -> List[dict]:
-        return [
+        selected_properties = [
             key[-1] for key, value in self.metadata.items()
             if value.selected and len(key) > 0
             ]
+        return list(set(self.properties).intersection(selected_properties))
 
     def prepare_request_payload(
         self, context: Optional[dict], next_page_token: Optional[Any]
