@@ -86,6 +86,14 @@ class HubspotStream(RESTStream):
             params["after"] = next_page_token
         params["limit"] = 100
         return params
+    
+    def get_selected_properties(self) -> List[dict]:
+        selected = []
+        for key, value in self.metadata.items():
+            if(value.selected and len(key) > 0):
+                selected.append(key[-1])
+        
+        return selected
 
     def prepare_request_payload(
         self, context: Optional[dict], next_page_token: Optional[Any]
