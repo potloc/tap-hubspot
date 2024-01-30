@@ -17,7 +17,7 @@ attrs = "^23.0.0"
 atomicwrites = "^1.4.0"
 
 [tool.poetry.dev-dependencies]
-pytest = "^6.2.5"
+pytest = "^8.0.0"
 tox = "^3.24.4"
 flake8 = "^3.9.2"
 black = "^22.3.0"
