@@ -1,0 +1,21 @@
+name: Validate Meltano Install
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+jobs:
+  setup-meltano:
+    name: Validate meltano configurations
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install meltano boto3
+      - name: Install dependencies
+        run: meltano install --clean
+      - name: Validate meltano install
+        run: meltano schedule list
