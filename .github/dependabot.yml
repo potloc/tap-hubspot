@@ -1,0 +1,56 @@
+version: 2
+
+updates:
+  - package-ecosystem: pip
+    open-pull-requests-limit: 5
+    directory: /
+    registries: "*"
+    schedule:
+      interval: daily
+      time: "10:00"
+      timezone: America/Montreal
+    reviewers:
+      - potloc/data-engineering
+    assignees:
+      - potloc/data-engineering
+    labels:
+      - python
+      - dependencies
+    groups: # https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#groups
+      minor-updates:
+        update-types:
+          - minor
+        patterns:
+          - "*"
+      major-updates:
+        update-types:
+          - major
+        patterns:
+          - "*"
+    rebase-strategy: auto
+
+  - package-ecosystem: github-actions
+    open-pull-requests-limit: 5
+    directory: /
+    schedule:
+      interval: daily
+      time: "10:00"
+      timezone: America/Montreal
+    reviewers:
+      - potloc/data-engineering
+    assignees:
+      - potloc/data-engineering
+    labels:
+      - github-actions
+      - dependencies
+    groups:
+      minor-updates:
+        update-types:
+          - minor
+        patterns:
+          - "*"
+      major-updates:
+        update-types:
+          - major
+        patterns:
+          - "*"
