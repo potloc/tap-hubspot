@@ -1,0 +1,57 @@
+name: Dependabot
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+permissions:
+  contents: write
+  pull-requests: write
+  repository-projects: read
+
+jobs:
+  dependabot:
+    name: Enable Auto-Merge and Approve
+    if: ${{ github.actor == 'dependabot[bot]' && !contains(github.event.pull_request.labels.*.name, 'automerge') && !contains(github.head_ref, '/terraform/') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Dependabot Metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: GitHub Actions - Patch or Minor
+        if: ${{ contains(github.head_ref, '/github_actions/') && (steps.metadata.outputs.update-type == 'version-update:semver-minor' || steps.metadata.outputs.update-type == 'version-update:semver-patch') }}
+        shell: bash --noprofile --norc -xeo pipefail {0}
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr review "$PR_URL" --approve
+          gh pr merge "$PR_URL" --auto --squash
+          gh pr edit "$PR_URL" --add-label 'automerge'
+
+      - name: Development - Patch or Minor
+        if: ${{ !contains(github.head_ref, '/github_actions/') && (steps.metadata.outputs.update-type == 'version-update:semver-minor' || steps.metadata.outputs.update-type == 'version-update:semver-patch') && steps.metadata.outputs.dependency-type == 'direct:development' }}
+        shell: bash --noprofile --norc -xeo pipefail {0}
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr review "$PR_URL" --approve
+          gh pr merge "$PR_URL" --auto --squash
+          gh pr edit "$PR_URL" --add-label 'automerge'
+
+      - name: Production - Patch
+        if: ${{ !contains(github.head_ref, '/github_actions/') && steps.metadata.outputs.update-type == 'version-update:semver-patch' && steps.metadata.outputs.dependency-type == 'direct:production' }}
+        shell: bash --noprofile --norc -xeo pipefail {0}
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr review "$PR_URL" --approve
+          gh pr merge "$PR_URL" --auto --squash
+          gh pr edit "$PR_URL" --add-label 'automerge'
